@@ -1,0 +1,19 @@
+version: "2"
+services:
+
+  hub:
+    image: "selenium/hub:3.4.0-einsteinium"
+    container_name: "hub"
+    ports:
+      - "4444:4444"
+    environment:
+      SE_OPTS: "-browserTimeout 10 -timeout 10"
+
+  firefox-node:
+    image: "selenium/node-firefox:3.4.0-einsteinium"
+    container_name: "firefox-node"
+    depends_on:
+      - "hub"
+    environment:
+      - "HUB_PORT_4444_TCP_ADDR=hub"
+      - "HUB_PORT_4444_TCP_PORT=4444"
