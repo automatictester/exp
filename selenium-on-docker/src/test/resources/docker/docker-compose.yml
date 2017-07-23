@@ -3,7 +3,6 @@ services:
 
   hub:
     image: "selenium/hub:3.4.0-einsteinium"
-    container_name: "hub"
     ports:
       - "4444:4444"
     environment:
@@ -11,7 +10,6 @@ services:
 
   firefox-node:
     image: "selenium/node-firefox:3.4.0-einsteinium"
-    container_name: "firefox-node"
     depends_on:
       - "hub"
     environment:
