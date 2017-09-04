@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/case/([A-Z0-9]*)",
+    "headers": {
+      "Accept" : {
+        "contains" : "application/json"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{ \"id\": 1234567890 }"
+  }
+}
