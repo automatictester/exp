@@ -1,4 +1,3 @@
-FROM ubuntu:17.04
 FROM openjdk:8u141-jdk
 
 RUN apt-get update
