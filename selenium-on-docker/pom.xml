@@ -90,12 +90,12 @@
                         <id>compose-stop</id>
                         <phase>post-integration-test</phase>
                         <configuration>
-                            <target name="compose-kill">
+                            <target name="compose-stop">
                                 <exec
                                         dir="${project.build.testOutputDirectory}/docker"
                                         executable="docker-compose"
-                                        spawn="true">
-                                    <arg line="kill"/>
+                                        spawn="false">
+                                    <arg line="stop"/>
                                 </exec>
                             </target>
                         </configuration>
