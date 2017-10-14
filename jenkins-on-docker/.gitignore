@@ -1,0 +1,7 @@
+.idea/
+gradle.properties
+id_rsa_jenkins.pub
+jenkins.asc
+passphrase.txt
+settings.xml
+*.iml
