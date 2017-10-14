@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.73.1-slim
+FROM jenkins/jenkins:2.73.2-slim
 
 # continue setup as root
 USER root
