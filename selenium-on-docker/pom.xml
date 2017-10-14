@@ -90,12 +90,12 @@
                         <id>compose-stop</id>
                         <phase>post-integration-test</phase>
                         <configuration>
-                            <target name="compose-stop">
+                            <target name="compose-kill">
                                 <exec
                                         dir="${project.build.testOutputDirectory}/docker"
                                         executable="docker-compose"
                                         spawn="true">
-                                    <arg line="stop"/>
+                                    <arg line="kill"/>
                                 </exec>
                             </target>
                         </configuration>
@@ -114,7 +114,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>3.4.0</version>
+            <version>3.6.0</version>
             <scope>test</scope>
         </dependency>
 

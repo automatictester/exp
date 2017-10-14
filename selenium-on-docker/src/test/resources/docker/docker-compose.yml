@@ -2,14 +2,14 @@ version: "3.3"
 services:
 
   hub:
-    image: "selenium/hub:3.4.0-einsteinium"
+    image: "selenium/hub:3.6.0"
     ports:
       - "4444:4444"
     environment:
       SE_OPTS: "-browserTimeout 10 -timeout 10"
 
   firefox-node:
-    image: "selenium/node-firefox:3.4.0-einsteinium"
+    image: "selenium/node-firefox:3.6.0"
     depends_on:
       - "hub"
     environment:

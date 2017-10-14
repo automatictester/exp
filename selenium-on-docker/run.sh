@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+docker pull selenium/hub:3.6.0
+docker pull selenium/node-firefox:3.6.0
+
 # Run Selenium tests on Docker Compose-based Selenium Grid
 mvn clean verify
 
