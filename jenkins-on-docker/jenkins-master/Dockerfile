@@ -10,3 +10,6 @@ RUN apt-get clean
 
 # solve problem with trend charts
 RUN sed -i 's/assistive_technologies.*/#assistive_technologies=org.GNOME.Accessibility.AtkWrapper/' /etc/java-8-openjdk/accessibility.properties
+
+# continue as jenkins
+USER jenkins
