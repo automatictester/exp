@@ -4,16 +4,10 @@ services:
   jmeter-server-01:
     build: ./images/server-01
     container_name: jmeter-server-01
-    networks:
-      jmeter:
-        ipv4_address: 172.26.0.11
 
   jmeter-server-02:
     build: ./images/server-02
     container_name: jmeter-server-02
-    networks:
-      jmeter:
-        ipv4_address: 172.26.0.12
 
   jmeter-client:
     build: ./images/client
@@ -23,12 +17,3 @@ services:
       - jmeter-server-02
     volumes:
       - ~/jmeter-docker-volume:/jmeter/bin/results
-    networks:
-      jmeter:
-        ipv4_address: 172.26.0.2
-
-networks:
-  jmeter:
-    ipam:
-      config:
-        - subnet: 172.26.0.3/24
