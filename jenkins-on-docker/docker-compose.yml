@@ -9,23 +9,11 @@ services:
       - 8080:8080
     volumes:
       - jenkins_home:/var/jenkins_home
-    networks:
-      jenkins:
-        ipv4_address: 172.25.0.20
 
   jenkins-agent:
     build: ./jenkins-agent
     container_name: jenkins-agent
-    networks:
-      jenkins:
-        ipv4_address: 172.25.0.21
 
 volumes:
   jenkins_home:
     external: true
-
-networks:
-  jenkins:
-    ipam:
-      config:
-        - subnet: 172.25.0.3/24
