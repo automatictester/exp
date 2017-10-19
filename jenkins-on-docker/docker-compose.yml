@@ -3,7 +3,7 @@ version: "3.3"
 services:
 
   jenkins-master:
-    image: deliverymind/jenkins-master:2.73.2-slim.1
+    build: ./jenkins-master
     container_name: jenkins-master
     ports:
       - 8080:8080
