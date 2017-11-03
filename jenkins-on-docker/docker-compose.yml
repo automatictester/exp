@@ -14,6 +14,12 @@ services:
     build: ./jenkins-agent
     container_name: jenkins-agent
 
+  jenkins-jnlp-agent:
+    build: ./jenkins-jnlp-agent
+    container_name: jenkins-jnlp-agent
+    environment:
+      - SECRET=${SECRET}
+
 volumes:
   jenkins_home:
     external: true

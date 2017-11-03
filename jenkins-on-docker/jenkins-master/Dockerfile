@@ -5,7 +5,7 @@ USER root
 
 # install packages
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y vim iputils-ping procps && \
+    apt-get install --no-install-recommends -y vim iputils-ping procps telnet && \
     apt-get clean
 
 # solve problem with trend charts

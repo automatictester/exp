@@ -5,3 +5,5 @@ jenkins.asc
 passphrase.txt
 settings.xml
 *.iml
+*.jar
+.env

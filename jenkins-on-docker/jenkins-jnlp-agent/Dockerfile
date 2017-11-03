@@ -1,5 +1,7 @@
 FROM openjdk:8-jdk
 
+ENV SECRET will-set-at-build-time
+
 # install packages
 RUN apt-get update
 RUN apt-get install --no-install-recommends -y openssh-server vim iputils-ping procps telnet
@@ -18,6 +20,10 @@ RUN chown -Rf jenkins:jenkins jenkins.asc passphrase.txt
 
 # continue as jenkins
 USER jenkins
+
+# copy slave script and jar
+COPY slave.jar .
+COPY jnlpagent-entrypoint.sh .
 
 # set up gpg
 RUN mkdir .gnupg
@@ -49,6 +55,12 @@ COPY id_rsa_jenkins.pub .ssh/authorized_keys
 RUN chown -Rf jenkins:jenkins .ssh
 RUN chmod 0700 -R .ssh
 
-# start ssh
-CMD exec /usr/sbin/sshd -De
-EXPOSE 22
+# make the startup script executable
+RUN chown -Rf jenkins:jenkins jnlpagent-entrypoint.sh
+RUN chmod +x jnlpagent-entrypoint.sh
+
+# continue as jenkins
+USER jenkins
+
+# start slave jar
+ENTRYPOINT ["./jnlpagent-entrypoint.sh"]
