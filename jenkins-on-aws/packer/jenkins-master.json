@@ -24,7 +24,7 @@
         "wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -",
         "sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'",
         "sudo apt-get update",
-        "sudo apt-get install awscli jenkins=2.89.2 -y",
+        "sudo apt-get install awscli jenkins=2.89.3 -y",
         "sudo apt-get clean",
         "sudo sed -i 's/HTTP_PORT=8080/HTTP_PORT=-1/' /etc/default/jenkins",
         "sudo sed -i 's/JENKINS_ARGS.*/JENKINS_ARGS=\"--webroot=\\/var\\/cache\\/$NAME\\/war --httpPort=$HTTP_PORT --httpsPort=8081 --sessionTimeout=30\"/' /etc/default/jenkins",
