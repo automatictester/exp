@@ -9,14 +9,20 @@ echo "Jenkins master instance ID: ${JENKINS_MASTER_INSTANCE_ID}"
 JENKINS_MASTER_SECURITY_GROUP_ID=$(aws ec2 describe-security-groups --filters 'Name=tag:Name,Values=Jenkins Master' --query 'SecurityGroups[*].GroupId' --output text)
 echo "Jenkins master security group ID: ${JENKINS_MASTER_SECURITY_GROUP_ID}"
 
-echo 'Setting Jenkins master security group to accept inbound connections only from your public IP ...'
-aws ec2 update-security-group-rule-descriptions-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --ip-permissions "[{\"IpProtocol\": \"tcp\", \"FromPort\": 22, \"ToPort\": 22, \"IpRanges\": [{\"CidrIp\": \"${PUBLIC_IP}/32\", \"Description\": \"SSH for admin\"}]}]" --output text
-aws ec2 update-security-group-rule-descriptions-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --ip-permissions "[{\"IpProtocol\": \"tcp\", \"FromPort\": 8081, \"ToPort\": 8081, \"IpRanges\": [{\"CidrIp\": \"${PUBLIC_IP}/32\", \"Description\": \"Jenkins HTTPS access\"}]}]" --output text
-echo '... done'
+echo -n 'Setting Jenkins master security group to accept inbound connections only from your public IP... '
+OLD_SSH_CIDR=$(aws ec2 describe-security-groups --filters "Name=description,Values=SSH and Jenkins HTTPS from my public IP only" --query 'SecurityGroups[*].IpPermissions[?FromPort==`22`].IpRanges[*].CidrIp' --output text)
+aws ec2 revoke-security-group-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --protocol tcp --port 22 --cidr ${OLD_SSH_CIDR}
+aws ec2 authorize-security-group-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --protocol tcp --port 22 --cidr "${PUBLIC_IP}/32"
 
-echo 'Starting Jenkins master ...'
+OLD_HTTPS_CIDR=$(aws ec2 describe-security-groups --filters "Name=description,Values=SSH and Jenkins HTTPS from my public IP only" --query 'SecurityGroups[*].IpPermissions[?FromPort==`8081`].IpRanges[*].CidrIp' --output text)
+aws ec2 revoke-security-group-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --protocol tcp --port 8081 --cidr ${OLD_HTTPS_CIDR}
+aws ec2 authorize-security-group-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --protocol tcp --port 8081 --cidr "${PUBLIC_IP}/32"
+
+echo 'done!'
+
+echo -n 'Starting Jenkins master... '
 aws ec2 start-instances --instance-ids ${JENKINS_MASTER_INSTANCE_ID} --output text >> /dev/null
-echo '... done'
+echo 'done!'
 
 URL=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=Jenkins Master' "Name=instance-id,Values=${JENKINS_MASTER_INSTANCE_ID}" --output text --query 'Reservations[*].Instances[*].NetworkInterfaces[*].PrivateIpAddresses[*].Association.PublicDnsName')
 echo -e "URL:\nhttps://${URL}:8081"
