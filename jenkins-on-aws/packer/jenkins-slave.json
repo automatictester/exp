@@ -44,7 +44,7 @@
       "type": "shell",
       "inline": [
         "sudo apt-get update",
-        "sudo apt-get install openjdk-8-jdk -y",
+        "sudo apt-get install awscli jq openjdk-8-jdk -y",
         "sudo apt-get clean",
 
         "sudo groupadd -g 1001 jenkins",
