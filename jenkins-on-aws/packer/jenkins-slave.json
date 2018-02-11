@@ -44,8 +44,12 @@
       "type": "shell",
       "inline": [
         "sudo apt-get update",
-        "sudo apt-get install awscli jq openjdk-8-jdk -y",
+        "sudo apt-get install groovy python2.7 jq openjdk-8-jdk -y",
         "sudo apt-get clean",
+
+        "sudo curl -O https://bootstrap.pypa.io/get-pip.py",
+        "sudo python2.7 get-pip.py",
+        "sudo pip install awscli",
 
         "sudo groupadd -g 1001 jenkins",
         "sudo useradd -d /home/jenkins -u 1001 -g 1001 -m -s /bin/bash jenkins",
