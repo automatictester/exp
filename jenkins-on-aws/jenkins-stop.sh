@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [ "$AWS_PROFILE" != "private" ]; then
+   echo "AWS_PROFILE not set correctly"
+   exit 1
+fi
+
 JENKINS_MASTER_INSTANCE_ID=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=Jenkins Master' 'Name=instance-state-name,Values=running' --query 'Reservations[*].Instances[*].InstanceId' --output text)
 echo "Jenkins master instance ID: ${JENKINS_MASTER_INSTANCE_ID}"
 

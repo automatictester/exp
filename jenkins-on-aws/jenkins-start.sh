@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [ "$AWS_PROFILE" != "private" ]; then
+   echo "AWS_PROFILE not set correctly"
+   exit 1
+fi
+
 PUBLIC_IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 echo "Your public IP: ${PUBLIC_IP}"
 
