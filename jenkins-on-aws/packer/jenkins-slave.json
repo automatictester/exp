@@ -44,8 +44,13 @@
       "type": "shell",
       "inline": [
         "sudo apt-get update",
-        "sudo apt-get install groovy python2.7 jq openjdk-8-jdk -y",
+        "sudo apt-get install groovy python2.7 jq openjdk-8-jdk unzip -y",
         "sudo apt-get clean",
+
+        "wget https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_linux_amd64.zip",
+        "unzip terraform_0.11.3_linux_amd64.zip",
+        "sudo mv terraform /usr/local/bin/",
+        "rm terraform_0.11.3_linux_amd64.zip",
 
         "sudo curl -O https://bootstrap.pypa.io/get-pip.py",
         "sudo python2.7 get-pip.py",
