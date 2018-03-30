@@ -13,8 +13,8 @@ RUN useradd -d /home/jenkins -u 1000 -g 1000 -m -s /bin/bash jenkins
 WORKDIR /home/jenkins
 
 # copy gpg key
-COPY jenkins.asc passphrase.txt /home/jenkins/
-RUN chown -Rf jenkins:jenkins jenkins.asc passphrase.txt
+COPY jenkins-gmail.asc passphrase.txt /home/jenkins/
+RUN chown -Rf jenkins:jenkins jenkins-gmail.asc passphrase.txt
 
 # continue as jenkins
 USER jenkins
@@ -24,11 +24,11 @@ RUN mkdir .gnupg
 RUN chmod 0700 -R .gnupg
 RUN echo allow-loopback-pinentry > .gnupg/gpg-agent.conf
 RUN echo "use-agent\npinentry-mode loopback" > .gnupg/gpg.conf
-RUN gpg --no-tty --passphrase-file passphrase.txt --import jenkins.asc
-RUN rm jenkins.asc passphrase.txt
+RUN gpg --no-tty --passphrase-file passphrase.txt --import jenkins-gmail.asc
+RUN rm jenkins-gmail.asc passphrase.txt
 
 # configure git for jenkins user
-RUN git config --global user.email "jenkins@deliverymind.co.uk"
+RUN git config --global user.email "jenkins.ci.build@gmail.com"
 RUN git config --global user.name "Jenkins"
 
 # configure maven
@@ -45,7 +45,7 @@ USER root
 # configure ssh
 RUN mkdir /var/run/sshd
 RUN mkdir .ssh
-COPY id_rsa_jenkins.pub .ssh/authorized_keys
+COPY id_rsa_jenkins_gmail_np.pub .ssh/authorized_keys
 RUN chown -Rf jenkins:jenkins .ssh
 RUN chmod 0700 -R .ssh
 

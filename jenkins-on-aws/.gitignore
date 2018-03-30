@@ -1,5 +1,5 @@
 */id_rsa*
 */gradle.properties
-*/jenkins.asc
+*/*.asc
 */passphrase.txt
 */settings.xml

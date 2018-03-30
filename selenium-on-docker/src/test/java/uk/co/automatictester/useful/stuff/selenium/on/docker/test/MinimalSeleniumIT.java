@@ -1,9 +1,9 @@
-package uk.co.deliverymind.useful.stuff.selenium.on.docker.test;
+package uk.co.automatictester.useful.stuff.selenium.on.docker.test;
 
 import org.junit.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.*;
-import uk.co.deliverymind.useful.stuff.selenium.on.docker.pages.*;
+import uk.co.automatictester.useful.stuff.selenium.on.docker.pages.*;
 
 import java.net.*;
 

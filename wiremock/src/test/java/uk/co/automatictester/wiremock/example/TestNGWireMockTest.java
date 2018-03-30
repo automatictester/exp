@@ -1,31 +1,33 @@
-package uk.co.deliverymind.wiremock.example;
+package uk.co.automatictester.wiremock.example;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.CoreMatchers;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class JUnitWireMockTest {
+public class TestNGWireMockTest {
 
+    private WireMockServer wireMockServer;
     private RequestSpecification reqSpec;
     private int port;
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort());
-
-    @Before
+    @BeforeClass
     public void setUp() {
         setUpMocks();
         setUpReqSpec();
@@ -43,15 +45,15 @@ public class JUnitWireMockTest {
         assertThat(json.getInt("id"), CoreMatchers.equalTo(1234567890));
     }
 
-    private void setUpMocks() {
-        port = wireMockRule.port();
+    @AfterClass
+    public void tearDown() {
+        wireMockServer.stop();
+    }
 
-        stubFor(get(urlMatching("/case/[A-Z0-9]+"))
-                .withHeader("Accept", equalTo(JSON.toString()))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("{ \"id\": 1234567890 }")));
+    private void setUpMocks() {
+        wireMockServer = new WireMockServer(wireMockConfig().dynamicPort().dynamicHttpsPort());
+        wireMockServer.start();
+        port = wireMockServer.port();
     }
 
     private void setUpReqSpec() {

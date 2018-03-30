@@ -1,4 +1,4 @@
-package uk.co.deliverymind.wiremock.example;
+package uk.co.automatictester.wiremock.example;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.path.json.JsonPath;

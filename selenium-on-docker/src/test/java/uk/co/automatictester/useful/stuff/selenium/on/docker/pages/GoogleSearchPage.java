@@ -1,4 +1,4 @@
-package uk.co.deliverymind.useful.stuff.selenium.on.docker.pages;
+package uk.co.automatictester.useful.stuff.selenium.on.docker.pages;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;

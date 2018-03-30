@@ -22,13 +22,13 @@
     },
     {
       "type": "file",
-      "source": "./id_rsa_jenkins_np.pub",
-      "destination": "/home/ubuntu/id_rsa_jenkins_np.pub"
+      "source": "./id_rsa_jenkins_gmail_np.pub",
+      "destination": "/home/ubuntu/id_rsa_jenkins_gmail_np.pub"
     },
     {
       "type": "file",
-      "source": "./jenkins.asc",
-      "destination": "/home/ubuntu/jenkins.asc"
+      "source": "./jenkins-gmail.asc",
+      "destination": "/home/ubuntu/jenkins-gmail.asc"
     },
     {
       "type": "file",
@@ -68,14 +68,14 @@
         "chmod 440 jenkins-sudoer",
         "sudo cp jenkins-sudoer /etc/sudoers.d/",
 
-        "sudo chown jenkins:jenkins jenkins.asc passphrase.txt settings.xml gradle.properties id_rsa_jenkins_np.pub",
+        "sudo chown jenkins:jenkins jenkins-gmail.asc passphrase.txt settings.xml gradle.properties id_rsa_jenkins_gmail_np.pub",
 
-        "sudo mv jenkins.asc passphrase.txt /home/jenkins/",
+        "sudo mv jenkins-gmail.asc passphrase.txt /home/jenkins/",
         "sudo su - jenkins -c 'mkdir .gnupg'",
         "sudo chmod 0700 /home/jenkins/.gnupg",
         "sudo su - jenkins -c 'echo allow-loopback-pinentry > .gnupg/gpg-agent.conf'",
-        "sudo su - jenkins -c 'gpg --no-tty --passphrase-file passphrase.txt --import jenkins.asc'",
-        "sudo su - jenkins -c 'rm jenkins.asc passphrase.txt'",
+        "sudo su - jenkins -c 'gpg --no-tty --passphrase-file passphrase.txt --import jenkins-gmail.asc'",
+        "sudo su - jenkins -c 'rm jenkins-gmail.asc passphrase.txt'",
 
         "sudo su - jenkins -c 'mkdir .m2'",
         "sudo mv settings.xml /home/jenkins/.m2",
@@ -85,9 +85,9 @@
 
         "sudo su - jenkins -c 'mkdir .ssh'",
         "sudo chmod 0700 -R /home/jenkins/.ssh",
-        "sudo mv id_rsa_jenkins_np.pub /home/jenkins/.ssh/authorized_keys",
+        "sudo mv id_rsa_jenkins_gmail_np.pub /home/jenkins/.ssh/authorized_keys",
 
-        "sudo su - jenkins -c 'git config --global user.email \"jenkins@deliverymind.co.uk\"'",
+        "sudo su - jenkins -c 'git config --global user.email \"jenkins.ci.build@gmail.com\"'",
         "sudo su - jenkins -c 'git config --global user.name \"Jenkins\"'"
       ]
     }

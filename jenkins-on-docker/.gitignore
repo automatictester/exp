@@ -1,7 +1,6 @@
 .idea/
 gradle.properties
-id_rsa_jenkins.pub
-jenkins.asc
+id_rsa_*.pub
 passphrase.txt
 settings.xml
 *.iml

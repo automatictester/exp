@@ -47,13 +47,13 @@
     },
     {
       "type": "file",
-      "source": "./id_rsa_jenkins_np",
-      "destination": "/home/ubuntu/id_rsa_jenkins_np"
+      "source": "./id_rsa_jenkins_gmail_np",
+      "destination": "/home/ubuntu/id_rsa_jenkins_gmail_np"
     },
     {
       "type": "shell",
       "inline": [
-        "sudo mv /home/ubuntu/id_rsa_jenkins_np /var/lib/jenkins/.ssh/id_rsa",
+        "sudo mv /home/ubuntu/id_rsa_jenkins_gmail_np /var/lib/jenkins/.ssh/id_rsa",
         "sudo chown jenkins:jenkins /var/lib/jenkins/.ssh/id_rsa"
       ]
     }
