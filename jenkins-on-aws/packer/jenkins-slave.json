@@ -44,7 +44,12 @@
       "type": "shell",
       "inline": [
         "sudo apt-get update",
-        "sudo apt-get install groovy python2.7 jq openjdk-8-jdk unzip -y",
+        "sudo apt-get install apt-transport-https ca-certificates curl software-properties-common -y",
+        "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
+        "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"",
+
+        "sudo apt-get update",
+        "sudo apt-get install groovy python2.7 jq openjdk-8-jdk unzip docker-ce -y",
         "sudo apt-get clean",
 
         "wget https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_linux_amd64.zip",
@@ -58,6 +63,10 @@
 
         "sudo groupadd -g 1001 jenkins",
         "sudo useradd -d /home/jenkins -u 1001 -g 1001 -m -s /bin/bash jenkins",
+
+        "echo \"jenkins ALL=(ALL) NOPASSWD: ALL\" > jenkins-sudoer",
+        "chmod 440 jenkins-sudoer",
+        "sudo cp jenkins-sudoer /etc/sudoers.d/",
 
         "sudo chown jenkins:jenkins jenkins.asc passphrase.txt settings.xml gradle.properties id_rsa_jenkins_np.pub",
 
