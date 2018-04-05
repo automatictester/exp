@@ -5,3 +5,4 @@ build/
 *.iml
 *.zip
 *.asc
+vars.sh
