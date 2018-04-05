@@ -31,6 +31,15 @@ JENKINS_MASTER_PUBLIC_IP=$(aws ec2 describe-instances --filters 'Name=tag:Name,V
 aws route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID} --change-batch "{ \"Changes\": [ { \"Action\": \"UPSERT\", \"ResourceRecordSet\": { \"Name\": \"${JENKINS_MASTER_DOMAIN_NAME}\", \"Type\": \"A\", \"TTL\": 60, \"ResourceRecords\": [ { \"Value\": \"${JENKINS_MASTER_PUBLIC_IP}\" } ] } } ] }" >> /dev/null
 echo 'done!'
 
+echo -n 'Removing stale entry from ~/.ssh/known_hosts file... '
+TRANSFORMED_JENKINS_MASTER_DOMAIN_NAME=$(echo ${JENKINS_MASTER_DOMAIN_NAME} | sed 's/\.$//')
+ssh-keygen -R ${TRANSFORMED_JENKINS_MASTER_DOMAIN_NAME} &> /dev/null
+echo 'done!'
+
 echo -n 'Flushing local DNS cache... '
 sudo killall -HUP mDNSResponder
+echo 'done!'
+
+echo -n 'Wait for Jenkins master to start... '
+aws ec2 wait instance-running --instance-ids ${JENKINS_MASTER_INSTANCE_ID}
 echo 'done!'
