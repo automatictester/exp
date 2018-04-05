@@ -16,9 +16,9 @@ OLD_SSH_CIDR=$(aws ec2 describe-security-groups --filters "Name=description,Valu
 aws ec2 revoke-security-group-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --protocol tcp --port 22 --cidr ${OLD_SSH_CIDR}
 aws ec2 authorize-security-group-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --protocol tcp --port 22 --cidr "${PUBLIC_IP}/32"
 
-OLD_HTTPS_CIDR=$(aws ec2 describe-security-groups --filters "Name=description,Values=SSH and Jenkins HTTPS from my public IP only" --query 'SecurityGroups[*].IpPermissions[?FromPort==`8081`].IpRanges[*].CidrIp' --output text)
-aws ec2 revoke-security-group-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --protocol tcp --port 8081 --cidr ${OLD_HTTPS_CIDR}
-aws ec2 authorize-security-group-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --protocol tcp --port 8081 --cidr "${PUBLIC_IP}/32"
+OLD_HTTPS_CIDR=$(aws ec2 describe-security-groups --filters "Name=description,Values=SSH and Jenkins HTTPS from my public IP only" --query 'SecurityGroups[*].IpPermissions[?FromPort==`443`].IpRanges[*].CidrIp' --output text)
+aws ec2 revoke-security-group-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --protocol tcp --port 443 --cidr ${OLD_HTTPS_CIDR}
+aws ec2 authorize-security-group-ingress --group-id ${JENKINS_MASTER_SECURITY_GROUP_ID} --protocol tcp --port 443 --cidr "${PUBLIC_IP}/32"
 echo 'done!'
 
 echo -n 'Starting Jenkins master... '
