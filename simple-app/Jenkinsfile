@@ -1,0 +1,55 @@
+#!groovy
+
+pipeline {
+    agent {
+        label 'linux'
+    }
+    parameters {
+        string(name: 'PUSH_TO_ECR', defaultValue: 'false', description: '')
+    }
+    tools {
+        maven 'M3'
+    }
+    options {
+        timestamps()
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+    }
+    stages {
+        stage('Cleanup') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Clone') {
+            steps {
+                sshagent(['github-creds']) {
+                    git credentialsId: 'github-creds', url: 'git@github.com:automatictester/simple-app.git'
+                }
+            }
+        }
+        stage('Create JAR file') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Push to ECR') {
+            when {
+                expression {
+                    "${params.PUSH_TO_ECR}" == "true"
+                }
+            }
+            steps {
+                sh "echo -n \"sudo \" > login-command.sh"
+                sh "aws ecr get-login --no-include-email --region eu-west-2 >> login-command.sh"
+                sh "chmod +x login-command.sh"
+                sh ". ./login-command.sh"
+                sh "sudo docker build -t simple-app ."
+                sh "sudo docker tag simple-app:latest 574377821355.dkr.ecr.eu-west-2.amazonaws.com/simple-app:latest "
+                sh "sudo docker push 574377821355.dkr.ecr.eu-west-2.amazonaws.com/simple-app:latest"
+                sh "rm login-command.sh"
+                sh "sudo docker logout https://574377821355.dkr.ecr.eu-west-2.amazonaws.com"
+            }
+        }
+    }
+}
