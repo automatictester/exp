@@ -1,4 +1,4 @@
-package uk.co.automatictester.sorting;
+package uk.co.automatictester.strategy;
 
 public class IntArrayBubbleSortStrategy implements IntArraySortStrategy {
 

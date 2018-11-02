@@ -1,4 +1,4 @@
-package uk.co.automatictester.sorting;
+package uk.co.automatictester.strategy;
 
 public interface IntArraySortStrategy {
 

@@ -1,10 +1,10 @@
-package uk.co.automatictester.sorting;
+package uk.co.automatictester.strategy;
 
 public class Context {
 
     /*
      * Participants:
-     * - Context
+     * - Context (this class)
      * - Strategy (IntArraySortStrategy interface)
      * - Concrete strategy (IntArrayBubbleSortStrategy class)
      */

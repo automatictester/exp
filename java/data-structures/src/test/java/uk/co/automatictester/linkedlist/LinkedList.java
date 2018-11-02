@@ -6,6 +6,28 @@ public class LinkedList<T> {
     private LinkedListNode<T> first;
     private int size = 0;
 
+    public void add(T value) {
+        LinkedListNode<T> newNode = newNode(value);
+        if (first == null) {
+            first = newNode;
+        } else {
+            LinkedListNode<T> lastNode = getLastNode();
+            lastNode.setNext(newNode);
+        }
+        size++;
+    }
+
+    public void addFirst(T value) {
+        LinkedListNode<T> newNode = newNode(value);
+        if (first == null) {
+            first = newNode;
+        } else {
+            newNode.setNext(first);
+            first = newNode;
+        }
+        size++;
+    }
+
     public void add(int index, T value) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
@@ -22,28 +44,6 @@ public class LinkedList<T> {
 
             newNode.setNext(nodeAtIndex);
             nodeBefore.setNext(newNode);
-        }
-        size++;
-    }
-
-    public void addFirst(T value) {
-        LinkedListNode<T> newNode = newNode(value);
-        if (first == null) {
-            first = newNode;
-        } else {
-            newNode.setNext(first);
-            first = newNode;
-        }
-        size++;
-    }
-
-    public void add(T value) {
-        LinkedListNode<T> newNode = newNode(value);
-        if (first == null) {
-            first = newNode;
-        } else {
-            LinkedListNode<T> lastNode = getLastNode();
-            lastNode.setNext(newNode);
         }
         size++;
     }
