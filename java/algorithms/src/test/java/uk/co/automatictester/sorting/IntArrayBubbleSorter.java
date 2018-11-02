@@ -1,12 +1,12 @@
 package uk.co.automatictester.sorting;
 
-public class BubbleIntArraySorter implements IntArraySorter {
+public class IntArrayBubbleSorter implements IntArraySorter {
 
     private int[] array;
     private int compareCount = 0;
     private int swapCount = 0;
 
-    public BubbleIntArraySorter(int[] array) {
+    public IntArrayBubbleSorter(int[] array) {
         this.array = array;
     }
 
@@ -32,7 +32,7 @@ public class BubbleIntArraySorter implements IntArraySorter {
         } while (hasChanged);
 
         int totalSteps = compareCount + swapCount;
-        System.out.println("Total iterations: " + totalSteps);
+        System.out.println("Total steps: " + totalSteps);
     }
 
     private boolean compare(int i) {
