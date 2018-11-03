@@ -3,8 +3,8 @@ package uk.co.automatictester.linkedlist;
 @SuppressWarnings("WeakerAccess")
 public class LinkedList<T> {
 
+    protected int size = 0;
     private LinkedListNode<T> first;
-    private int size = 0;
 
     public void add(T value) {
         LinkedListNode<T> newNode = newNode(value);
@@ -50,9 +50,7 @@ public class LinkedList<T> {
 
     public void delete(int index) {
         assertIndex(index);
-        if (index == size && size == 0) {
-            this.first = null;
-        } else if (index == 0 && size > 0) {
+        if (index == 0 && size > 0) {
             LinkedListNode<T> nodeToDelete = getNode(index);
             first = getNode(index + 1);
             nodeToDelete.setNext(null);
@@ -93,13 +91,19 @@ public class LinkedList<T> {
             text += "Empty";
         }
         for (int i = 0; i < size; i++) {
-            if (i < size -1) {
+            if (i < size - 1) {
                 text += String.format("%s, ", get(i));
             } else {
                 text += get(i);
             }
         }
         return text;
+    }
+
+    protected void assertIndex(int index) {
+        if (index > size - 1 || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     private LinkedListNode<T> newNode(T value) {
@@ -111,8 +115,8 @@ public class LinkedList<T> {
         if (index == 0) {
             return first;
         }
-        LinkedListNode<T> currentNode = first.getNext();
-        for (int i = 1; i < index; i++) {
+        LinkedListNode<T> currentNode = first;
+        for (int i = 1; i <= index; i++) {
             currentNode = currentNode.getNext();
         }
         return currentNode;
@@ -120,11 +124,5 @@ public class LinkedList<T> {
 
     private LinkedListNode<T> getLastNode() {
         return getNode(size - 1);
-    }
-
-    private void assertIndex(int index) {
-        if (index > size - 1) {
-            throw new IndexOutOfBoundsException();
-        }
     }
 }

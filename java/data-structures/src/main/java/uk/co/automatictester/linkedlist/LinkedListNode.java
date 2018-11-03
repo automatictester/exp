@@ -2,7 +2,7 @@ package uk.co.automatictester.linkedlist;
 
 public class LinkedListNode<T> {
 
-    private T value;
+    protected T value;
     private LinkedListNode<T> next;
 
     public LinkedListNode(T value) {

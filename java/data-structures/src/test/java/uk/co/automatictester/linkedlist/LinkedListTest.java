@@ -36,7 +36,7 @@ public class LinkedListTest {
     }
 
     @Test
-    public void testMidAdd() {
+    public void testAddAt() {
         LinkedList<Integer> list = new LinkedList<>();
 
         list.add(0, 1);
@@ -56,21 +56,15 @@ public class LinkedListTest {
     }
 
     @Test(expectedExceptions = IndexOutOfBoundsException.class)
-    public void testMidAddExNegative() {
+    public void testAddAtExNegative() {
         LinkedList<Integer> list = new LinkedList<>();
         list.add(-1, 10);
     }
 
     @Test(expectedExceptions = IndexOutOfBoundsException.class)
-    public void testMidAddExTooLarge() {
+    public void testAddAtExTooLarge() {
         LinkedList<Integer> list = new LinkedList<>();
         list.add(1, 10);
-    }
-
-    @Test(expectedExceptions = IndexOutOfBoundsException.class)
-    public void testGet() {
-        LinkedList<Integer> list = new LinkedList<>();
-        list.get(0);
     }
 
     @Test
@@ -103,6 +97,18 @@ public class LinkedListTest {
         assertTrue(list.get(1) == 4);
     }
 
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
+    public void testDeleteEx() {
+        LinkedList<Integer> list = new LinkedList<>();
+        list.delete(0);
+    }
+
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
+    public void testGetEx() {
+        LinkedList<Integer> list = new LinkedList<>();
+        list.get(0);
+    }
+
     @Test
     public void testSearch() {
         LinkedList<Integer> list = new LinkedList<>();
@@ -114,7 +120,9 @@ public class LinkedListTest {
         list.add(5);
 
         assertTrue(list.search(0) == -1);
+        assertTrue(list.search(1) == 0);
         assertTrue(list.search(5) == 4);
+        assertTrue(list.search(6) == -1);
     }
 
     @Test
