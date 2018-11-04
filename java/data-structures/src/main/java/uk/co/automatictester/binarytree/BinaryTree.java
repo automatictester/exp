@@ -114,10 +114,11 @@ public class BinaryTree<T extends Comparable<T>> {
             }
         } else if (value == element && left != null && right != null && right.left != null) {
             BinaryTree<T> rightLeftMostChild = right.leftMostChild();
-            BinaryTree<T> leftMostChildParent = right.leftMostChildParent(this);
+            BinaryTree<T> rightLeftMostChildParent = right.leftMostChildParent(this);
+            BinaryTree<T> rightLeftMostChildRight = rightLeftMostChild.right;
             rightLeftMostChild.left = left;
             rightLeftMostChild.right = right;
-            leftMostChildParent.left = null;
+            rightLeftMostChildParent.left = null;
             if (parent != null && parent.left != null && parent.left.equals(this)) {
                 parent.left = rightLeftMostChild;
                 value = null;
@@ -130,6 +131,7 @@ public class BinaryTree<T extends Comparable<T>> {
                 right = null;
             } else if (parent == null){
                 value = rightLeftMostChild.value;
+                rightLeftMostChildParent.left = rightLeftMostChildRight;
             }
         } else if (element.compareTo(value) < 0 && left == null) {
             return;
