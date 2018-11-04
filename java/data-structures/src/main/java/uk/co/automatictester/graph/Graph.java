@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("WeakerAccess")
 public class Graph<T extends Comparable<T>> {
 
+    private static final int ALL_CONECTIONS = -1;
     TreeSet<Vertex<T>> vertices = new TreeSet<>();
     TreeSet<Edge<T>> edges = new TreeSet<>();
 
@@ -42,6 +43,9 @@ public class Graph<T extends Comparable<T>> {
     }
 
     public Set<Vertex<T>> connectionsOf(Vertex<T> vertex, int degree) {
+        if (degree == ALL_CONECTIONS) {
+            degree = vertices.size() - 1;
+        }
         Set<Vertex<T>> connections = connectionsOf(vertex);
         if (degree > 1) {
             for (Vertex<T> connection : connectionsOf(vertex)) {

@@ -210,10 +210,21 @@ public class GraphTest {
         graph.addEdge(g, i);
         graph.addEdge(e, i);
 
+        assertTrue(graph.connectionsOf(a, 1).size() == 4);
         assertTrue(graph.connectionsOf(a, 1).equals(new TreeSet<>(Arrays.asList(b, c, d, e))));
+
+        assertTrue(graph.connectionsOf(f, 1).size() == 3);
         assertTrue(graph.connectionsOf(f, 1).equals(new TreeSet<>(Arrays.asList(b, g, h))));
+
+        assertTrue(graph.connectionsOf(h, 2).size() == 3);
         assertTrue(graph.connectionsOf(h, 2).equals(new TreeSet<>(Arrays.asList(b, f, g))));
+
+        assertTrue(graph.connectionsOf(a, 2).size() == 7);
         assertTrue(graph.connectionsOf(a, 2).equals(new TreeSet<>(Arrays.asList(b, c, d, e, f, g, i))));
+
+        assertTrue(graph.connectionsOf(a, 3).size() == 8);
         assertTrue(graph.connectionsOf(a, 3).equals(new TreeSet<>(Arrays.asList(b, c, d, e, f, g, h, i))));
+
+        assertTrue(graph.connectionsOf(i, -1).equals(new TreeSet<>(Arrays.asList(a, b, c, d, e, f, g, h))));
     }
 }
