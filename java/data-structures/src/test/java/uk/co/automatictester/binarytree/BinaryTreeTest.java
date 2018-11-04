@@ -324,4 +324,19 @@ public class BinaryTreeTest {
         List<Integer> list = Arrays.asList(15, 22, 25, 30, 60);
         assertTrue(tree.toList().equals(list));
     }
+
+    @Test
+    public void testDeleteTopNodeWithTwoLeafsAndRightLeftLeaf() {
+        BinaryTree<Integer> tree = new BinaryTree<>();
+        tree.insert(10);
+        tree.insert(20);
+        tree.insert(15);
+        tree.insert(25);
+        tree.insert(22);
+        tree.insert(30);
+        tree.insert(5);
+        tree.delete(10);
+        List<Integer> list = Arrays.asList(5, 15, 20, 22, 25, 30);
+        assertTrue(tree.toList().equals(list));
+    }
 }

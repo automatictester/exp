@@ -118,14 +118,19 @@ public class BinaryTree<T extends Comparable<T>> {
             rightLeftMostChild.left = left;
             rightLeftMostChild.right = right;
             leftMostChildParent.left = null;
-            if (parent.left != null && parent.left.equals(this)) {
+            if (parent != null && parent.left != null && parent.left.equals(this)) {
                 parent.left = rightLeftMostChild;
-            } else {
+                value = null;
+                left = null;
+                right = null;
+            } else if (parent != null && parent.right != null && parent.right.equals(this)) {
                 parent.right = rightLeftMostChild;
+                value = null;
+                left = null;
+                right = null;
+            } else if (parent == null){
+                value = rightLeftMostChild.value;
             }
-            value = null;
-            left = null;
-            right = null;
         } else if (element.compareTo(value) < 0 && left == null) {
             return;
         } else if (element.compareTo(value) < 0 && left != null) {
