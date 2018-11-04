@@ -353,4 +353,32 @@ public class BinaryTreeTest {
         List<Integer> list = Arrays.asList(5, 15, 18, 20, 21);
         assertTrue(tree.toList().equals(list));
     }
+
+    @Test
+    public void testDeleteRightNodeWithTwoLeafsAndRightLeftRightLeaf() {
+        BinaryTree<Integer> tree = new BinaryTree<>();
+        tree.insert(5);
+        tree.insert(10);
+        tree.insert(8);
+        tree.insert(15);
+        tree.insert(12);
+        tree.insert(14);
+        tree.delete(10);
+        List<Integer> list = Arrays.asList(5, 8, 12, 14, 15);
+        assertTrue(tree.toList().equals(list));
+    }
+
+    @Test
+    public void testDeleteLeftNodeWithTwoLeafsAndRightLeftRightLeaf() {
+        BinaryTree<Integer> tree = new BinaryTree<>();
+        tree.insert(20);
+        tree.insert(10);
+        tree.insert(8);
+        tree.insert(15);
+        tree.insert(12);
+        tree.insert(14);
+        tree.delete(10);
+        List<Integer> list = Arrays.asList(8, 12, 14, 15, 20);
+        assertTrue(tree.toList().equals(list));
+    }
 }
