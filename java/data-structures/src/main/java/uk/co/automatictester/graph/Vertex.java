@@ -12,4 +12,9 @@ public class Vertex<T extends Comparable<T>> implements Comparable<Vertex<T>> {
     public int compareTo(Vertex<T> other) {
         return this.value.compareTo(other.value);
     }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

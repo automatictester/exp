@@ -20,11 +20,24 @@ public class Graph<T extends Comparable<T>> {
         if (!vertices.contains(from) || !vertices.contains(to)) {
             throw new IllegalArgumentException();
         }
-        if (!edges.contains(new Edge<>(to, from))) {
+        if (!edges.contains(new Edge<>(to, from)) && !edges.contains(new Edge<>(from, to))) {
             Edge<T> edge = new Edge<>(from, to);
             return edges.add(edge);
         }
         return false;
+    }
+
+    public boolean deleteEdge(Vertex<T> from, Vertex<T> to) {
+        return edges.remove(new Edge<T>(from, to));
+    }
+
+    public boolean deleteVertex(Vertex<T> vertex) {
+        boolean vertexExists = vertices.contains(vertex);
+        if (vertexExists) {
+            vertices.remove(vertex);
+            edgesOf(vertex).forEach(v -> edges.remove(v));
+        }
+        return vertexExists;
     }
 
     public Set<Edge<T>> edgesOf(Vertex<T> vertex) {

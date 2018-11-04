@@ -2,7 +2,8 @@ package uk.co.automatictester.graph;
 
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings("SimplifiedTestNGAssertion")
 public class GraphTest {
@@ -85,5 +86,92 @@ public class GraphTest {
         assertTrue(graph.edgesOf(a).size() == 2);
         assertTrue(graph.edgesOf(b).size() == 1);
         assertTrue(graph.edgesOf(c).size() == 1);
+    }
+
+    @Test
+    public void testDeleteEdge() {
+        Graph<String> graph = new Graph<>();
+        Vertex<String> a = new Vertex<>("a");
+        Vertex<String> b = new Vertex<>("b");
+        Vertex<String> c = new Vertex<>("c");
+        Vertex<String> d = new Vertex<>("d");
+        Vertex<String> e = new Vertex<>("e");
+        Vertex<String> f = new Vertex<>("f");
+        Vertex<String> g = new Vertex<>("g");
+        Vertex<String> h = new Vertex<>("h");
+        Vertex<String> i = new Vertex<>("i");
+        graph.addVertex(a);
+        graph.addVertex(b);
+        graph.addVertex(c);
+        graph.addVertex(d);
+        graph.addVertex(e);
+        graph.addVertex(f);
+        graph.addVertex(g);
+        graph.addVertex(h);
+        graph.addVertex(i);
+        graph.addEdge(a, b);
+        graph.addEdge(c, a);
+        graph.addEdge(a, d);
+        graph.addEdge(e, a);
+        graph.addEdge(b, f);
+        graph.addEdge(d, g);
+        graph.addEdge(f, g);
+        graph.addEdge(f, h);
+        graph.addEdge(g, i);
+        graph.addEdge(e, i);
+
+        assertTrue(graph.edges.size() == 10);
+        assertTrue(graph.edgesOf(a).contains(new Edge<>(a, c)));
+
+        boolean deleted = graph.deleteEdge(a, c);
+        assertTrue(deleted);
+        deleted = graph.deleteEdge(e, a);
+        assertTrue(deleted);
+        assertTrue(graph.edges.size() == 8);
+        assertFalse(graph.edgesOf(a).contains(new Edge<>(a, c)));
+        assertFalse(graph.edgesOf(a).contains(new Edge<>(a, e)));
+    }
+
+    @Test
+    public void testDeletevertex() {
+        Graph<String> graph = new Graph<>();
+        Vertex<String> a = new Vertex<>("a");
+        Vertex<String> b = new Vertex<>("b");
+        Vertex<String> c = new Vertex<>("c");
+        Vertex<String> d = new Vertex<>("d");
+        Vertex<String> e = new Vertex<>("e");
+        Vertex<String> f = new Vertex<>("f");
+        Vertex<String> g = new Vertex<>("g");
+        Vertex<String> h = new Vertex<>("h");
+        Vertex<String> i = new Vertex<>("i");
+        graph.addVertex(a);
+        graph.addVertex(b);
+        graph.addVertex(c);
+        graph.addVertex(d);
+        graph.addVertex(e);
+        graph.addVertex(f);
+        graph.addVertex(g);
+        graph.addVertex(h);
+        graph.addVertex(i);
+        graph.addEdge(a, b);
+        graph.addEdge(c, a);
+        graph.addEdge(a, d);
+        graph.addEdge(e, a);
+        graph.addEdge(b, f);
+        graph.addEdge(d, g);
+        graph.addEdge(f, g);
+        graph.addEdge(f, h);
+        graph.addEdge(g, i);
+        graph.addEdge(e, i);
+
+        assertTrue(graph.vertices.size() == 9);
+        assertTrue(graph.edges.size() == 10);
+        assertTrue(graph.edgesOf(a).contains(new Edge<>(a, c)));
+
+        boolean deleted = graph.deleteVertex(a);
+        assertTrue(deleted);
+        assertTrue(graph.vertices.size() == 8);
+        assertTrue(graph.edges.size() == 6);
+        assertFalse(graph.edgesOf(a).contains(new Edge<>(a, c)));
     }
 }
