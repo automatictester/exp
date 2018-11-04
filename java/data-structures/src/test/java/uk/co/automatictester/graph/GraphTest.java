@@ -2,6 +2,9 @@ package uk.co.automatictester.graph;
 
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.TreeSet;
+
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -133,7 +136,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testDeletevertex() {
+    public void testDeleteVertex() {
         Graph<String> graph = new Graph<>();
         Vertex<String> a = new Vertex<>("a");
         Vertex<String> b = new Vertex<>("b");
@@ -173,5 +176,44 @@ public class GraphTest {
         assertTrue(graph.vertices.size() == 8);
         assertTrue(graph.edges.size() == 6);
         assertFalse(graph.edgesOf(a).contains(new Edge<>(a, c)));
+    }
+
+    @Test
+    public void testGetNthConnections() {
+        Graph<String> graph = new Graph<>();
+        Vertex<String> a = new Vertex<>("a");
+        Vertex<String> b = new Vertex<>("b");
+        Vertex<String> c = new Vertex<>("c");
+        Vertex<String> d = new Vertex<>("d");
+        Vertex<String> e = new Vertex<>("e");
+        Vertex<String> f = new Vertex<>("f");
+        Vertex<String> g = new Vertex<>("g");
+        Vertex<String> h = new Vertex<>("h");
+        Vertex<String> i = new Vertex<>("i");
+        graph.addVertex(a);
+        graph.addVertex(b);
+        graph.addVertex(c);
+        graph.addVertex(d);
+        graph.addVertex(e);
+        graph.addVertex(f);
+        graph.addVertex(g);
+        graph.addVertex(h);
+        graph.addVertex(i);
+        graph.addEdge(a, b);
+        graph.addEdge(c, a);
+        graph.addEdge(a, d);
+        graph.addEdge(e, a);
+        graph.addEdge(b, f);
+        graph.addEdge(d, g);
+        graph.addEdge(f, g);
+        graph.addEdge(f, h);
+        graph.addEdge(g, i);
+        graph.addEdge(e, i);
+
+        assertTrue(graph.connectionsOf(a, 1).equals(new TreeSet<>(Arrays.asList(b, c, d, e))));
+        assertTrue(graph.connectionsOf(f, 1).equals(new TreeSet<>(Arrays.asList(b, g, h))));
+        assertTrue(graph.connectionsOf(h, 2).equals(new TreeSet<>(Arrays.asList(b, f, g))));
+        assertTrue(graph.connectionsOf(a, 2).equals(new TreeSet<>(Arrays.asList(b, c, d, e, f, g, i))));
+        assertTrue(graph.connectionsOf(a, 3).equals(new TreeSet<>(Arrays.asList(b, c, d, e, f, g, h, i))));
     }
 }

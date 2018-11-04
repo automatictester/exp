@@ -2,6 +2,7 @@ package uk.co.automatictester.graph;
 
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("WeakerAccess")
 public class Graph<T extends Comparable<T>> {
@@ -38,6 +39,23 @@ public class Graph<T extends Comparable<T>> {
             edgesOf(vertex).forEach(v -> edges.remove(v));
         }
         return vertexExists;
+    }
+
+    public Set<Vertex<T>> connectionsOf(Vertex<T> vertex, int degree) {
+        Set<Vertex<T>> connections = connectionsOf(vertex);
+        if (degree > 1) {
+            for (Vertex<T> connection : connectionsOf(vertex)) {
+                connections.addAll(connectionsOf(connection, degree - 1));
+            }
+        }
+        connections.remove(vertex);
+        return connections;
+    }
+
+    public Set<Vertex<T>> connectionsOf(Vertex<T> vertex) {
+        Set<Vertex<T>> connections = edgesOf(vertex).stream().map(e -> e.from).filter(v -> !v.equals(vertex)).collect(Collectors.toSet());
+        connections.addAll(edgesOf(vertex).stream().map(e -> e.to).filter(v -> !v.equals(vertex)).collect(Collectors.toSet()));
+        return connections;
     }
 
     public Set<Edge<T>> edgesOf(Vertex<T> vertex) {

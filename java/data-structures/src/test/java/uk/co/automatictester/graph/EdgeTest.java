@@ -2,7 +2,12 @@ package uk.co.automatictester.graph;
 
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.testng.Assert.assertTrue;
 
 public class EdgeTest {
 
@@ -12,5 +17,14 @@ public class EdgeTest {
         Vertex<String> b = new Vertex<>("b");
         Edge<String> edge = new Edge<>(b, a);
         assertTrue(edge.toString().equals("(a, b)"));
+    }
+
+    @Test
+    public void testVertices() {
+        Vertex<String> a = new Vertex<>("a");
+        Vertex<String> b = new Vertex<>("b");
+        Edge<String> edge = new Edge<>(b, a);
+        Object[] expected = Stream.of(a, b).distinct().toArray();
+        assertThat(edge.vertices(), containsInAnyOrder(expected));
     }
 }
