@@ -3,6 +3,7 @@ package uk.co.automatictester.graph;
 import java.util.Set;
 import java.util.TreeSet;
 
+@SuppressWarnings("WeakerAccess")
 public class Graph<T extends Comparable<T>> {
 
     TreeSet<Vertex<T>> vertices = new TreeSet<>();

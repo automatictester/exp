@@ -2,6 +2,7 @@ package uk.co.automatictester.graph;
 
 import java.util.Comparator;
 
+@SuppressWarnings("WeakerAccess")
 public class Edge<T extends Comparable<T>> implements Comparable<Edge<T>> {
     Vertex<T> from;
     Vertex<T> to;
