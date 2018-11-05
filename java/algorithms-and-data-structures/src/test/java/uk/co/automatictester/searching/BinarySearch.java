@@ -3,7 +3,6 @@ package uk.co.automatictester.searching;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.equalTo;
