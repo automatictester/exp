@@ -3,6 +3,7 @@ package uk.co.automatictester.graph;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.TreeSet;
 
 import static org.testng.Assert.assertFalse;
@@ -190,6 +191,8 @@ public class GraphTest {
         Vertex<String> g = new Vertex<>("g");
         Vertex<String> h = new Vertex<>("h");
         Vertex<String> i = new Vertex<>("i");
+        Vertex<String> x = new Vertex<>("x");
+        Vertex<String> y = new Vertex<>("y");
         graph.addVertex(a);
         graph.addVertex(b);
         graph.addVertex(c);
@@ -199,6 +202,8 @@ public class GraphTest {
         graph.addVertex(g);
         graph.addVertex(h);
         graph.addVertex(i);
+        graph.addVertex(x);
+        graph.addVertex(y);
         graph.addEdge(a, b);
         graph.addEdge(c, a);
         graph.addEdge(a, d);
@@ -209,22 +214,20 @@ public class GraphTest {
         graph.addEdge(f, h);
         graph.addEdge(g, i);
         graph.addEdge(e, i);
+        graph.addEdge(x, y);
 
-        assertTrue(graph.connectionsOf(a, 1).size() == 4);
         assertTrue(graph.connectionsOf(a, 1).equals(new TreeSet<>(Arrays.asList(b, c, d, e))));
 
-        assertTrue(graph.connectionsOf(f, 1).size() == 3);
         assertTrue(graph.connectionsOf(f, 1).equals(new TreeSet<>(Arrays.asList(b, g, h))));
 
-        assertTrue(graph.connectionsOf(h, 2).size() == 3);
         assertTrue(graph.connectionsOf(h, 2).equals(new TreeSet<>(Arrays.asList(b, f, g))));
 
-        assertTrue(graph.connectionsOf(a, 2).size() == 7);
         assertTrue(graph.connectionsOf(a, 2).equals(new TreeSet<>(Arrays.asList(b, c, d, e, f, g, i))));
 
-        assertTrue(graph.connectionsOf(a, 3).size() == 8);
         assertTrue(graph.connectionsOf(a, 3).equals(new TreeSet<>(Arrays.asList(b, c, d, e, f, g, h, i))));
 
         assertTrue(graph.connectionsOf(i, -1).equals(new TreeSet<>(Arrays.asList(a, b, c, d, e, f, g, h))));
+
+        assertTrue(graph.connectionsOf(x, 5).equals(Collections.singleton(y)));
     }
 }

@@ -46,11 +46,18 @@ public class Graph<T extends Comparable<T>> {
         if (degree == ALL_CONECTIONS) {
             degree = vertices.size() - 1;
         }
-        Set<Vertex<T>> connections = connectionsOf(vertex);
-        if (degree > 1) {
-            for (Vertex<T> connection : connectionsOf(vertex)) {
-                connections.addAll(connectionsOf(connection, degree - 1));
+        Set<Vertex<T>> connections = new TreeSet<>();
+        connections.add(vertex);
+
+        for (int i = 0; i < degree; i++) {
+            int connectionsBefore = connections.size();
+            Set<Vertex<T>> nextDegreeConnections = new TreeSet<>();
+            for (Vertex<T> connection : connections) {
+                nextDegreeConnections.addAll(connectionsOf(connection));
             }
+            connections.addAll(nextDegreeConnections);
+            int connectionsAfter = connections.size();
+            if (connectionsAfter == connectionsBefore) break;
         }
         connections.remove(vertex);
         return connections;
