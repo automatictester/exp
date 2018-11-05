@@ -1,11 +1,12 @@
 package uk.co.automatictester.graph;
 
+import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @SuppressWarnings("WeakerAccess")
-public class DirectedEdge<T extends Comparable<T>> {
+public class DirectedEdge<T extends Comparable<T>> implements Comparable<DirectedEdge<T>> {
     Vertex<T> from;
     Vertex<T> to;
     int weight;
@@ -17,6 +18,13 @@ public class DirectedEdge<T extends Comparable<T>> {
         this.from = from;
         this.to = to;
         this.weight = weight;
+    }
+
+    public int compareTo(DirectedEdge<T> other) {
+        return Comparator.comparing((DirectedEdge<T> edge) -> edge.from)
+                .thenComparing((DirectedEdge<T> edge) -> edge.to)
+                .thenComparing((DirectedEdge<T> edge) -> edge.weight)
+                .compare(this, other);
     }
 
     public Set<Vertex<T>> vertices() {
