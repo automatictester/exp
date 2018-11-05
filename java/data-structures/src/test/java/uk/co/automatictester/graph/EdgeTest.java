@@ -2,7 +2,6 @@ package uk.co.automatictester.graph;
 
 import org.testng.annotations.Test;
 
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,5 +25,11 @@ public class EdgeTest {
         Edge<String> edge = new Edge<>(b, a);
         Object[] expected = Stream.of(a, b).distinct().toArray();
         assertThat(edge.vertices(), containsInAnyOrder(expected));
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testSameToFrom() {
+        Vertex<String> a = new Vertex<>("a");
+        new Edge<>(a, a);
     }
 }

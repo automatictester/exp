@@ -13,6 +13,9 @@ public class Edge<T extends Comparable<T>> implements Comparable<Edge<T>> {
     Vertex<T> to;
 
     public Edge(Vertex<T> from, Vertex<T> to) {
+        if (from.equals(to)) {
+            throw new IllegalArgumentException();
+        }
         if (from.compareTo(to) < 0) {
             this.from = from;
             this.to = to;

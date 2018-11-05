@@ -32,14 +32,6 @@ public class GraphTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testAddEdgeExSame() {
-        Graph<String> graph = new Graph<>();
-        Vertex<String> a = new Vertex<>("a");
-
-        graph.addEdge(a, a);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testAddEdgeExNoSuchFrom() {
         Graph<String> graph = new Graph<>();
         Vertex<String> a = new Vertex<>("a");

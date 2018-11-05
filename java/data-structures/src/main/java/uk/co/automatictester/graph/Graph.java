@@ -16,9 +16,6 @@ public class Graph<T extends Comparable<T>> {
     }
 
     public boolean addEdge(Vertex<T> from, Vertex<T> to) {
-        if (from.equals(to)) {
-            throw new IllegalArgumentException();
-        }
         if (!vertices.contains(from) || !vertices.contains(to)) {
             throw new IllegalArgumentException();
         }
