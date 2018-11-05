@@ -20,6 +20,11 @@ public class DirectedWeightedEdge<T extends Comparable<T>> implements Comparable
         this.weight = weight;
     }
 
+    public Set<Vertex<T>> vertices() {
+        return Stream.of(to, from).collect(Collectors.toSet());
+    }
+
+    @Override
     public int compareTo(DirectedWeightedEdge<T> other) {
         return Comparator.comparing((DirectedWeightedEdge<T> edge) -> edge.from)
                 .thenComparing((DirectedWeightedEdge<T> edge) -> edge.to)
@@ -27,8 +32,20 @@ public class DirectedWeightedEdge<T extends Comparable<T>> implements Comparable
                 .compare(this, other);
     }
 
-    public Set<Vertex<T>> vertices() {
-        return Stream.of(to, from).collect(Collectors.toSet());
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof DirectedWeightedEdge) {
+            DirectedWeightedEdge other = ((DirectedWeightedEdge) o);
+            return from.equals(other.from)
+                    && to.equals(other.to)
+                    && weight == other.weight;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return from.hashCode() + to.hashCode() + weight;
     }
 
     @Override

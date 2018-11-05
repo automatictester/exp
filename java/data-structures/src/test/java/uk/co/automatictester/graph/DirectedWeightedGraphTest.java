@@ -3,6 +3,7 @@ package uk.co.automatictester.graph;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.Set;
 import java.util.TreeSet;
 
 import static org.testng.Assert.assertFalse;
@@ -229,5 +230,41 @@ public class DirectedWeightedGraphTest {
         assertTrue(graph.connectionsOf(c, 3).equals(new TreeSet<>(Arrays.asList(b, d, e))));
         assertTrue(graph.connectionsOf(d, -1).equals(new TreeSet<>(Arrays.asList(b, c, e))));
         assertTrue(graph.connectionsOf(e, 10).equals(new TreeSet<>(Arrays.asList(b, c, d))));
+    }
+
+    @Test
+    public void testCheapestEdgeToUnvisitedConnection() {
+        DirectedWeightedGraph<String> graph = new DirectedWeightedGraph<>();
+        Vertex<String> a = new Vertex<>("a");
+        Vertex<String> b = new Vertex<>("b");
+        Vertex<String> c = new Vertex<>("c");
+        Vertex<String> d = new Vertex<>("d");
+        Vertex<String> e = new Vertex<>("e");
+        graph.addVertex(a);
+        graph.addVertex(b);
+        graph.addVertex(c);
+        graph.addVertex(d);
+        graph.addVertex(e);
+        graph.addEdge(a, b, 100);
+        graph.addEdge(a, d, 160);
+        graph.addEdge(b, c, 120);
+        graph.addEdge(b, d, 180);
+        graph.addEdge(c, e, 80);
+        graph.addEdge(d, c, 40);
+        graph.addEdge(d, e, 140);
+        graph.addEdge(e, b, 100);
+
+        Set<Vertex<String>> visitedConnections = new TreeSet<>();
+
+        DirectedWeightedEdge<String> expected = new DirectedWeightedEdge<>(d, c, 40);
+        assertTrue(graph.cheapestEdgeToUnvisitedConnection(d, visitedConnections).equals(expected));
+
+        visitedConnections.add(c);
+        expected = new DirectedWeightedEdge<>(d, e, 140);
+        assertTrue(graph.cheapestEdgeToUnvisitedConnection(d, visitedConnections).equals(expected));
+
+        visitedConnections.add(b);
+        expected = new DirectedWeightedEdge<>(a, d, 160);
+        assertTrue(graph.cheapestEdgeToUnvisitedConnection(a, visitedConnections).equals(expected));
     }
 }

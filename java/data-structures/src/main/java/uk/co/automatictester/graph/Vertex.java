@@ -14,6 +14,20 @@ public class Vertex<T extends Comparable<T>> implements Comparable<Vertex<T>> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o instanceof Vertex) {
+            Vertex other = (Vertex) o;
+            return value.equals(other.value);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
     public String toString() {
         return value.toString();
     }
