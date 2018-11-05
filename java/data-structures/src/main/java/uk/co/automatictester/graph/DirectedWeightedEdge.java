@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @SuppressWarnings("WeakerAccess")
-public class DirectedEdge<T extends Comparable<T>> implements Comparable<DirectedEdge<T>> {
+public class DirectedWeightedEdge<T extends Comparable<T>> implements Comparable<DirectedWeightedEdge<T>> {
     Vertex<T> from;
     Vertex<T> to;
     int weight;
 
-    public DirectedEdge(Vertex<T> from, Vertex<T> to, int weight) {
+    public DirectedWeightedEdge(Vertex<T> from, Vertex<T> to, int weight) {
         if (from.equals(to)) {
             throw new IllegalArgumentException();
         }
@@ -20,10 +20,10 @@ public class DirectedEdge<T extends Comparable<T>> implements Comparable<Directe
         this.weight = weight;
     }
 
-    public int compareTo(DirectedEdge<T> other) {
-        return Comparator.comparing((DirectedEdge<T> edge) -> edge.from)
-                .thenComparing((DirectedEdge<T> edge) -> edge.to)
-                .thenComparing((DirectedEdge<T> edge) -> edge.weight)
+    public int compareTo(DirectedWeightedEdge<T> other) {
+        return Comparator.comparing((DirectedWeightedEdge<T> edge) -> edge.from)
+                .thenComparing((DirectedWeightedEdge<T> edge) -> edge.to)
+                .thenComparing((DirectedWeightedEdge<T> edge) -> edge.weight)
                 .compare(this, other);
     }
 

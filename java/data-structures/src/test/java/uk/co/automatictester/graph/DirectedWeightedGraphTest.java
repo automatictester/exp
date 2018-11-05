@@ -3,7 +3,6 @@ package uk.co.automatictester.graph;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.TreeSet;
 
 import static org.testng.Assert.assertFalse;
@@ -111,7 +110,7 @@ public class DirectedWeightedGraphTest {
         graph.addEdge(e, b, 100);
 
         assertTrue(graph.edges.size() == 8);
-        assertTrue(graph.edges.contains(new DirectedEdge<>(a, b, 100)));
+        assertTrue(graph.edges.contains(new DirectedWeightedEdge<>(a, b, 100)));
 
         boolean deleted = graph.deleteEdge(a, b, 100);
         assertTrue(deleted);
@@ -120,8 +119,8 @@ public class DirectedWeightedGraphTest {
         assertFalse(deleted);
 
         assertTrue(graph.edges.size() == 7);
-        assertFalse(graph.edges.contains(new DirectedEdge<>(a, b, 100)));
-        assertTrue(graph.edges.contains(new DirectedEdge<>(b, c, 120)));
+        assertFalse(graph.edges.contains(new DirectedWeightedEdge<>(a, b, 100)));
+        assertTrue(graph.edges.contains(new DirectedWeightedEdge<>(b, c, 120)));
     }
 
     @Test
@@ -148,13 +147,13 @@ public class DirectedWeightedGraphTest {
 
         assertTrue(graph.vertices.size() == 5);
         assertTrue(graph.edges.size() == 8);
-        assertTrue(graph.edges.contains(new DirectedEdge<>(c, e, 80)));
+        assertTrue(graph.edges.contains(new DirectedWeightedEdge<>(c, e, 80)));
 
         boolean deleted = graph.deleteVertex(c);
         assertTrue(deleted);
         assertTrue(graph.vertices.size() == 4);
         assertTrue(graph.edges.size() == 5);
-        assertFalse(graph.edges.contains(new DirectedEdge<>(c, e, 80)));
+        assertFalse(graph.edges.contains(new DirectedWeightedEdge<>(c, e, 80)));
     }
 
     @Test

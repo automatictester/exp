@@ -9,7 +9,7 @@ public class DirectedWeightedGraph<T extends Comparable<T>> {
 
     private static final int ALL_CONECTIONS = -1;
     TreeSet<Vertex<T>> vertices = new TreeSet<>();
-    TreeSet<DirectedEdge<T>> edges = new TreeSet<>();
+    TreeSet<DirectedWeightedEdge<T>> edges = new TreeSet<>();
 
     public boolean addVertex(Vertex<T> vertex) {
         return vertices.add(vertex);
@@ -19,12 +19,12 @@ public class DirectedWeightedGraph<T extends Comparable<T>> {
         if (!vertices.contains(from) || !vertices.contains(to)) {
             throw new IllegalArgumentException();
         }
-        DirectedEdge<T> edge = new DirectedEdge<>(from, to, weight);
+        DirectedWeightedEdge<T> edge = new DirectedWeightedEdge<>(from, to, weight);
         return edges.add(edge);
     }
 
     public boolean deleteEdge(Vertex<T> from, Vertex<T> to, int weight) {
-        return edges.remove(new DirectedEdge<T>(from, to, weight));
+        return edges.remove(new DirectedWeightedEdge<T>(from, to, weight));
     }
 
     public boolean deleteVertex(Vertex<T> vertex) {
@@ -64,9 +64,9 @@ public class DirectedWeightedGraph<T extends Comparable<T>> {
                 .collect(Collectors.toSet());
     }
 
-    public Set<DirectedEdge<T>> edgesOf(Vertex<T> vertex) {
-        Set<DirectedEdge<T>> edgesOfVertex = new TreeSet<>();
-        for (DirectedEdge<T> edge : edges) {
+    public Set<DirectedWeightedEdge<T>> edgesOf(Vertex<T> vertex) {
+        Set<DirectedWeightedEdge<T>> edgesOfVertex = new TreeSet<>();
+        for (DirectedWeightedEdge<T> edge : edges) {
             if (edge.from.equals(vertex)) {
                 edgesOfVertex.add(edge);
             }

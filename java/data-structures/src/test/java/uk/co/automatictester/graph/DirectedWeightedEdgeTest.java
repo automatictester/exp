@@ -8,13 +8,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.testng.Assert.assertTrue;
 
-public class DirectedEdgeTest {
+public class DirectedWeightedEdgeTest {
 
     @Test
     public void testNoNormalization() {
         Vertex<String> a = new Vertex<>("a");
         Vertex<String> b = new Vertex<>("b");
-        DirectedEdge<String> edge = new DirectedEdge<>(b, a, 10);
+        DirectedWeightedEdge<String> edge = new DirectedWeightedEdge<>(b, a, 10);
         assertTrue(edge.toString().equals("(b, a, 10)"));
     }
 
@@ -22,7 +22,7 @@ public class DirectedEdgeTest {
     public void testVertices() {
         Vertex<String> a = new Vertex<>("a");
         Vertex<String> b = new Vertex<>("b");
-        DirectedEdge<String> edge = new DirectedEdge<>(b, a, 10);
+        DirectedWeightedEdge<String> edge = new DirectedWeightedEdge<>(b, a, 10);
         Object[] expected = Stream.of(a, b).distinct().toArray();
         assertThat(edge.vertices(), containsInAnyOrder(expected));
     }
@@ -30,6 +30,6 @@ public class DirectedEdgeTest {
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSameToFrom() {
         Vertex<String> a = new Vertex<>("a");
-        new DirectedEdge<>(a, a, 10);
+        new DirectedWeightedEdge<>(a, a, 10);
     }
 }
