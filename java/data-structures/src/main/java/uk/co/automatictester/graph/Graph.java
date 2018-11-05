@@ -57,8 +57,18 @@ public class Graph<T extends Comparable<T>> {
     }
 
     public Set<Vertex<T>> connectionsOf(Vertex<T> vertex) {
-        Set<Vertex<T>> connections = edgesOf(vertex).stream().map(e -> e.from).filter(v -> !v.equals(vertex)).collect(Collectors.toSet());
-        connections.addAll(edgesOf(vertex).stream().map(e -> e.to).filter(v -> !v.equals(vertex)).collect(Collectors.toSet()));
+
+        Set<Vertex<T>> connections = edgesOf(vertex).stream()
+                .map(e -> e.from)
+                .filter(v -> !v.equals(vertex))
+                .collect(Collectors.toSet());
+
+        connections.addAll(edgesOf(vertex).stream()
+                .map(e -> e.to)
+                .filter(v -> !v.equals(vertex))
+                .collect(Collectors.toSet())
+        );
+
         return connections;
     }
 
