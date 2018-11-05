@@ -76,4 +76,13 @@ public class DirectedWeightedGraph<T extends Comparable<T>> {
         }
         return edgesOfVertex;
     }
+    public Set<DirectedWeightedEdge<T>> edgesFrom(Vertex<T> vertex) {
+        Set<DirectedWeightedEdge<T>> edgesOfVertex = new TreeSet<>();
+        for (DirectedWeightedEdge<T> edge : edges) {
+            if (edge.from.equals(vertex)) {
+                edgesOfVertex.add(edge);
+            }
+        }
+        return edgesOfVertex;
+    }
 }

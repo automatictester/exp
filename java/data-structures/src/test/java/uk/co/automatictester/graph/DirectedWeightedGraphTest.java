@@ -88,6 +88,26 @@ public class DirectedWeightedGraphTest {
     }
 
     @Test
+    public void testEdgesFrom() {
+        DirectedWeightedGraph<String> graph = new DirectedWeightedGraph<>();
+        Vertex<String> a = new Vertex<>("a");
+        Vertex<String> b = new Vertex<>("b");
+        Vertex<String> c = new Vertex<>("c");
+        graph.addVertex(a);
+        graph.addVertex(b);
+        graph.addVertex(c);
+
+        assertTrue(graph.edgesFrom(a).size() == 0);
+
+        graph.addEdge(a, b, 10);
+        graph.addEdge(a, c, 10);
+        graph.addEdge(b, c, 10);
+        assertTrue(graph.edgesFrom(a).size() == 2);
+        assertTrue(graph.edgesFrom(b).size() == 1);
+        assertTrue(graph.edgesFrom(c).size() == 0);
+    }
+
+    @Test
     public void testDeleteEdge() {
         DirectedWeightedGraph<String> graph = new DirectedWeightedGraph<>();
         Vertex<String> a = new Vertex<>("a");
@@ -157,7 +177,33 @@ public class DirectedWeightedGraphTest {
     }
 
     @Test
-    public void testGetNthConnections() {
+    public void testConnectionsOf() {
+        DirectedWeightedGraph<String> graph = new DirectedWeightedGraph<>();
+        Vertex<String> a = new Vertex<>("a");
+        Vertex<String> b = new Vertex<>("b");
+        Vertex<String> c = new Vertex<>("c");
+        Vertex<String> d = new Vertex<>("d");
+        Vertex<String> e = new Vertex<>("e");
+        graph.addVertex(a);
+        graph.addVertex(b);
+        graph.addVertex(c);
+        graph.addVertex(d);
+        graph.addVertex(e);
+        graph.addEdge(a, b, 100);
+        graph.addEdge(a, d, 160);
+        graph.addEdge(b, c, 120);
+        graph.addEdge(b, d, 180);
+        graph.addEdge(c, e, 80);
+        graph.addEdge(d, c, 40);
+        graph.addEdge(d, e, 140);
+        graph.addEdge(e, b, 100);
+
+        assertTrue(graph.connectionsOf(a).equals(new TreeSet<>(Arrays.asList(b, d))));
+        assertTrue(graph.connectionsOf(b).equals(new TreeSet<>(Arrays.asList(c, d))));
+    }
+
+    @Test
+    public void testNthConnectionsOf() {
         DirectedWeightedGraph<String> graph = new DirectedWeightedGraph<>();
         Vertex<String> a = new Vertex<>("a");
         Vertex<String> b = new Vertex<>("b");
