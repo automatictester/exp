@@ -266,5 +266,8 @@ public class DirectedWeightedGraphTest {
         visitedConnections.add(b);
         expected = new DirectedWeightedEdge<>(a, d, 160);
         assertTrue(graph.cheapestEdgeToUnvisitedConnection(a, visitedConnections).equals(expected));
+
+        visitedConnections.add(d);
+        assertTrue(graph.cheapestEdgeToUnvisitedConnection(a, visitedConnections) == null);
     }
 }
