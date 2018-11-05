@@ -8,8 +8,8 @@ import java.util.stream.Stream;
 @SuppressWarnings("WeakerAccess")
 public class DirectedWeightedEdge<T extends Comparable<T>> implements Comparable<DirectedWeightedEdge<T>> {
     Vertex<T> from;
-    Vertex<T> to;
-    int weight;
+    public Vertex<T> to;
+    public int weight;
 
     public DirectedWeightedEdge(Vertex<T> from, Vertex<T> to, int weight) {
         if (from.equals(to)) {
