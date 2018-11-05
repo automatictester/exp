@@ -1,5 +1,7 @@
 package uk.co.automatictester.graph;
 
+import java.util.Comparator;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -24,7 +26,7 @@ public class DirectedWeightedGraph<T extends Comparable<T>> {
     }
 
     public boolean deleteEdge(Vertex<T> from, Vertex<T> to, int weight) {
-        return edges.remove(new DirectedWeightedEdge<T>(from, to, weight));
+        return edges.remove(new DirectedWeightedEdge<>(from, to, weight));
     }
 
     public boolean deleteVertex(Vertex<T> vertex) {
@@ -76,7 +78,7 @@ public class DirectedWeightedGraph<T extends Comparable<T>> {
         }
         return edgesOfVertex;
     }
-    
+
     public Set<DirectedWeightedEdge<T>> edgesFrom(Vertex<T> vertex) {
         Set<DirectedWeightedEdge<T>> edgesFromVertex = new TreeSet<>();
         for (DirectedWeightedEdge<T> edge : edges) {
@@ -85,5 +87,19 @@ public class DirectedWeightedGraph<T extends Comparable<T>> {
             }
         }
         return edgesFromVertex;
+    }
+
+    public DirectedWeightedEdge<T> cheapestEdgeToUnvisitedConnection(Vertex<T> from, Set<Vertex<T>> visitedConnections) {
+        Set<DirectedWeightedEdge<T>> edgesFrom = edgesFrom(from);
+        Set<DirectedWeightedEdge<T>> edgesToUnvisitedConnections = edgesFrom.stream()
+                .filter(e -> !visitedConnections.contains(e.to))
+                .collect(Collectors.toSet());
+        if (edgesToUnvisitedConnections.size() == 0) {
+            return null;
+        } else {
+            Comparator<DirectedWeightedEdge> comp = Comparator.comparingInt((DirectedWeightedEdge e) -> e.weight);
+            Optional<DirectedWeightedEdge<T>> edge = edgesToUnvisitedConnections.stream().min(comp);
+            return edge.get();
+        }
     }
 }
