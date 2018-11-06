@@ -59,10 +59,10 @@ public class Destinations<T extends Comparable<T>> {
             Vertex<T> to = edge.to;
             DestinationDetails details;
             if (!destinations.containsKey(to)) {
-                details = new DestinationDetails<>(edge.weight + cost);
+                details = new DestinationDetails(edge.weight + cost);
                 destinations.put(to, details);
             } else if (destinations.containsKey(to) && edge.weight + cost < destinations.get(to).cost) {
-                details = new DestinationDetails<>(edge.weight + cost);
+                details = new DestinationDetails(edge.weight + cost);
                 destinations.put(to, details);
             }
         }

@@ -22,7 +22,7 @@ public class DijkstraSolver<T extends Comparable<T>> {
     public Map<Vertex<T>, DestinationDetails> go() {
         Vertex<T> currentVertex = entry;
         int cost = 0;
-        DestinationDetails<T> details = new DestinationDetails<>(cost, true);
+        DestinationDetails details = new DestinationDetails(cost, true);
         destinations.add(currentVertex, details);
         Set<DirectedWeightedEdge<T>> edgesFrom;
 

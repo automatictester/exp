@@ -1,6 +1,6 @@
 package uk.co.automatictester.dijkstra;
 
-public class DestinationDetails<T extends Comparable<T>> {
+public class DestinationDetails {
     int cost;
     boolean visited = false;
 
