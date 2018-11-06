@@ -88,18 +88,4 @@ public class DirectedWeightedGraph<T extends Comparable<T>> {
         }
         return edgesFromVertex;
     }
-
-    public DirectedWeightedEdge<T> cheapestEdgeToUnvisitedConnection(Vertex<T> from, Set<Vertex<T>> visitedConnections) {
-        Set<DirectedWeightedEdge<T>> edgesFrom = edgesFrom(from);
-        Set<DirectedWeightedEdge<T>> edgesToUnvisitedConnections = edgesFrom.stream()
-                .filter(e -> !visitedConnections.contains(e.to))
-                .collect(Collectors.toSet());
-        if (edgesToUnvisitedConnections.size() == 0) {
-            return null;
-        } else {
-            Comparator<DirectedWeightedEdge> comp = Comparator.comparingInt((DirectedWeightedEdge e) -> e.weight);
-            Optional<DirectedWeightedEdge<T>> edge = edgesToUnvisitedConnections.stream().min(comp);
-            return edge.get();
-        }
-    }
 }
