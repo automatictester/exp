@@ -1,4 +1,4 @@
-package uk.co.automatictester.state;
+package uk.co.automatictester.behavioral.state;
 
 public interface LockableMapState<K, V> {
     void put(K key, V value);

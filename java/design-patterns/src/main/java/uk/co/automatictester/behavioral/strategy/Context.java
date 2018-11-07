@@ -1,4 +1,4 @@
-package uk.co.automatictester.strategy;
+package uk.co.automatictester.behavioral.strategy;
 
 public class Context {
 

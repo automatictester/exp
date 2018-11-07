@@ -1,4 +1,4 @@
-package uk.co.automatictester.state;
+package uk.co.automatictester.behavioral.state;
 
 import org.testng.annotations.Test;
 

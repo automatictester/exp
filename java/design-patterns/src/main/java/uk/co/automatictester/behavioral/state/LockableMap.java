@@ -1,4 +1,4 @@
-package uk.co.automatictester.state;
+package uk.co.automatictester.behavioral.state;
 
 import java.util.HashMap;
 import java.util.Map;
