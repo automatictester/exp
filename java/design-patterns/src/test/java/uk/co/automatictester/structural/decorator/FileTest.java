@@ -1,10 +1,10 @@
-package uk.co.automatictester.decorator;
+package uk.co.automatictester.structural.decorator;
 
 import org.testng.annotations.Test;
-import uk.co.automatictester.decorator.components.File;
-import uk.co.automatictester.decorator.components.SimpleFile;
-import uk.co.automatictester.decorator.decorators.ReadableFile;
-import uk.co.automatictester.decorator.decorators.WritableFile;
+import uk.co.automatictester.structural.decorator.components.File;
+import uk.co.automatictester.structural.decorator.components.SimpleFile;
+import uk.co.automatictester.structural.decorator.decorators.ReadableFile;
+import uk.co.automatictester.structural.decorator.decorators.WritableFile;
 
 import static org.testng.Assert.assertEquals;
 

@@ -1,4 +1,4 @@
-package uk.co.automatictester.decorator.components;
+package uk.co.automatictester.structural.decorator.components;
 
 public class SimpleFile implements File {
 
