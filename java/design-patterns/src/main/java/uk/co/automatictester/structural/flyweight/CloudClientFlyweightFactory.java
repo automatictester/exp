@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("WeakerAccess")
-public class CloudClientFactory {
+public class CloudClientFlyweightFactory {
 
     private static Map<String, CloudClient> cloudClientStore = new HashMap<>();
 
-    private CloudClientFactory() {
+    private CloudClientFlyweightFactory() {
     }
 
     public static CloudClient getInstance(String region) {
