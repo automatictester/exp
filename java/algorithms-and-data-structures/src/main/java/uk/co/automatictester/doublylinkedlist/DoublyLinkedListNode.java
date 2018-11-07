@@ -23,6 +23,7 @@ public class DoublyLinkedListNode<T> extends LinkedListNode<T> {
         next = node;
     }
 
+    @Override
     public DoublyLinkedListNode<T> getNext() {
         return next;
     }
@@ -32,8 +33,9 @@ public class DoublyLinkedListNode<T> extends LinkedListNode<T> {
         if (o instanceof DoublyLinkedListNode) {
             if (o == this) {
                 return true;
-            } else if (this.value == ((DoublyLinkedListNode) o).value) {
-                return true;
+            } else {
+                DoublyLinkedListNode other = (DoublyLinkedListNode) o;
+                return value.equals(other.value);
             }
         }
         return false;

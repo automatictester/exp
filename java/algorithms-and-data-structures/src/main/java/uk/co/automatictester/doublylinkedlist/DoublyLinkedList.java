@@ -2,12 +2,12 @@ package uk.co.automatictester.doublylinkedlist;
 
 import uk.co.automatictester.linkedlist.LinkedList;
 
-@SuppressWarnings("WeakerAccess")
 public class DoublyLinkedList<T> extends LinkedList<T> {
 
     private DoublyLinkedListNode<T> first;
     private DoublyLinkedListNode<T> last;
 
+    @Override
     public void add(T value) {
         DoublyLinkedListNode<T> newNode = newNode(value);
         if (first == null) {
@@ -21,6 +21,7 @@ public class DoublyLinkedList<T> extends LinkedList<T> {
         size++;
     }
 
+    @Override
     public void addFirst(T value) {
         DoublyLinkedListNode<T> newNode = newNode(value);
         if (first == null) {
@@ -34,6 +35,7 @@ public class DoublyLinkedList<T> extends LinkedList<T> {
         size++;
     }
 
+    @Override
     public void add(int index, T value) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
@@ -58,6 +60,7 @@ public class DoublyLinkedList<T> extends LinkedList<T> {
         size++;
     }
 
+    @Override
     public void delete(int index) {
         assertIndex(index);
         if (index == 0 && size == 1) {
@@ -90,10 +93,12 @@ public class DoublyLinkedList<T> extends LinkedList<T> {
         size--;
     }
 
+    @Override
     public T get(int index) {
         return getNode(index).getValue();
     }
 
+    @Override
     public int search(T value) {
         for (int i = 0; i < size; i++) {
             if (get(i).equals(value)) {
@@ -103,6 +108,7 @@ public class DoublyLinkedList<T> extends LinkedList<T> {
         return -1;
     }
 
+    @Override
     public String toString() {
         String text = "DoublyLinkedList: ";
         if (size == 0) {

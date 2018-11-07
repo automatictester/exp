@@ -26,8 +26,9 @@ public class LinkedListNode<T> {
         if (o instanceof LinkedListNode) {
             if (o == this) {
                 return true;
-            } else if (this.value == ((LinkedListNode) o).value) {
-                return true;
+            } else {
+                LinkedListNode other = (LinkedListNode) o;
+                return value.equals(other.value);
             }
         }
         return false;

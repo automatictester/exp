@@ -1,10 +1,10 @@
-package uk.co.automatictester.linkedlist;
+package uk.co.automatictester.linkedlist.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.linkedlist.LinkedList;
 
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
 
-@SuppressWarnings("SimplifiedTestNGAssertion")
 public class LinkedListTest {
 
     @Test
@@ -15,10 +15,10 @@ public class LinkedListTest {
         list.add(2);
         list.add(3);
 
-        assertTrue(list.size() == 3);
-        assertTrue(list.get(0) == 1);
-        assertTrue(list.get(1) == 2);
-        assertTrue(list.get(2) == 3);
+        assertEquals(list.size(), 3);
+        assertEquals((int) list.get(0), 1);
+        assertEquals((int) list.get(1), 2);
+        assertEquals((int) list.get(2), 3);
     }
 
     @Test
@@ -26,13 +26,13 @@ public class LinkedListTest {
         LinkedList<Integer> list = new LinkedList<>();
 
         list.addFirst(2);
-        assertTrue(list.size() == 1);
-        assertTrue(list.get(0) == 2);
+        assertEquals(list.size(), 1);
+        assertEquals((int) list.get(0), 2);
 
         list.addFirst(1);
-        assertTrue(list.size() == 2);
-        assertTrue(list.get(0) == 1);
-        assertTrue(list.get(1) == 2);
+        assertEquals(list.size(), 2);
+        assertEquals((int) list.get(0), 1);
+        assertEquals((int) list.get(1), 2);
     }
 
     @Test
@@ -40,19 +40,19 @@ public class LinkedListTest {
         LinkedList<Integer> list = new LinkedList<>();
 
         list.add(0, 1);
-        assertTrue(list.size() == 1);
-        assertTrue(list.get(0) == 1);
+        assertEquals(list.size(), 1);
+        assertEquals((int) list.get(0), 1);
 
         list.add(1, 2);
-        assertTrue(list.size() == 2);
-        assertTrue(list.get(0) == 1);
-        assertTrue(list.get(1) == 2);
+        assertEquals(list.size(), 2);
+        assertEquals((int) list.get(0), 1);
+        assertEquals((int) list.get(1), 2);
 
         list.add(1, 30);
-        assertTrue(list.size() == 3);
-        assertTrue(list.get(0) == 1);
-        assertTrue(list.get(1) == 30);
-        assertTrue(list.get(2) == 2);
+        assertEquals(list.size(), 3);
+        assertEquals((int) list.get(0), 1);
+        assertEquals((int) list.get(1), 30);
+        assertEquals((int) list.get(2), 2);
     }
 
     @Test(expectedExceptions = IndexOutOfBoundsException.class)
@@ -76,25 +76,25 @@ public class LinkedListTest {
         list.add(3);
         list.add(4);
         list.add(5);
-        assertTrue(list.size() == 5);
+        assertEquals(list.size(), 5);
 
         list.delete(0);
-        assertTrue(list.size() == 4);
-        assertTrue(list.get(0) == 2);
-        assertTrue(list.get(1) == 3);
-        assertTrue(list.get(2) == 4);
-        assertTrue(list.get(3) == 5);
+        assertEquals(list.size(), 4);
+        assertEquals((int) list.get(0), 2);
+        assertEquals((int) list.get(1), 3);
+        assertEquals((int) list.get(2), 4);
+        assertEquals((int) list.get(3), 5);
 
         list.delete(3);
-        assertTrue(list.size() == 3);
-        assertTrue(list.get(0) == 2);
-        assertTrue(list.get(1) == 3);
-        assertTrue(list.get(2) == 4);
+        assertEquals(list.size(), 3);
+        assertEquals((int) list.get(0), 2);
+        assertEquals((int) list.get(1), 3);
+        assertEquals((int) list.get(2), 4);
 
         list.delete(1);
-        assertTrue(list.size() == 2);
-        assertTrue(list.get(0) == 2);
-        assertTrue(list.get(1) == 4);
+        assertEquals(list.size(), 2);
+        assertEquals((int) list.get(0), 2);
+        assertEquals((int) list.get(1), 4);
     }
 
     @Test(expectedExceptions = IndexOutOfBoundsException.class)
@@ -119,22 +119,22 @@ public class LinkedListTest {
         list.add(4);
         list.add(5);
 
-        assertTrue(list.search(0) == -1);
-        assertTrue(list.search(1) == 0);
-        assertTrue(list.search(5) == 4);
-        assertTrue(list.search(6) == -1);
+        assertEquals(list.search(0), -1);
+        assertEquals(list.search(1), 0);
+        assertEquals(list.search(5), 4);
+        assertEquals(list.search(6), -1);
     }
 
     @Test
     public void testToString() {
         LinkedList<Integer> list = new LinkedList<>();
-        assertTrue(list.toString().equals("LinkedList: Empty"));
+        assertEquals(list.toString(), "LinkedList: Empty");
 
         list.add(1);
         list.add(2);
         list.add(3);
         list.add(4);
         list.add(5);
-        assertTrue(list.toString().equals("LinkedList: 1, 2, 3, 4, 5"));
+        assertEquals(list.toString(), ("LinkedList: 1, 2, 3, 4, 5"));
     }
 }

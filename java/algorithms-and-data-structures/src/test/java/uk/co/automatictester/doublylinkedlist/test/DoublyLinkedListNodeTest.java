@@ -1,6 +1,7 @@
-package uk.co.automatictester.doublylinkedlist;
+package uk.co.automatictester.doublylinkedlist.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.doublylinkedlist.DoublyLinkedListNode;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -10,7 +11,7 @@ public class DoublyLinkedListNodeTest {
     @Test
     public void testValue() {
         DoublyLinkedListNode<Integer> node = new DoublyLinkedListNode<>(2);
-        assertTrue(node.getValue() == 2);
+        assertEquals((int) node.getValue(), 2);
     }
 
     @Test

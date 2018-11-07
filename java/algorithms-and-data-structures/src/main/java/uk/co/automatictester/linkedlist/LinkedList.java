@@ -1,6 +1,5 @@
 package uk.co.automatictester.linkedlist;
 
-@SuppressWarnings("WeakerAccess")
 public class LinkedList<T> {
 
     protected int size = 0;
