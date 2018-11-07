@@ -1,4 +1,4 @@
-package uk.co.automatictester.singleton;
+package uk.co.automatictester.creational.singleton;
 
 public class StaticSingleton {
 
