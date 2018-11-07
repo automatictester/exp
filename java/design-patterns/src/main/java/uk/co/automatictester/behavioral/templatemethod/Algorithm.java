@@ -1,5 +1,6 @@
 package uk.co.automatictester.behavioral.templatemethod;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class Algorithm {
 
     protected int i;

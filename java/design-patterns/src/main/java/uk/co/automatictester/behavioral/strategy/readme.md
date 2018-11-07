@@ -1,4 +1,4 @@
 ##### Participants:
 - Context (Context class)
 - Strategy (IntArraySortStrategy interface)
-- Concrete strategy (IntArrayBubbleSortStrategy class)
+- Concrete Strategy (IntArrayBubbleSortStrategy class)

@@ -1,6 +1,6 @@
 ##### Participants
 
 - Component (File interface)
-- Concrete component (SimpleFile class)
-- Decorator (Usable file abstract class)
-- Concrete decorator (ReadableFile, WritableFile classes)
+- Concrete Component (SimpleFile class)
+- Decorator (UsableFile abstract class)
+- Concrete Decorator (ReadableFile, WritableFile classes)
