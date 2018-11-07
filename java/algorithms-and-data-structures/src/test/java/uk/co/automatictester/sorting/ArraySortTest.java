@@ -9,7 +9,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-public class SortingArrays {
+public class ArraySortTest {
 
     @Test(dataProvider = "input")
     public void selectionSortTest(int[] array, String sorted) {

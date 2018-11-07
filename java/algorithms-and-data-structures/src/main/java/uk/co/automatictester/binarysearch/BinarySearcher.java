@@ -1,4 +1,4 @@
-package uk.co.automatictester.searching;
+package uk.co.automatictester.binarysearch;
 
 public class BinarySearcher {
 
