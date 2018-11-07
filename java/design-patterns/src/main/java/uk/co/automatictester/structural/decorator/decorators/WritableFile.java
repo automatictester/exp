@@ -2,7 +2,6 @@ package uk.co.automatictester.structural.decorator.decorators;
 
 import uk.co.automatictester.structural.decorator.components.File;
 
-@SuppressWarnings("WeakerAccess")
 public class WritableFile extends UsableFile {
 
     public WritableFile(File file) {

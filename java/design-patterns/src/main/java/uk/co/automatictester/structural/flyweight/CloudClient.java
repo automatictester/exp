@@ -1,6 +1,5 @@
 package uk.co.automatictester.structural.flyweight;
 
-@SuppressWarnings("FieldCanBeLocal")
 class CloudClient {
 
     private String region;

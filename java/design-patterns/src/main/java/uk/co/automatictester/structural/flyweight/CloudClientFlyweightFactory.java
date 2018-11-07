@@ -3,7 +3,6 @@ package uk.co.automatictester.structural.flyweight;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("WeakerAccess")
 public class CloudClientFlyweightFactory {
 
     private static Map<String, CloudClient> cloudClientStore = new HashMap<>();

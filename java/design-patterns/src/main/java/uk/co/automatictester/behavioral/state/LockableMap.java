@@ -3,7 +3,6 @@ package uk.co.automatictester.behavioral.state;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("WeakerAccess")
 public class LockableMap<K, V> {
 
     private LockableMapState<K, V> state = new UnlockedMap<>(this);

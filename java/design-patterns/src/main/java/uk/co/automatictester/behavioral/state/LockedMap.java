@@ -1,6 +1,5 @@
 package uk.co.automatictester.behavioral.state;
 
-@SuppressWarnings("WeakerAccess")
 public class LockedMap<K, V> implements LockableMapState<K, V> {
 
     private LockableMap<K, V> ref;
