@@ -1,6 +1,8 @@
-package uk.co.automatictester.creational.factorymethod;
+package uk.co.automatictester.creational.factorymethod.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.creational.factorymethod.CloudClient;
+import uk.co.automatictester.creational.factorymethod.CloudClientFactory;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;

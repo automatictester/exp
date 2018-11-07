@@ -6,7 +6,7 @@ import java.util.Map;
 public class LockableMap<K, V> {
 
     private LockableMapState<K, V> state = new UnlockedMap<>(this);
-    protected Map<K, V> map = new HashMap<>();
+    Map<K, V> map = new HashMap<>();
 
     public void lock() {
         state = new LockedMap<>(this);

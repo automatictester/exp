@@ -1,6 +1,6 @@
 package uk.co.automatictester.structural.flyweight;
 
-class CloudClient {
+public class CloudClient {
 
     private String region;
 

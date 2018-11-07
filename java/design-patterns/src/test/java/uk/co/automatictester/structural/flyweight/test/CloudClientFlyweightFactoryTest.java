@@ -1,6 +1,8 @@
-package uk.co.automatictester.structural.flyweight;
+package uk.co.automatictester.structural.flyweight.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.structural.flyweight.CloudClient;
+import uk.co.automatictester.structural.flyweight.CloudClientFlyweightFactory;
 
 import static org.testng.Assert.*;
 

@@ -1,10 +1,10 @@
-package uk.co.automatictester.behavioral.state;
+package uk.co.automatictester.behavioral.state.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.behavioral.state.LockableMap;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
-@SuppressWarnings("SimplifiedTestNGAssertion")
 public class LockableMapTest {
 
     @Test
@@ -14,16 +14,16 @@ public class LockableMapTest {
         lockableMap.put("b", "bbb");
 
         String getA = lockableMap.get("a");
-        assertTrue(getA.equals("aaa"));
+        assertEquals("aaa", getA);
 
         lockableMap.lock();
         String getB = lockableMap.get("b");
-        assertTrue(getB.equals("bbb"));
+        assertEquals("bbb", getB);
 
         lockableMap.unlock();
         lockableMap.put("c", "ccc");
         String getC = lockableMap.get("c");
-        assertTrue(getC.equals("ccc"));
+        assertEquals("ccc", getC);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)

@@ -1,4 +1,4 @@
-package uk.co.automatictester.structural.decorator;
+package uk.co.automatictester.structural.decorator.test;
 
 import org.testng.annotations.Test;
 import uk.co.automatictester.structural.decorator.components.File;

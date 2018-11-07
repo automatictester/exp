@@ -1,6 +1,7 @@
-package uk.co.automatictester.creational.builder;
+package uk.co.automatictester.creational.builder.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.creational.builder.MultiFieldClass;
 
 import static org.testng.Assert.*;
 
