@@ -6,6 +6,13 @@ import java.util.Map;
 @SuppressWarnings("WeakerAccess")
 public class LockableMap<K, V> {
 
+    /*
+     * Participants:
+     * - Context (this class)
+     * - State (LockableMapState class)
+     * - Concrete State subclasses (LockedMap, UnlockedMap classes)
+     */
+
     private LockableMapState<K, V> state = new UnlockedMap<>(this);
     protected Map<K, V> map = new HashMap<>();
 
