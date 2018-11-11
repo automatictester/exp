@@ -3,8 +3,6 @@ package uk.co.automatictester.sorting;
 public class IntArraySelectionSorter implements IntArraySorter {
 
     private int[] array;
-    private int compareCount = 0;
-    private int swapCount = 0;
 
     public IntArraySelectionSorter(int[] array) {
         this.array = array;
@@ -26,18 +24,13 @@ public class IntArraySelectionSorter implements IntArraySorter {
                 if (array[i] < array[lowestValueIndex]) {
                     lowestValueIndex = i;
                 }
-                compareCount++;
             }
 
             if (lowestValueIndex > currentIndex) {
                 int temp = array[currentIndex];
                 array[currentIndex] = array[lowestValueIndex];
                 array[lowestValueIndex] = temp;
-                swapCount++;
             }
         }
-
-        int totalSteps = compareCount + swapCount;
-        System.out.println("Total steps: " + totalSteps);
     }
 }

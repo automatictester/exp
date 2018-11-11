@@ -3,8 +3,6 @@ package uk.co.automatictester.sorting;
 public class IntArrayBubbleSorter implements IntArraySorter {
 
     private int[] array;
-    private int compareCount = 0;
-    private int swapCount = 0;
 
     public IntArrayBubbleSorter(int[] array) {
         this.array = array;
@@ -30,13 +28,9 @@ public class IntArrayBubbleSorter implements IntArraySorter {
             }
             elementsToInspect--;
         } while (hasChanged);
-
-        int totalSteps = compareCount + swapCount;
-        System.out.println("Total steps: " + totalSteps);
     }
 
     private boolean compare(int i) {
-        compareCount++;
         return array[i] > array[i + 1];
     }
 
@@ -44,6 +38,5 @@ public class IntArrayBubbleSorter implements IntArraySorter {
         int temp = array[i];
         array[i] = array[i + 1];
         array[i + 1] = temp;
-        swapCount++;
     }
 }
