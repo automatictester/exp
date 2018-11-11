@@ -20,14 +20,17 @@ public class BinaryTree<T extends Comparable<T>> {
     public void insert(T element) {
         if (value == null) {
             value = element;
-        } else if (element.compareTo(value) < 0 && left == null) {
-            left = new BinaryTree<>(element);
-        } else if (element.compareTo(value) < 0 && left != null) {
-            left.insert(element);
-        } else if (element.compareTo(value) > 0 && right == null) {
-            right = new BinaryTree<>(element);
         } else {
-            right.insert(element);
+            int cmp = element.compareTo(value);
+            if (cmp < 0 && left == null) {
+                left = new BinaryTree<>(element);
+            } else if (cmp < 0 && left != null) {
+                left.insert(element);
+            } else if (cmp > 0 && right == null) {
+                right = new BinaryTree<>(element);
+            } else {
+                right.insert(element);
+            }
         }
     }
 
@@ -36,14 +39,17 @@ public class BinaryTree<T extends Comparable<T>> {
             return false;
         } else if (value.equals(element)) {
             return true;
-        } else if (element.compareTo(value) < 0 && left == null) {
-            return false;
-        } else if (element.compareTo(value) < 0 && left != null) {
-            return left.contains(element);
-        } else if (element.compareTo(value) > 0 && right == null) {
-            return false;
         } else {
-            return right.contains(element);
+            int cmp = element.compareTo(value);
+            if (cmp < 0 && left == null) {
+                return false;
+            } else if (cmp < 0 && left != null) {
+                return left.contains(element);
+            } else if (cmp > 0 && right == null) {
+                return false;
+            } else {
+                return right.contains(element);
+            }
         }
     }
 
