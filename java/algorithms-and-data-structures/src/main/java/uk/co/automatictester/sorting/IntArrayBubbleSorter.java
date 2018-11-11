@@ -8,13 +8,6 @@ public class IntArrayBubbleSorter implements IntArraySorter {
         this.array = array;
     }
 
-    /*
-     * Bubble Sort:
-     * - O(N2) - worst case
-     * - O(N2) - average
-     * - O(N)  - best case
-     */
-
     public void sort() {
         boolean hasChanged;
         int elementsToInspect = array.length;

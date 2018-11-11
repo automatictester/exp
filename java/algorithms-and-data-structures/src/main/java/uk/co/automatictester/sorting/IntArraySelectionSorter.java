@@ -8,13 +8,6 @@ public class IntArraySelectionSorter implements IntArraySorter {
         this.array = array;
     }
 
-    /*
-     * Selection Sort:
-     * - O(N2) - worst case - elements sorted in reverse order
-     * - O(N2) - average
-     * - O(N2) - best case
-     */
-
     public void sort() {
 
         for (int currentIndex = 0; currentIndex < array.length; currentIndex++) {

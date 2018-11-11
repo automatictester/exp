@@ -8,13 +8,6 @@ public class IntArrayInsertionSorter implements IntArraySorter {
         this.array = array;
     }
 
-    /*
-     * Insertion Sort:
-     * - O(N2) - worst case - elements sorted in reverse order
-     * - O(N2) - average
-     * - O(N)  - best case
-     */
-
     public void sort() {
         for (int i = 1; i < array.length; i++) {
             if (!isSorted(i)) {
