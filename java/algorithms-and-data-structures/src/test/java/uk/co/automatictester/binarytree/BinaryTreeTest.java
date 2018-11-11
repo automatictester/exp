@@ -89,6 +89,13 @@ public class BinaryTreeTest {
     }
 
     @Test
+    public void testToListEmpty() {
+        BinaryTree<Integer> tree = new BinaryTree<>();
+        List<Integer> list = Collections.emptyList();
+        assertTrue(tree.toList().equals(list));
+    }
+
+    @Test
     public void testToListBalanced() {
         BinaryTree<Integer> tree = new BinaryTree<>();
         tree.insert(10);

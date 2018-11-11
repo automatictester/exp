@@ -1,6 +1,7 @@
 package uk.co.automatictester.binarytree;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
@@ -54,13 +55,14 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     public List<T> toList() {
+        if (value == null) {
+            return Collections.emptyList();
+        }
         List<T> list = new ArrayList<>();
         if (left != null) {
             list.addAll(left.toList());
         }
-        if (value != null) {
-            list.add(value);
-        }
+        list.add(value);
         if (right != null) {
             list.addAll(right.toList());
         }
@@ -135,7 +137,7 @@ public class BinaryTree<T extends Comparable<T>> {
                 value = null;
                 left = null;
                 right = null;
-            } else if (parent == null){
+            } else if (parent == null) {
                 value = rightLeftMostChild.value;
             }
             rightLeftMostChildParent.left = rightLeftMostChildRight;
