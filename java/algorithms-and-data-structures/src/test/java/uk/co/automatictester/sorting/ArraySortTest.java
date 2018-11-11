@@ -38,6 +38,15 @@ public class ArraySortTest {
         assertThat(Arrays.toString(array), is(equalTo(sorted)));
     }
 
+    @Test(dataProvider = "input")
+    public void mergeSortTest(int[] array, String sorted) {
+
+        IntArraySorter strategy = new IntArrayMergeSorter(array);
+        strategy.sort();
+
+        assertThat(Arrays.toString(array), is(equalTo(sorted)));
+    }
+
     @DataProvider(name = "input")
     public Object[][] arrays() {
         return new Object[][]{
@@ -48,6 +57,7 @@ public class ArraySortTest {
                 {new int[]{9, 7, 5, 3, 1}, "[1, 3, 5, 7, 9]"},
                 {new int[]{6, 5, 3, 1, 8, 7, 2, 4}, "[1, 2, 3, 4, 5, 6, 7, 8]"},
                 {new int[]{38, 27, 43, 3, 9, 82, 10}, "[3, 9, 10, 27, 38, 43, 82]"},
+                {new int[]{38, 27, 43, 3}, "[3, 27, 38, 43]"},
         };
     }
 }
