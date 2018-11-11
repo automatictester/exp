@@ -11,7 +11,7 @@ public class IntArraySelectionSorter implements IntArraySorter {
     }
 
     /*
-     * Bubble Sort:
+     * Selection Sort:
      * - O(N2) - worst case - elements sorted in reverse order
      * - O(N2) - average
      * - O(N2) - best case
