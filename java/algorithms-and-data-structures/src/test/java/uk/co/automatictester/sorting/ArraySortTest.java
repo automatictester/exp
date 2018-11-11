@@ -12,6 +12,15 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class ArraySortTest {
 
     @Test(dataProvider = "input")
+    public void bubbleSortTest(int[] array, String sorted) {
+
+        IntArraySorter strategy = new IntArrayBubbleSorter(array);
+        strategy.sort();
+
+        assertThat(Arrays.toString(array), is(equalTo(sorted)));
+    }
+
+    @Test(dataProvider = "input")
     public void selectionSortTest(int[] array, String sorted) {
 
         IntArraySorter strategy = new IntArraySelectionSorter(array);
@@ -21,9 +30,9 @@ public class ArraySortTest {
     }
 
     @Test(dataProvider = "input")
-    public void bubbleSortTest(int[] array, String sorted) {
+    public void insertionSortTest(int[] array, String sorted) {
 
-        IntArraySorter strategy = new IntArrayBubbleSorter(array);
+        IntArraySorter strategy = new IntArrayInsertionSorter(array);
         strategy.sort();
 
         assertThat(Arrays.toString(array), is(equalTo(sorted)));
@@ -34,8 +43,10 @@ public class ArraySortTest {
         return new Object[][]{
                 {new int[]{9, 5, 7, 1, 3}, "[1, 3, 5, 7, 9]"},
                 {new int[]{1, 2, 3, 4, 5}, "[1, 2, 3, 4, 5]"},
+                {new int[]{1, 3, 5, 7, 8}, "[1, 3, 5, 7, 8]"},
                 {new int[]{1, 2, 5, 3, 4}, "[1, 2, 3, 4, 5]"},
                 {new int[]{9, 7, 5, 3, 1}, "[1, 3, 5, 7, 9]"},
+                {new int[]{6, 5, 3, 1, 8, 7, 2, 4}, "[1, 2, 3, 4, 5, 6, 7, 8]"},
         };
     }
 }
