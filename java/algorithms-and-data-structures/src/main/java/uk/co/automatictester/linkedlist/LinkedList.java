@@ -88,13 +88,16 @@ public class LinkedList<T> {
         String text = "LinkedList: ";
         if (size == 0) {
             text += "Empty";
+            return text;
         }
-        for (int i = 0; i < size; i++) {
-            if (i < size - 1) {
-                text += String.format("%s, ", get(i));
+        LinkedListNode<T> node = first;
+        while (node != null) {
+            if (node.getNext() != null) {
+                text += String.format("%s, ", node.value);
             } else {
-                text += get(i);
+                text += node.value;
             }
+            node = node.getNext();
         }
         return text;
     }

@@ -113,13 +113,16 @@ public class DoublyLinkedList<T> extends LinkedList<T> {
         String text = "DoublyLinkedList: ";
         if (size == 0) {
             text += "Empty";
+            return text;
         }
-        for (int i = 0; i < size; i++) {
-            if (i < size - 1) {
-                text += String.format("%s, ", get(i));
+        DoublyLinkedListNode<T> node = first;
+        while (node != null) {
+            if (node.getNext() != null) {
+                text += String.format("%s, ", node.getValue());
             } else {
-                text += get(i);
+                text += node.getValue();
             }
+            node = node.getNext();
         }
         return text;
     }
