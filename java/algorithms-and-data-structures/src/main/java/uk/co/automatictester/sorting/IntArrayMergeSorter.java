@@ -15,29 +15,28 @@ public class IntArrayMergeSorter implements IntArraySorter {
         Queue<Queue<Integer>> elements = new LinkedList<>();
 
         for (int i : array) {
-            Queue<Integer> q = new LinkedList<>();
-            q.add(i);
-            elements.add(q);
+            Queue<Integer> queue = new LinkedList<>();
+            queue.add(i);
+            elements.add(queue);
         }
 
         while (elements.size() > 1) {
-            Queue<Queue<Integer>> merged = new LinkedList<>();
-            int count = elements.size();
-            for (int i = 0; i < count; i += 2) {
-                merged.add(merge(elements.poll(), elements.poll()));
-            }
-            elements = merged;
+            Queue<Integer> q1 = elements.poll();
+            Queue<Integer> q2 = elements.poll();
+            Queue<Integer> merged = merge(q1, q2);
+            elements.add(merged);
         }
 
+        Queue<Integer> sortedElements = elements.poll();
         for (int i = 0; i < array.length; i++) {
-            array[i] = elements.peek().poll();
+            array[i] = sortedElements.poll();
         }
     }
 
     static Queue<Integer> merge(Queue<Integer> q1, Queue<Integer> q2) {
-        Queue<Integer> merged = new LinkedList<>();
-
         if (q2 == null) return q1;
+
+        Queue<Integer> merged = new LinkedList<>();
 
         while (!q1.isEmpty() && !q2.isEmpty()) {
             if (q1.peek() < q2.peek()) {
