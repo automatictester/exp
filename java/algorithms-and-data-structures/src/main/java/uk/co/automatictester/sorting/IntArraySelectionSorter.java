@@ -10,20 +10,25 @@ public class IntArraySelectionSorter implements IntArraySorter {
 
     public void sort() {
 
-        for (int currentIndex = 0; currentIndex < array.length; currentIndex++) {
-            int lowestValueIndex = currentIndex;
+        for (int i = 0; i < array.length; i++) {
+            int lowestValueIndex = i;
 
-            for (int i = currentIndex + 1; i < array.length; i++) {
-                if (array[i] < array[lowestValueIndex]) {
-                    lowestValueIndex = i;
+            for (int j = i + 1; j < array.length; j++) {
+                if (array[j] < array[lowestValueIndex]) {
+                    lowestValueIndex = j;
                 }
             }
 
-            if (lowestValueIndex > currentIndex) {
-                int temp = array[currentIndex];
-                array[currentIndex] = array[lowestValueIndex];
-                array[lowestValueIndex] = temp;
+            if (i < lowestValueIndex) {
+                swap(i, lowestValueIndex);
             }
         }
+    }
+
+    private void swap(int i, int j) {
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+
     }
 }

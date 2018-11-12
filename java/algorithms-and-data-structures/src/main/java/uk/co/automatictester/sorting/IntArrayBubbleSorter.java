@@ -14,7 +14,7 @@ public class IntArrayBubbleSorter implements IntArraySorter {
         do {
             hasChanged = false;
             for (int i = 0; i < elementsToInspect - 1; i++) {
-                if (compare(i)) {
+                if (isReverted(i)) {
                     swap(i);
                     hasChanged = true;
                 }
@@ -23,7 +23,7 @@ public class IntArrayBubbleSorter implements IntArraySorter {
         } while (hasChanged);
     }
 
-    private boolean compare(int i) {
+    private boolean isReverted(int i) {
         return array[i] > array[i + 1];
     }
 
