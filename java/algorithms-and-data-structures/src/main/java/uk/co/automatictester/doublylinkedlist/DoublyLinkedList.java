@@ -49,8 +49,8 @@ public class DoublyLinkedList<T> extends LinkedList<T> {
             newNode.setPrev(last);
             last = newNode;
         } else {
-            DoublyLinkedListNode<T> nodeAtIndex = getNode(index);
             DoublyLinkedListNode<T> nodeBefore = getNode(index - 1);
+            DoublyLinkedListNode<T> nodeAtIndex = nodeBefore.getNext();
 
             newNode.setNext(nodeAtIndex);
             newNode.setPrev(nodeBefore);
@@ -68,22 +68,22 @@ public class DoublyLinkedList<T> extends LinkedList<T> {
             last = null;
         } else if (index == 0 && size > 1) {
             DoublyLinkedListNode<T> nodeToDelete = getNode(index);
-            DoublyLinkedListNode<T> nodeAfter = getNode(index + 1);
+            DoublyLinkedListNode<T> nodeAfter = nodeToDelete.getNext();
 
             nodeToDelete.setNext(null);
             nodeAfter.setPrev(null);
             first = nodeAfter;
         } else if (index == size - 1) {
             DoublyLinkedListNode<T> nodeBefore = getNode(index - 1);
-            DoublyLinkedListNode<T> nodeToDelete = getNode(index);
+            DoublyLinkedListNode<T> nodeToDelete = nodeBefore.getNext();
 
             nodeToDelete.setPrev(null);
             nodeBefore.setNext(null);
             last = nodeBefore;
         } else {
             DoublyLinkedListNode<T> nodeBefore = getNode(index - 1);
-            DoublyLinkedListNode<T> nodeToDelete = getNode(index);
-            DoublyLinkedListNode<T> nodeAfter = getNode(index + 1);
+            DoublyLinkedListNode<T> nodeToDelete = nodeBefore.getNext();
+            DoublyLinkedListNode<T> nodeAfter = nodeToDelete.getNext();
 
             nodeBefore.setNext(nodeAfter);
             nodeAfter.setPrev(nodeBefore);

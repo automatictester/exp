@@ -37,8 +37,8 @@ public class LinkedList<T> {
             LinkedListNode<T> lastNode = getLastNode();
             lastNode.setNext(newNode(value));
         } else {
-            LinkedListNode<T> nodeAtIndex = getNode(index);
             LinkedListNode<T> nodeBefore = getNode(index - 1);
+            LinkedListNode<T> nodeAtIndex = nodeBefore.getNext();
             LinkedListNode<T> newNode = newNode(value);
 
             newNode.setNext(nodeAtIndex);
@@ -58,8 +58,8 @@ public class LinkedList<T> {
             nodeLastMinusOne.setNext(null);
         } else {
             LinkedListNode<T> nodeBeforeDelete = getNode(index - 1);
-            LinkedListNode<T> nodeToDelete = getNode(index);
-            LinkedListNode<T> nodeAfterDelete = getNode(index + 1);
+            LinkedListNode<T> nodeToDelete = nodeBeforeDelete.getNext();
+            LinkedListNode<T> nodeAfterDelete = nodeToDelete.getNext();
 
             nodeBeforeDelete.setNext(nodeAfterDelete);
             nodeToDelete.setNext(null);
