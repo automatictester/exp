@@ -2,9 +2,8 @@ package uk.co.automatictester.primes;
 
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -18,8 +17,8 @@ public class SieveOfEratosthenes {
     @Test(invocationCount = 4)
     public void linearSieve() {
         List<Integer> input = IntStream.rangeClosed(START, LIMIT).boxed().collect(Collectors.toList());
-        Set<Integer> toRemove = new TreeSet<>();
-        Set<Integer> target = new TreeSet<>(input);
+        List<Integer> toRemove = new ArrayList<>();
+        List<Integer> target = new ArrayList<>(input);
 
         for (int i = 0; i < input.size() && input.get(i) < sqrt(LIMIT); i++) {
             int elementValue = input.get(i);
@@ -39,10 +38,10 @@ public class SieveOfEratosthenes {
     @Test(invocationCount = 4)
     public void recursiveSieve() {
         List<Integer> input = IntStream.rangeClosed(START, LIMIT).boxed().collect(Collectors.toList());
-        sieveNextElement(input, new TreeSet<>());
+        sieveNextElement(input, new ArrayList<>());
     }
 
-    private void sieveNextElement(List<Integer> potentialPrimes, Set<Integer> primes) {
+    private void sieveNextElement(List<Integer> potentialPrimes, List<Integer> primes) {
         if (!potentialPrimes.isEmpty()) {
 
             int head = potentialPrimes.get(0);
@@ -56,7 +55,7 @@ public class SieveOfEratosthenes {
         }
     }
 
-    private void print(Set<Integer> primes) {
+    private void print(List<Integer> primes) {
 //        System.out.println(primes.toString());
         System.out.println(primes.size());
     }
