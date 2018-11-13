@@ -2,9 +2,7 @@ package uk.co.automatictester.primes;
 
 import org.testng.annotations.Test;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -32,8 +30,7 @@ public class SieveOfEratosthenes {
         }
 
         target.removeAll(toRemove);
-
-        print(target);
+        System.out.println(target.size());
     }
 
     @Test(invocationCount = 4)
@@ -47,11 +44,6 @@ public class SieveOfEratosthenes {
             potentialPrimes.removeIf(x -> x % head == 0);
         }
 
-        print(primes);
-    }
-
-    private void print(Set<Integer> primes) {
-//        System.out.println(primes.toString());
         System.out.println(primes.size());
     }
 }
