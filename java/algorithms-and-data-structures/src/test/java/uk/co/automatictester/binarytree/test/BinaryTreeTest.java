@@ -1,12 +1,16 @@
-package uk.co.automatictester.binarytree;
+package uk.co.automatictester.binarytree.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.binarytree.BinaryTree;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.testng.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertEquals;
+import static uk.co.automatictester.binarytree.BinaryTree.TraversalStrategy.BFS;
+import static uk.co.automatictester.binarytree.BinaryTree.TraversalStrategy.DFS;
 
 @SuppressWarnings("SimplifiedTestNGAssertion")
 public class BinaryTreeTest {
@@ -14,40 +18,40 @@ public class BinaryTreeTest {
     @Test
     public void testDefaultConstructor() {
         BinaryTree<Integer> tree = new BinaryTree<>();
-        assertTrue(tree.left == null);
-        assertTrue(tree.value == null);
-        assertTrue(tree.right == null);
+        assertTrue(tree.left() == null);
+        assertTrue(tree.value() == null);
+        assertTrue(tree.right() == null);
     }
 
     @Test
     public void testConstructor() {
         BinaryTree<Integer> tree = new BinaryTree<>(1);
-        assertTrue(tree.left == null);
-        assertTrue(tree.value == 1);
-        assertTrue(tree.right == null);
+        assertTrue(tree.left() == null);
+        assertTrue(tree.value() == 1);
+        assertTrue(tree.right() == null);
     }
 
     @Test
     public void testInsertEmpty() {
         BinaryTree<Integer> tree = new BinaryTree<>();
         tree.insert(1);
-        assertTrue(tree.value == 1);
+        assertTrue(tree.value() == 1);
     }
 
     @Test
     public void testInsertEmptyLeft() {
         BinaryTree<Integer> tree = new BinaryTree<>(10);
         tree.insert(5);
-        assertTrue(tree.left.value == 5);
-        assertTrue(tree.value == 10);
+        assertTrue(tree.left().value() == 5);
+        assertTrue(tree.value() == 10);
     }
 
     @Test
     public void testInsertEmptyRight() {
         BinaryTree<Integer> tree = new BinaryTree<>(10);
         tree.insert(20);
-        assertTrue(tree.value == 10);
-        assertTrue(tree.right.value == 20);
+        assertTrue(tree.value() == 10);
+        assertTrue(tree.right().value() == 20);
     }
 
     @Test
@@ -55,9 +59,9 @@ public class BinaryTreeTest {
         BinaryTree<Integer> tree = new BinaryTree<>(10);
         tree.insert(5);
         tree.insert(2);
-        assertTrue(tree.left.left.value == 2);
-        assertTrue(tree.left.value == 5);
-        assertTrue(tree.value == 10);
+        assertTrue(tree.left().left().value() == 2);
+        assertTrue(tree.left().value() == 5);
+        assertTrue(tree.value() == 10);
     }
 
     @Test
@@ -65,9 +69,9 @@ public class BinaryTreeTest {
         BinaryTree<Integer> tree = new BinaryTree<>(10);
         tree.insert(20);
         tree.insert(25);
-        assertTrue(tree.value == 10);
-        assertTrue(tree.right.value == 20);
-        assertTrue(tree.right.right.value == 25);
+        assertTrue(tree.value() == 10);
+        assertTrue(tree.right().value() == 20);
+        assertTrue(tree.right().right().value() == 25);
     }
 
     @Test
@@ -96,7 +100,7 @@ public class BinaryTreeTest {
     }
 
     @Test
-    public void testToListBalanced() {
+    public void testDefaultToListBalanced() {
         BinaryTree<Integer> tree = new BinaryTree<>();
         tree.insert(10);
         tree.insert(5);
@@ -107,6 +111,26 @@ public class BinaryTreeTest {
         tree.insert(25);
         List<Integer> list = Arrays.asList(2, 5, 7, 10, 15, 20, 25);
         assertTrue(tree.toList().equals(list));
+    }
+
+    @Test
+    public void testToListBalanced() {
+        BinaryTree<Integer> tree = new BinaryTree<>();
+        tree.insert(10);
+        tree.insert(5);
+        tree.insert(2);
+        tree.insert(7);
+        tree.insert(20);
+        tree.insert(25);
+        tree.insert(1);
+
+        tree.setTraversalStrategy(BFS);
+        List<Integer> list = Arrays.asList(10, 5, 20, 2, 7, 25, 1);
+        assertEquals(tree.toList(), list);
+
+        tree.setTraversalStrategy(DFS);
+        list = Arrays.asList(1, 2, 5, 7, 10, 20, 25);
+        assertEquals(tree.toList(), list);
     }
 
     @Test

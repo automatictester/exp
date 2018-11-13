@@ -1,21 +1,37 @@
 package uk.co.automatictester.binarytree;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-@SuppressWarnings("WeakerAccess")
+import static uk.co.automatictester.binarytree.BinaryTree.TraversalStrategy.DFS;
+
 public class BinaryTree<T extends Comparable<T>> {
 
-    BinaryTree<T> left;
-    T value;
-    BinaryTree<T> right;
+    private BinaryTree<T> left;
+    private T value;
+    private BinaryTree<T> right;
+    private TraversalStrategy traversalStrategy = DFS;
 
     public BinaryTree() {
     }
 
+    public BinaryTree<T> left() {
+        return left;
+    }
+
+    public T value() {
+        return value;
+    }
+
+    public BinaryTree<T> right() {
+        return right;
+    }
+
     public BinaryTree(T element) {
         this.value = element;
+    }
+
+    public void setTraversalStrategy(TraversalStrategy traversalStrategy) {
+        this.traversalStrategy = traversalStrategy;
     }
 
     public void insert(T element) {
@@ -55,6 +71,17 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     public List<T> toList() {
+        switch (traversalStrategy) {
+            case DFS:
+                return toListDfs();
+            case BFS:
+                return toListBfs();
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    private List<T> toListDfs() {
         if (value == null) {
             return Collections.emptyList();
         }
@@ -65,6 +92,19 @@ public class BinaryTree<T extends Comparable<T>> {
         list.add(value);
         if (right != null) {
             list.addAll(right.toList());
+        }
+        return list;
+    }
+
+    private List<T> toListBfs() {
+        Queue<BinaryTree<T>> queue = new LinkedList<>();
+        List<T> list = new ArrayList<>();
+        queue.add(this);
+        while (!queue.isEmpty()) {
+            BinaryTree<T> item = queue.poll();
+            list.add(item.value);
+            if (item.left != null) queue.add(item.left);
+            if (item.right != null) queue.add(item.right);
         }
         return list;
     }
@@ -166,5 +206,9 @@ public class BinaryTree<T extends Comparable<T>> {
         } else {
             return left.leftMostChildParent(this);
         }
+    }
+
+    public enum TraversalStrategy {
+        DFS, BFS
     }
 }
