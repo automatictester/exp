@@ -4,7 +4,8 @@
 - coarse-grained unstructured locking with ReentrantLock
 - fine-grained unstructured locking with ReentrantReadWriteLock
 - atomic constructs, most importantly: AtomicInteger, AtomicReference(V)
-- concurrent constructs, most importantly: ConcurrentHashMap, ConcurrentLinkedQueue, ConcurrentSkipListSet
+- concurrent constructs, most importantly: ConcurrentHashMap, ConcurrentLinkedQueue, PriorityBlockingQueue, 
+  ConcurrentSkipListSet
 - volatile keyword - see [this guideline](https://www.ibm.com/developerworks/java/library/j-jtp06197)
 
 ### Higher-level constructs
