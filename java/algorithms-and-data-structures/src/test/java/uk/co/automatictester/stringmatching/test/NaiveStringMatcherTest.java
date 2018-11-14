@@ -1,12 +1,13 @@
-package uk.co.automatictester.stringmatching;
+package uk.co.automatictester.stringmatching.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.stringmatching.NaiveStringMatcher;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 public class NaiveStringMatcherTest {
 

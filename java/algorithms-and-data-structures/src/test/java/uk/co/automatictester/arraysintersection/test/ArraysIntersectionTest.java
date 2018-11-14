@@ -1,6 +1,7 @@
-package uk.co.automatictester.sortedarraysintersection;
+package uk.co.automatictester.arraysintersection.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.arraysintersection.ArrayIntersection;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,7 +9,7 @@ import java.util.List;
 
 import static org.testng.Assert.*;
 
-public class SortedArraysIntersectionTest {
+public class ArraysIntersectionTest {
 
     @Test
     public void testSame() {

@@ -1,4 +1,4 @@
-package uk.co.automatictester.sortedarraysintersection;
+package uk.co.automatictester.arraysintersection;
 
 import java.util.Arrays;
 import java.util.LinkedList;
