@@ -192,6 +192,24 @@ public class BinaryTree<T extends Comparable<T>> {
         }
     }
 
+    public T min() {
+        return min(this);
+    }
+
+    private T min(BinaryTree<T> tree) {
+        if (tree.value == null || tree.left == null) return tree.value;
+        return min(tree.left);
+    }
+
+    public T max() {
+        return max(this);
+    }
+
+    private T max(BinaryTree<T> tree) {
+        if (tree.value == null || tree.right == null) return tree.value;
+        return min(tree.right);
+    }
+
     private BinaryTree<T> leftMostChild() {
         if (left == null) {
             return this;

@@ -148,6 +148,28 @@ public class BinaryTreeTest {
     }
 
     @Test
+    public void testMin() {
+        BinaryTree<Integer> tree = new BinaryTree<>();
+        assertEquals(tree.min(), null);
+
+        tree.insert(5);
+        tree.insert(2);
+        tree.insert(7);
+        assertEquals((int) tree.min(), 2);
+    }
+
+    @Test
+    public void testMax() {
+        BinaryTree<Integer> tree = new BinaryTree<>();
+        assertEquals(tree.min(), null);
+
+        tree.insert(5);
+        tree.insert(2);
+        tree.insert(7);
+        assertEquals((int) tree.max(), 7);
+    }
+
+    @Test
     public void testDeleteFromEmpty() {
         BinaryTree<Integer> tree = new BinaryTree<>();
         tree.delete(10);
