@@ -1,8 +1,9 @@
-package uk.co.automatictester.binarysearch;
+package uk.co.automatictester.binarysearch.test;
 
 import org.hamcrest.MatcherAssert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import uk.co.automatictester.binarysearch.BinarySearcher;
 
 import java.util.stream.IntStream;
 

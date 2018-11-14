@@ -1,6 +1,5 @@
 package uk.co.automatictester.graph;
 
-@SuppressWarnings("WeakerAccess")
 public class Vertex<T extends Comparable<T>> implements Comparable<Vertex<T>> {
     public T value;
 

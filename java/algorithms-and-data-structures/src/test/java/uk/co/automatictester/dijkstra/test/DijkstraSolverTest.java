@@ -1,14 +1,15 @@
-package uk.co.automatictester.dijkstra;
+package uk.co.automatictester.dijkstra.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.dijkstra.DestinationDetails;
+import uk.co.automatictester.dijkstra.DijkstraSolver;
 import uk.co.automatictester.graph.DirectedWeightedGraph;
 import uk.co.automatictester.graph.Vertex;
 
 import java.util.Map;
 
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
 
-@SuppressWarnings("SimplifiedTestNGAssertion")
 public class DijkstraSolverTest {
 
     @Test
@@ -35,10 +36,10 @@ public class DijkstraSolverTest {
 
         DijkstraSolver<String> dijkstra = new DijkstraSolver<>(graph, a);
         Map<Vertex<String>, DestinationDetails> destinations = dijkstra.go();
-        assertTrue(destinations.get(b).cost == 100);
-        assertTrue(destinations.get(c).cost == 200);
-        assertTrue(destinations.get(d).cost == 160);
-        assertTrue(destinations.get(e).cost == 280);
+        assertEquals(destinations.get(b).cost(), 100);
+        assertEquals(destinations.get(c).cost(), 200);
+        assertEquals(destinations.get(d).cost(), 160);
+        assertEquals(destinations.get(e).cost(), 280);
     }
 
     @Test
@@ -65,8 +66,8 @@ public class DijkstraSolverTest {
 
         DijkstraSolver<String> dijkstra = new DijkstraSolver<>(graph, c);
         Map<Vertex<String>, DestinationDetails> destinations = dijkstra.go();
-        assertTrue(destinations.get(b).cost == 180);
-        assertTrue(destinations.get(d).cost == 360);
-        assertTrue(destinations.get(e).cost == 80);
+        assertEquals(destinations.get(b).cost(), 180);
+        assertEquals(destinations.get(d).cost(), 360);
+        assertEquals(destinations.get(e).cost(), 80);
     }
 }

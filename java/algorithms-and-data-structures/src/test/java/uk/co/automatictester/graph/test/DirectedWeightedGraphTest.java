@@ -1,9 +1,11 @@
-package uk.co.automatictester.graph;
+package uk.co.automatictester.graph.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.graph.DirectedWeightedEdge;
+import uk.co.automatictester.graph.DirectedWeightedGraph;
+import uk.co.automatictester.graph.Vertex;
 
 import java.util.Arrays;
-import java.util.Set;
 import java.util.TreeSet;
 
 import static org.testng.Assert.assertFalse;
@@ -26,9 +28,9 @@ public class DirectedWeightedGraphTest {
         Vertex<String> b = new Vertex<>("b");
         graph.addVertex(b);
 
-        assertTrue(graph.vertices.size() == 2);
-        assertTrue(graph.vertices.contains(a));
-        assertTrue(graph.vertices.contains(b));
+        assertTrue(graph.vertices().size() == 2);
+        assertTrue(graph.vertices().contains(a));
+        assertTrue(graph.vertices().contains(b));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -66,7 +68,7 @@ public class DirectedWeightedGraphTest {
         addedEdge = graph.addEdge(b, a, 10);
         assertTrue(addedEdge);
 
-        assertTrue(graph.edges.size() == 2);
+        assertTrue(graph.edges().size() == 2);
     }
 
     @Test
@@ -130,8 +132,8 @@ public class DirectedWeightedGraphTest {
         graph.addEdge(d, e, 140);
         graph.addEdge(e, b, 100);
 
-        assertTrue(graph.edges.size() == 8);
-        assertTrue(graph.edges.contains(new DirectedWeightedEdge<>(a, b, 100)));
+        assertTrue(graph.edges().size() == 8);
+        assertTrue(graph.edges().contains(new DirectedWeightedEdge<>(a, b, 100)));
 
         boolean deleted = graph.deleteEdge(a, b, 100);
         assertTrue(deleted);
@@ -139,9 +141,9 @@ public class DirectedWeightedGraphTest {
         deleted = graph.deleteEdge(c, b, 120);
         assertFalse(deleted);
 
-        assertTrue(graph.edges.size() == 7);
-        assertFalse(graph.edges.contains(new DirectedWeightedEdge<>(a, b, 100)));
-        assertTrue(graph.edges.contains(new DirectedWeightedEdge<>(b, c, 120)));
+        assertTrue(graph.edges().size() == 7);
+        assertFalse(graph.edges().contains(new DirectedWeightedEdge<>(a, b, 100)));
+        assertTrue(graph.edges().contains(new DirectedWeightedEdge<>(b, c, 120)));
     }
 
     @Test
@@ -166,15 +168,15 @@ public class DirectedWeightedGraphTest {
         graph.addEdge(d, e, 140);
         graph.addEdge(e, b, 100);
 
-        assertTrue(graph.vertices.size() == 5);
-        assertTrue(graph.edges.size() == 8);
-        assertTrue(graph.edges.contains(new DirectedWeightedEdge<>(c, e, 80)));
+        assertTrue(graph.vertices().size() == 5);
+        assertTrue(graph.edges().size() == 8);
+        assertTrue(graph.edges().contains(new DirectedWeightedEdge<>(c, e, 80)));
 
         boolean deleted = graph.deleteVertex(c);
         assertTrue(deleted);
-        assertTrue(graph.vertices.size() == 4);
-        assertTrue(graph.edges.size() == 5);
-        assertFalse(graph.edges.contains(new DirectedWeightedEdge<>(c, e, 80)));
+        assertTrue(graph.vertices().size() == 4);
+        assertTrue(graph.edges().size() == 5);
+        assertFalse(graph.edges().contains(new DirectedWeightedEdge<>(c, e, 80)));
     }
 
     @Test

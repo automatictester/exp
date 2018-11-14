@@ -1,17 +1,22 @@
 package uk.co.automatictester.graph;
 
-import java.util.Comparator;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("WeakerAccess")
 public class DirectedWeightedGraph<T extends Comparable<T>> {
 
     private static final int ALL_CONECTIONS = -1;
-    TreeSet<Vertex<T>> vertices = new TreeSet<>();
-    TreeSet<DirectedWeightedEdge<T>> edges = new TreeSet<>();
+    private TreeSet<Vertex<T>> vertices = new TreeSet<>();
+    private TreeSet<DirectedWeightedEdge<T>> edges = new TreeSet<>();
+
+    public TreeSet<Vertex<T>> vertices() {
+        return vertices;
+    }
+
+    public TreeSet<DirectedWeightedEdge<T>> edges() {
+        return edges;
+    }
 
     public boolean addVertex(Vertex<T> vertex) {
         return vertices.add(vertex);
@@ -61,7 +66,7 @@ public class DirectedWeightedGraph<T extends Comparable<T>> {
 
     public Set<Vertex<T>> connectionsOf(Vertex<T> vertex) {
         return edgesOf(vertex).stream()
-                .map(e -> e.to)
+                .map(e -> e.to())
                 .filter(v -> !v.equals(vertex))
                 .collect(Collectors.toSet());
     }
@@ -69,10 +74,10 @@ public class DirectedWeightedGraph<T extends Comparable<T>> {
     public Set<DirectedWeightedEdge<T>> edgesOf(Vertex<T> vertex) {
         Set<DirectedWeightedEdge<T>> edgesOfVertex = new TreeSet<>();
         for (DirectedWeightedEdge<T> edge : edges) {
-            if (edge.from.equals(vertex)) {
+            if (edge.from().equals(vertex)) {
                 edgesOfVertex.add(edge);
             }
-            if (edge.to.equals(vertex)) {
+            if (edge.to().equals(vertex)) {
                 edgesOfVertex.add(edge);
             }
         }
@@ -82,7 +87,7 @@ public class DirectedWeightedGraph<T extends Comparable<T>> {
     public Set<DirectedWeightedEdge<T>> edgesFrom(Vertex<T> vertex) {
         Set<DirectedWeightedEdge<T>> edgesFromVertex = new TreeSet<>();
         for (DirectedWeightedEdge<T> edge : edges) {
-            if (edge.from.equals(vertex)) {
+            if (edge.from().equals(vertex)) {
                 edgesFromVertex.add(edge);
             }
         }

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@SuppressWarnings("WeakerAccess")
 public class Destinations<T extends Comparable<T>> {
 
     private Map<Vertex<T>, DestinationDetails> destinations = new HashMap<>();
@@ -20,8 +19,8 @@ public class Destinations<T extends Comparable<T>> {
         Vertex<T> minCostDestination = null;
         int minCost = -1;
         for (Vertex<T> key : destinations.keySet()) {
-            if (destinations.get(key).visited) continue;
-            int destinationCost = destinations.get(key).cost;
+            if (destinations.get(key).getVisited()) continue;
+            int destinationCost = destinations.get(key).cost();
             if (minCost == -1 || destinationCost < minCost) {
                 minCostDestination = key;
                 minCost = destinationCost;
@@ -40,14 +39,14 @@ public class Destinations<T extends Comparable<T>> {
 
     public boolean hasUnvisitedDestinations() {
         for (Vertex<T> key : destinations.keySet()) {
-            if (!destinations.get(key).visited) return true;
+            if (!destinations.get(key).getVisited()) return true;
         }
         return false;
     }
 
     public void showResults() {
         for (Vertex<T> key : destinations.keySet()) {
-            if (destinations.get(key).cost == 0) continue;
+            if (destinations.get(key).cost() == 0) continue;
             String destination = String.format("%s -> %s", key.value, destinations.get(key));
             System.out.println(destination);
         }
@@ -56,13 +55,13 @@ public class Destinations<T extends Comparable<T>> {
 
     public void updateDestinations(Set<DirectedWeightedEdge<T>> edges, int cost) {
         for (DirectedWeightedEdge<T> edge : edges) {
-            Vertex<T> to = edge.to;
+            Vertex<T> to = edge.to();
             DestinationDetails details;
             if (!destinations.containsKey(to)) {
-                details = new DestinationDetails(edge.weight + cost);
+                details = new DestinationDetails(edge.weight() + cost);
                 destinations.put(to, details);
-            } else if (destinations.containsKey(to) && edge.weight + cost < destinations.get(to).cost) {
-                details = new DestinationDetails(edge.weight + cost);
+            } else if (destinations.containsKey(to) && edge.weight() + cost < destinations.get(to).cost()) {
+                details = new DestinationDetails(edge.weight() + cost);
                 destinations.put(to, details);
             }
         }

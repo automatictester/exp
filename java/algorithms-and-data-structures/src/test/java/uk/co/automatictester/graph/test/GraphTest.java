@@ -1,6 +1,9 @@
-package uk.co.automatictester.graph;
+package uk.co.automatictester.graph.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.graph.Edge;
+import uk.co.automatictester.graph.Graph;
+import uk.co.automatictester.graph.Vertex;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,9 +29,9 @@ public class GraphTest {
         Vertex<String> b = new Vertex<>("b");
         graph.addVertex(b);
 
-        assertTrue(graph.vertices.size() == 2);
-        assertTrue(graph.vertices.contains(a));
-        assertTrue(graph.vertices.contains(b));
+        assertTrue(graph.vertices().size() == 2);
+        assertTrue(graph.vertices().contains(a));
+        assertTrue(graph.vertices().contains(b));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -62,7 +65,7 @@ public class GraphTest {
         assertFalse(addedEdge);
         addedEdge = graph.addEdge(b, a);
         assertFalse(addedEdge);
-        assertTrue(graph.edges.size() == 1);
+        assertTrue(graph.edges().size() == 1);
     }
 
     @Test
@@ -116,14 +119,14 @@ public class GraphTest {
         graph.addEdge(g, i);
         graph.addEdge(e, i);
 
-        assertTrue(graph.edges.size() == 10);
+        assertTrue(graph.edges().size() == 10);
         assertTrue(graph.edgesOf(a).contains(new Edge<>(a, c)));
 
         boolean deleted = graph.deleteEdge(a, c);
         assertTrue(deleted);
         deleted = graph.deleteEdge(e, a);
         assertTrue(deleted);
-        assertTrue(graph.edges.size() == 8);
+        assertTrue(graph.edges().size() == 8);
         assertFalse(graph.edgesOf(a).contains(new Edge<>(a, c)));
         assertFalse(graph.edgesOf(a).contains(new Edge<>(a, e)));
     }
@@ -160,14 +163,14 @@ public class GraphTest {
         graph.addEdge(g, i);
         graph.addEdge(e, i);
 
-        assertTrue(graph.vertices.size() == 9);
-        assertTrue(graph.edges.size() == 10);
+        assertTrue(graph.vertices().size() == 9);
+        assertTrue(graph.edges().size() == 10);
         assertTrue(graph.edgesOf(a).contains(new Edge<>(a, c)));
 
         boolean deleted = graph.deleteVertex(a);
         assertTrue(deleted);
-        assertTrue(graph.vertices.size() == 8);
-        assertTrue(graph.edges.size() == 6);
+        assertTrue(graph.vertices().size() == 8);
+        assertTrue(graph.edges().size() == 6);
         assertFalse(graph.edgesOf(a).contains(new Edge<>(a, c)));
     }
 

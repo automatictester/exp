@@ -4,12 +4,19 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("WeakerAccess")
 public class Graph<T extends Comparable<T>> {
 
     private static final int ALL_CONECTIONS = -1;
-    TreeSet<Vertex<T>> vertices = new TreeSet<>();
-    TreeSet<Edge<T>> edges = new TreeSet<>();
+    private TreeSet<Vertex<T>> vertices = new TreeSet<>();
+    private TreeSet<Edge<T>> edges = new TreeSet<>();
+
+    public TreeSet<Vertex<T>> vertices() {
+        return vertices;
+    }
+
+    public TreeSet<Edge<T>> edges() {
+        return edges;
+    }
 
     public boolean addVertex(Vertex<T> vertex) {
         return vertices.add(vertex);
@@ -63,12 +70,12 @@ public class Graph<T extends Comparable<T>> {
     public Set<Vertex<T>> connectionsOf(Vertex<T> vertex) {
 
         Set<Vertex<T>> connections = edgesOf(vertex).stream()
-                .map(e -> e.from)
+                .map(e -> e.from())
                 .filter(v -> !v.equals(vertex))
                 .collect(Collectors.toSet());
 
         connections.addAll(edgesOf(vertex).stream()
-                .map(e -> e.to)
+                .map(e -> e.to())
                 .filter(v -> !v.equals(vertex))
                 .collect(Collectors.toSet())
         );
@@ -79,10 +86,10 @@ public class Graph<T extends Comparable<T>> {
     public Set<Edge<T>> edgesOf(Vertex<T> vertex) {
         Set<Edge<T>> edgesOfVertex = new TreeSet<>();
         for (Edge<T> edge : edges) {
-            if (edge.from.equals(vertex)) {
+            if (edge.from().equals(vertex)) {
                 edgesOfVertex.add(edge);
             }
-            if (edge.to.equals(vertex)) {
+            if (edge.to().equals(vertex)) {
                 edgesOfVertex.add(edge);
             }
         }

@@ -1,16 +1,13 @@
 package uk.co.automatictester.graph;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("WeakerAccess")
 public class Edge<T extends Comparable<T>> implements Comparable<Edge<T>> {
-    Vertex<T> from;
-    Vertex<T> to;
+    private Vertex<T> from;
+    private Vertex<T> to;
 
     public Edge(Vertex<T> from, Vertex<T> to) {
         if (from.equals(to)) {
@@ -23,6 +20,14 @@ public class Edge<T extends Comparable<T>> implements Comparable<Edge<T>> {
             this.from = to;
             this.to = from;
         }
+    }
+
+    public Vertex<T> from() {
+        return from;
+    }
+
+    public Vertex<T> to() {
+        return to;
     }
 
     public int compareTo(Edge<T> other) {

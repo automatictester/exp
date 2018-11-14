@@ -7,7 +7,6 @@ import uk.co.automatictester.graph.Vertex;
 import java.util.Map;
 import java.util.Set;
 
-@SuppressWarnings("WeakerAccess")
 public class DijkstraSolver<T extends Comparable<T>> {
 
     private DirectedWeightedGraph<T> graph;
@@ -31,8 +30,8 @@ public class DijkstraSolver<T extends Comparable<T>> {
 
         do {
             currentVertex = destinations.cheapestUnvisitedDestination();
-            destinations.get(currentVertex).visited = true;
-            cost = destinations.get(currentVertex).cost;
+            destinations.get(currentVertex).setVisited(true);
+            cost = destinations.get(currentVertex).cost();
             edgesFrom = graph.edgesFrom(currentVertex);
             destinations.updateDestinations(edgesFrom, cost);
 

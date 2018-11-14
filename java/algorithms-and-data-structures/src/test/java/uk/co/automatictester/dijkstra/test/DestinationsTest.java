@@ -1,6 +1,8 @@
-package uk.co.automatictester.dijkstra;
+package uk.co.automatictester.dijkstra.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.dijkstra.DestinationDetails;
+import uk.co.automatictester.dijkstra.Destinations;
 import uk.co.automatictester.graph.DirectedWeightedEdge;
 import uk.co.automatictester.graph.Vertex;
 
@@ -117,8 +119,8 @@ public class DestinationsTest {
 
         destinations.updateDestinations(edges, 100);
 
-        assertTrue(destinations.get(b).cost == 200);
-        assertTrue(destinations.get(c).cost == 280);
-        assertTrue(destinations.get(d).cost == 600);
+        assertTrue(destinations.get(b).cost() == 200);
+        assertTrue(destinations.get(c).cost() == 280);
+        assertTrue(destinations.get(d).cost() == 600);
     }
 }

@@ -5,11 +5,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("WeakerAccess")
 public class DirectedWeightedEdge<T extends Comparable<T>> implements Comparable<DirectedWeightedEdge<T>> {
-    Vertex<T> from;
-    public Vertex<T> to;
-    public int weight;
+
+    private Vertex<T> from;
+    private Vertex<T> to;
+    private int weight;
 
     public DirectedWeightedEdge(Vertex<T> from, Vertex<T> to, int weight) {
         if (from.equals(to)) {
@@ -18,6 +18,18 @@ public class DirectedWeightedEdge<T extends Comparable<T>> implements Comparable
         this.from = from;
         this.to = to;
         this.weight = weight;
+    }
+
+    public Vertex<T> from() {
+        return from;
+    }
+
+    public Vertex<T> to() {
+        return to;
+    }
+
+    public int weight() {
+        return weight;
     }
 
     public Set<Vertex<T>> vertices() {

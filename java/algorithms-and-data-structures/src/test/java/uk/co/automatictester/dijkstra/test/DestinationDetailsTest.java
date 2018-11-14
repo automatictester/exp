@@ -1,6 +1,7 @@
-package uk.co.automatictester.dijkstra;
+package uk.co.automatictester.dijkstra.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.dijkstra.DestinationDetails;
 
 import static org.testng.Assert.assertTrue;
 

@@ -1,8 +1,9 @@
-package uk.co.automatictester.graph;
+package uk.co.automatictester.graph.test;
 
 import org.testng.annotations.Test;
+import uk.co.automatictester.graph.Vertex;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertTrue;
 
 public class VertexTest {
 

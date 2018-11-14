@@ -1,15 +1,27 @@
 package uk.co.automatictester.dijkstra;
 
 public class DestinationDetails {
-    int cost;
-    boolean visited = false;
+    private int cost;
+    private boolean visited = false;
 
-    DestinationDetails(int cost) {
+    public DestinationDetails(int cost) {
         this.cost = cost;
     }
 
-    DestinationDetails(int cost, boolean visited) {
+    public DestinationDetails(int cost, boolean visited) {
         this.cost = cost;
+        this.visited = visited;
+    }
+
+    public int cost() {
+        return cost;
+    }
+
+    public boolean getVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
         this.visited = visited;
     }
 
