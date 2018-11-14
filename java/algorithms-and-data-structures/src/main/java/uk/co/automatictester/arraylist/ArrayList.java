@@ -25,19 +25,25 @@ public class ArrayList<E> {
     }
 
     public E get(int index) {
-        if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException();
-        }
+        assertIndex(index);
         return array[index];
     }
 
     public E remove(int index) {
+        assertIndex(index);
         E element = array[index];
-        for (int i = index; i < size; i++) {
+        for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
+        array[size - 1] = null;
         size--;
         return element;
+    }
+
+    private void assertIndex(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     public void clear() {

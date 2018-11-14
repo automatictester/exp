@@ -67,6 +67,27 @@ public class ArrayListTest {
     }
 
     @Test
+    public void testRemoveLastElementAtLastIndex() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        assertEquals((int) list.remove(2), 3);
+    }
+
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
+    public void testRemoveNegative() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.remove(-1);
+    }
+
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
+    public void testRemoveAbove() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.remove(0);
+    }
+
+    @Test
     public void testClear() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
