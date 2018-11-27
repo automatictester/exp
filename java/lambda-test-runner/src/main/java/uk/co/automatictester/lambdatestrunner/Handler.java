@@ -20,8 +20,11 @@ public class Handler implements RequestHandler<Request, Response> {
     private static final Logger log = LogManager.getLogger(Handler.class);
 
     // TODO: cleanup
+    // TODO: installJdk once
     @Override
     public Response handleRequest(Request request, Context context) {
+        installJdk();
+
         File targetDir = new File(request.getTargetDir());
         try {
             FileUtils.deleteDirectory(targetDir);
@@ -32,14 +35,25 @@ public class Handler implements RequestHandler<Request, Response> {
         String repoUri = request.getRepoUri();
         GitCloner.cloneRepo(repoUri, targetDir);
 
-        List<String> command = Arrays.asList(request.getCommand().split(" "));
-
+        List<String> command = transformCommand(request.getCommand());
         String log = request.getLogFile();
         File logFile = new File(log);
         ProcessRunner.runProcess(command, targetDir, logFile);
 
 //        logOutput(log);
         return null;
+    }
+
+    private void installJdk() {
+        List<String> command = transformCommand("./jdk-installer.sh");
+        File dir = new File("scripts");
+        File logFile = new File("jdk-installer.log");
+        ProcessRunner.runProcess(command, dir, logFile);
+        logOutput(logFile.toString());
+    }
+
+    private List<String> transformCommand(String command) {
+        return Arrays.asList(command.split(" "));
     }
 
     private void logOutput(String logFile) {
