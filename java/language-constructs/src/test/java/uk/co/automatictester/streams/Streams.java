@@ -1,4 +1,4 @@
-package uk.co.automatictester.streams.api;
+package uk.co.automatictester.streams;
 
 import org.testng.annotations.Test;
 
