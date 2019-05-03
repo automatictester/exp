@@ -74,11 +74,13 @@
 
 
                     <execution>
-                        <id>give-selenium-hub-a-few-seconds-to-start</id>
+                        <id>wait-for-selenium-grid-to-start</id>
                         <phase>pre-integration-test</phase>
                         <configuration>
                             <target name="wait">
-                                <sleep seconds="5"/>
+                                <waitfor maxwait="10" maxwaitunit="second" checkevery="1" checkeveryunit="second">
+                                    <http url="http://localhost:4444/wd/hub"/>
+                                </waitfor>
                             </target>
                         </configuration>
                         <goals>
