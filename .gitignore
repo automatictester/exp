@@ -6,3 +6,5 @@ build/
 *.zip
 *.asc
 vars.sh
+.credentials
+bamboo.properties
