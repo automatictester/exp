@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <groupId>uk.co.automatictester</groupId>
+   <artifactId>mvn-site</artifactId>
+   <version>1.0-SNAPSHOT</version>
+
+   <name>Maven Site Example</name>
+   <description>Sample project demonstrating complete setup for generating documentation with Maven</description>
+   <inceptionYear>2019</inceptionYear>
+   <url>https://github.com/automatictester/none</url>
+
+   <licenses>
+      <license>
+         <name>MIT License</name>
+         <url>https://opensource.org/licenses/mit-license.php</url>
+         <distribution>repo</distribution>
+      </license>
+   </licenses>
+
+   <developers>
+      <developer>
+         <name>Ireneusz Pastusiak</name>
+         <organizationUrl>https://github.com/automatictester</organizationUrl>
+      </developer>
+   </developers>
+
+   <scm>
+      <connection>scm:git:git@github.com:automatictester/none.git</connection>
+      <developerConnection>scm:git:git@github.com:automatictester/none.git</developerConnection>
+      <url>git@github.com:automatictester/none.git</url>
+      <tag>HEAD</tag>
+   </scm>
+
+   <issueManagement>
+      <system>GitHub</system>
+      <url>https://github.com/automatictester/none/issues</url>
+   </issueManagement>
+   <ciManagement>
+      <system>Travis CI</system>
+      <url>https://travis-ci.com/automatictester/none</url>
+   </ciManagement>
+
+   <build>
+      <plugins>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version>
+            <configuration>
+               <source>1.8</source>
+               <target>1.8</target>
+            </configuration>
+         </plugin>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>3.7.1</version>
+            <dependencies>
+               <dependency>
+                  <groupId>org.apache.maven.doxia</groupId>
+                  <artifactId>doxia-module-markdown</artifactId>
+                  <version>1.8</version>
+               </dependency>
+            </dependencies>
+         </plugin>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <version>3.0.0</version>
+         </plugin>
+
+         <plugin>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+               <execution>
+                  <id>clean-docs</id>
+                  <phase>pre-site</phase>
+                  <goals>
+                     <goal>clean</goal>
+                  </goals>
+                  <configuration>
+                     <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                     <filesets>
+                        <fileset>
+                           <directory>docs/</directory>
+                        </fileset>
+                     </filesets>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+
+         <plugin>
+            <groupId>com.coderplus.maven.plugins</groupId>
+            <artifactId>copy-rename-maven-plugin</artifactId>
+            <version>1.0.1</version>
+            <executions>
+               <execution>
+                  <phase>post-site</phase>
+                  <goals>
+                     <goal>rename</goal>
+                  </goals>
+                  <configuration>
+                     <sourceFile>${project.build.directory}/site/</sourceFile>
+                     <destinationFile>docs/</destinationFile>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+
+      </plugins>
+   </build>
+
+   <distributionManagement>
+      <snapshotRepository>
+         <id>ossrh</id>
+         <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      </snapshotRepository>
+      <repository>
+         <id>ossrh</id>
+         <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      </repository>
+   </distributionManagement>
+
+   <reporting>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <reportSets>
+               <reportSet>
+                  <reports>
+                     <report>ci-management</report>
+                     <report>dependencies</report>
+                     <report>dependency-info</report>
+                     <report>dependency-management</report>
+                     <report>distribution-management</report>
+                     <report>issue-management</report>
+                     <report>plugin-management</report>
+                     <report>plugins</report>
+                     <report>scm</report>
+                     <report>summary</report>
+                  </reports>
+               </reportSet>
+            </reportSets>
+         </plugin>
+      </plugins>
+   </reporting>
+
+   <dependencies>
+      <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <version>6.14.3</version>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+
+   <dependencyManagement>
+      <dependencies>
+         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+         </dependency>
+      </dependencies>
+   </dependencyManagement>
+
+</project>

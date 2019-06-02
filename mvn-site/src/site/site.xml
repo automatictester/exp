@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="${project.name}">
+   <version position="left"/>
+   <publishDate position="left"/>
+   <body>
+      <menu name="Overview">
+         <item name="Introduction" href="index.html"/>
+         <item name="Release Notes" href="release-notes.html"/>
+         <item name="License" href="license.html"/>
+      </menu>
+      <menu name="Project Documentation">
+         <item name="Project Information" href="project-info.html"/>
+         <item name="Summary" href="summary.html"/>
+         <item name="Dependency Information" href="dependency-info.html"/>
+         <item name="Source Code Management" href="scm.html"/>
+         <item name="Issue Management" href="issue-management.html"/>
+         <item name="Dependency Management" href="dependency-management.html"/>
+         <item name="Dependencies" href="dependencies.html"/>
+         <item name="CI Management" href="ci-management.html"/>
+         <item name="Plugin Management" href="plugin-management.html"/>
+         <item name="Plugins" href="plugins.html"/>
+         <item name="Distribution Management" href="distribution-management.html"/>
+      </menu>
+   </body>
+   <skin>
+      <groupId>org.apache.maven.skins</groupId>
+      <artifactId>maven-fluido-skin</artifactId>
+      <version>1.7</version>
+   </skin>
+   <custom>
+      <fluidoSkin>
+         <gitHub>
+            <projectId>automatictester/none</projectId>
+            <ribbonOrientation>right</ribbonOrientation>
+            <ribbonColor>gray</ribbonColor>
+         </gitHub>
+      </fluidoSkin>
+   </custom>
+</project>

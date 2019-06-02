@@ -8,3 +8,4 @@ build/
 vars.sh
 .credentials
 bamboo.properties
+mvn-site/docs/
