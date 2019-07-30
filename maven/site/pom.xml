@@ -5,7 +5,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <groupId>uk.co.automatictester</groupId>
-   <artifactId>mvn-site</artifactId>
+   <artifactId>site</artifactId>
    <version>1.0-SNAPSHOT</version>
 
    <name>Maven Site Example</name>
