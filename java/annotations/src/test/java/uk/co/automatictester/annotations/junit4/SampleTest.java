@@ -9,13 +9,12 @@ public class SampleTest {
     public TestIdRule rule = new TestIdRule();
 
     @Test
-    @TestId("ABC-101")
+    @TestId("ABC-001")
     public void testSomething() {
 
     }
 
     @Test
-    @TestId("ABC-102")
     public void testSomethingElse() {
 
     }
