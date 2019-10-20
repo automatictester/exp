@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 
-mvn clean package
-docker build -t simple-app .
+./build-docker.sh
 docker run -p 8080:8080 simple-app
