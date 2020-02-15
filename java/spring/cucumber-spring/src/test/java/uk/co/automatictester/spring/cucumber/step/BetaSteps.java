@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import uk.co.automatictester.spring.cucumber.component.AnotherState;
-import uk.co.automatictester.spring.cucumber.component.ExternalBean;
-import uk.co.automatictester.spring.cucumber.component.ExternalBeanC;
-import uk.co.automatictester.spring.cucumber.component.State;
+import uk.co.automatictester.spring.cucumber.state.AnotherState;
+import uk.co.automatictester.spring.cucumber.state.State;
+import uk.co.automatictester.spring.external.beans.ExternalBean;
+import uk.co.automatictester.spring.external.beans.ExternalBeanC;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,14 +51,33 @@ public class BetaSteps implements En {
             assertThat(myKey).isEqualTo("my.value");
             assertThat(myQuestion).isEqualTo("my.answer");
 
-            listBeans();
+            checkBeans();
+            listBeanClasses();
+
+            assertThat(context.getBean("scenarioState")).isInstanceOf(State.class);
         });
     }
 
-    private void listBeans() {
-        Arrays.stream(context.getBeanDefinitionNames())
+    private void checkBeans() {
+        List<String> beans = Arrays.stream(context.getBeanDefinitionNames())
+                .filter(bean -> !bean.startsWith("org.springframework"))
+                .filter(bean -> !bean.startsWith("uk.co.automatictester")) // cucumber step definitions
+                .collect(Collectors.toList());
+
+        beans.forEach(bean -> log.info("Bean name: {}", bean));
+        assertThat(beans.size()).isEqualTo(8);
+    }
+
+    private void listBeanClasses() {
+        List<String> beans = Arrays.stream(context.getBeanDefinitionNames())
                 .filter(bean -> !bean.startsWith("org.springframework"))
                 .filter(bean -> !bean.startsWith("uk.co.automatictester"))
-                .forEach(bean -> log.info("{}", bean));
+                .collect(Collectors.toList());
+
+        beans.forEach(bean -> {
+            String beanClass = context.getBean(bean).getClass().getSimpleName();
+            log.info("Bean class: {}", beanClass);
+        });
+        assertThat(beans.size()).isEqualTo(8);
     }
 }

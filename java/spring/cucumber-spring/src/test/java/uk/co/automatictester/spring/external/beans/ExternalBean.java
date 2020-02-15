@@ -1,4 +1,4 @@
-package uk.co.automatictester.spring.cucumber.component;
+package uk.co.automatictester.spring.external.beans;
 
 public interface ExternalBean {
 

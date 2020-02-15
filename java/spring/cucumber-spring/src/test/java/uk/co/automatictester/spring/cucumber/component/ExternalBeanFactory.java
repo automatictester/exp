@@ -2,6 +2,10 @@ package uk.co.automatictester.spring.cucumber.component;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.co.automatictester.spring.external.beans.ExternalBean;
+import uk.co.automatictester.spring.external.beans.ExternalBeanA;
+import uk.co.automatictester.spring.external.beans.ExternalBeanB;
+import uk.co.automatictester.spring.external.beans.ExternalBeanC;
 
 @Configuration
 public class ExternalBeanFactory {
