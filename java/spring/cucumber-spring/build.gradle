@@ -28,7 +28,7 @@ task cucumber() {
 test.finalizedBy(cucumber)
 
 def lombokVersion = '1.18.12'
-def springFrameworkVersion = "5.1.5.RELEASE"
+def springFrameworkVersion = "5.2.3.RELEASE"
 def slf4jVersion = '1.7.30'
 def cucumberVersion = '5.3.0'
 
