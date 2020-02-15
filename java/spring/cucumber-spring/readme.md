@@ -1,0 +1,2 @@
+Totally overengineered and at the same time simplified example of how to use certaing Spring constructs inside 
+`cucumber-spring`. Don't follow unless you can distinguish between what's a feature demo and what's a best practice.
