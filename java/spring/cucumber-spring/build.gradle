@@ -1,4 +1,7 @@
-apply plugin: 'java'
+plugins {
+    id 'java'
+    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.17'
+}
 
 repositories {
     mavenCentral()
@@ -10,13 +13,29 @@ configurations {
     }
 }
 
-task cucumber() {
+def getVersion() {
+    def versionNumber = '1.0.5'
+    println versionNumber
+    versionNumber
+}
+
+cucumberReports {
+    outputDir = file('build/cucumber/html')
+    reports = files('build/cucumber/json/results.json')
+    classifications = [
+            // lazy evaluation - not during gradle configuration phase
+            Version: "${-> getVersion()}"
+    ]
+}
+
+task cucumber(type: Test) {
     dependsOn assemble, compileTestJava
     doLast {
         javaexec {
-            main = "io.cucumber.core.cli.Main"
+            main = 'io.cucumber.core.cli.Main'
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
             args = ['--plugin', 'pretty',
+                    '--plugin', 'json:build/cucumber/json/results.json',
                     '--strict',
                     '--tags', 'not @ignore',
                     '--glue', 'uk.co.automatictester.spring.cucumber.step',
@@ -28,7 +47,7 @@ task cucumber() {
 test.finalizedBy(cucumber)
 
 def lombokVersion = '1.18.12'
-def springFrameworkVersion = "5.2.3.RELEASE"
+def springFrameworkVersion = '5.2.3.RELEASE'
 def slf4jVersion = '1.7.30'
 def cucumberVersion = '5.3.0'
 
