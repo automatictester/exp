@@ -8,19 +8,28 @@ import uk.co.automatictester.spring.cucumber.state.State;
 
 public class AlphaSteps implements En {
 
-    private final State state;
-    private final AnotherState anotherState;
+    private final State state; // autowired constructor param allows for a property to be marked final
 
-    public AlphaSteps(@Autowired @Qualifier("scenarioState") State state,
-                      @Autowired AnotherState anotherState) {
+    @Autowired // autowired field - not recommended
+    private AnotherState anotherState;
+
+    public AlphaSteps(@Autowired @Qualifier("scenarioState") State state) {
         this.state = state;
-        this.anotherState = anotherState;
 
         Given("nothing", () -> {
         });
 
         When("something happens", () -> {
-            state.setId(21);
+            doStuff();
+            doOtherStuff();
         });
+    }
+
+    private void doStuff() {
+        state.setId(21);
+    }
+
+    private void doOtherStuff() {
+        anotherState.setId(22);
     }
 }

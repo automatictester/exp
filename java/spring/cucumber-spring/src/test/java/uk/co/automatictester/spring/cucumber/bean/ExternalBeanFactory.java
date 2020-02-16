@@ -1,4 +1,4 @@
-package uk.co.automatictester.spring.cucumber.component;
+package uk.co.automatictester.spring.cucumber.bean;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +10,12 @@ import uk.co.automatictester.spring.external.beans.ExternalBeanC;
 @Configuration
 public class ExternalBeanFactory {
 
-    @Bean("extBeanA")
+    @Bean("extBeanA") // renames @Bean bean from 'externalBeanA' to 'extBeanA'
     public ExternalBean externalBeanA() {
         return new ExternalBeanA();
     }
 
-    @Bean("extBeanB")
+    @Bean
     public ExternalBean externalBeanB() {
         return new ExternalBeanB();
     }

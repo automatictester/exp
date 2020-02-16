@@ -20,27 +20,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 public class BetaSteps implements En {
 
-    private final State state;
-    private final AnotherState anotherState;
+    @Autowired
+    @Qualifier("scenarioState")
+    private State state;
 
-    private @Value("${my.question}")
-    String myQuestion;
+    @Autowired
+    private AnotherState anotherState;
+
+    @Value("${my.question}") // property injection - class property
+    private String myQuestion;
 
     @Autowired
     private ApplicationContext context;
 
     public BetaSteps(
-            @Autowired @Qualifier("scenarioState") State state,
-            @Autowired AnotherState anotherState,
             @Autowired @Qualifier("extBeanA") ExternalBean beanA,
-            @Autowired @Qualifier("extBeanB") ExternalBean beanB,
-            @Autowired ExternalBeanC beanC,
-            @Autowired @Value("${my.key}") String myKey) {
-        this.state = state;
-        this.anotherState = anotherState;
+            @Autowired @Qualifier("externalBeanB") ExternalBean beanB,
+            @Autowired @Value("${my.key}") String myKey, // property injection - constructor param
+            @Autowired ExternalBeanC beanC) {
 
         Then("there is a result of it", () -> {
             assertThat(state.getId()).isEqualTo(21);
+            assertThat(anotherState.getId()).isEqualTo(22);
         });
 
         And("stuff", () -> {
@@ -52,7 +53,7 @@ public class BetaSteps implements En {
             assertThat(myQuestion).isEqualTo("my.answer");
 
             checkBeans();
-            listBeanClasses();
+            checkBeanClasses();
 
             assertThat(context.getBean("scenarioState")).isInstanceOf(State.class);
         });
@@ -61,14 +62,14 @@ public class BetaSteps implements En {
     private void checkBeans() {
         List<String> beans = Arrays.stream(context.getBeanDefinitionNames())
                 .filter(bean -> !bean.startsWith("org.springframework"))
-                .filter(bean -> !bean.startsWith("uk.co.automatictester")) // cucumber step definitions
+                .filter(bean -> !bean.startsWith("uk.co.automatictester")) // cucumber stepdefs
                 .collect(Collectors.toList());
 
         beans.forEach(bean -> log.info("Bean name: {}", bean));
         assertThat(beans.size()).isEqualTo(8);
     }
 
-    private void listBeanClasses() {
+    private void checkBeanClasses() {
         List<String> beans = Arrays.stream(context.getBeanDefinitionNames())
                 .filter(bean -> !bean.startsWith("org.springframework"))
                 .filter(bean -> !bean.startsWith("uk.co.automatictester"))

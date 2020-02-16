@@ -13,7 +13,7 @@ import javax.annotation.PreDestroy;
 
 import static io.cucumber.spring.CucumberTestContext.SCOPE_CUCUMBER_GLUE;
 
-@Component("scenarioState")
+@Component("scenarioState") // renames @Component bean from 'state' to 'scenarioState'
 @Scope(SCOPE_CUCUMBER_GLUE)
 @Getter
 @Setter
@@ -21,6 +21,8 @@ import static io.cucumber.spring.CucumberTestContext.SCOPE_CUCUMBER_GLUE;
 public class State implements InitializingBean, DisposableBean {
 
     private int id;
+
+    // spring and javax lifecycle annotations, in execution order
 
     @PostConstruct
     public void postContruct() {
