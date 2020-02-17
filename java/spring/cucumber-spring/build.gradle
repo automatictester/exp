@@ -39,7 +39,7 @@ task cucumber(type: Test) {
                     '--strict',
                     '--tags', 'not @ignore',
                     '--glue', 'uk.co.automatictester.spring.cucumber.step',
-                    'src/test/resources/features']
+                    'classpath:features']
         }
     }
 }
