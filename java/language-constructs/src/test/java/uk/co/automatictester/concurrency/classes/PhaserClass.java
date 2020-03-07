@@ -61,6 +61,17 @@ public class PhaserClass {
 
     private List<Thread> threads = new ArrayList<>();
 
+    /**
+     * Sample output:
+     *
+     * 3
+     * 1
+     * 2
+     * 6 after 3
+     * 4 after 2
+     * 5 after 1, 3
+     *
+     */
     @Test
     public void runThread() {
         threads.add(t1);
