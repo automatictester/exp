@@ -20,7 +20,7 @@ public class ConcurrentTypeExecution {
     private ExecutionMutex mutex = new ExecutionMutex();
 
     private Runnable alpha = () -> {
-        for (; ; ) {
+        while(true) {
             boolean success = mutex.tryIncrementAlpha();
             if (success) {
                 int duration = new Random().nextInt(MAX_EXECUTION_DURATION);
@@ -33,7 +33,7 @@ public class ConcurrentTypeExecution {
     };
 
     private Runnable beta = () -> {
-        for (; ; ) {
+        while(true) {
             boolean success = mutex.tryIncrementBeta();
             if (success) {
                 int duration = new Random().nextInt(MAX_EXECUTION_DURATION);
