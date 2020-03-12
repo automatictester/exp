@@ -9,6 +9,7 @@ public class PrivateInterfaceMethodTest {
         default void doStuff() {
             doPublicStuff();
             doPrivateStuff();
+            doStaticStuff();
         }
 
         private void doPublicStuff() {
@@ -17,6 +18,10 @@ public class PrivateInterfaceMethodTest {
 
         private void doPrivateStuff() {
             System.out.println("Do private stuff");
+        }
+
+        private static void doStaticStuff() {
+            System.out.println("Do static stuff");
         }
     }
 
