@@ -17,7 +17,7 @@ public class StreamTest {
         );
 
         listOfOptionals.stream()
-                .flatMap(Optional::stream) // new in Java 9, useful with ordered streams
+                .flatMap(Optional::stream) // new in Java 9
                 .forEach(i -> log.info("{}", i)); // 1 2 3
     }
 
@@ -26,7 +26,7 @@ public class StreamTest {
         List<Integer> orderedList = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
         orderedList.stream()
-                .takeWhile(i -> i < 6) // new in Java 9
+                .takeWhile(i -> i < 6) // new in Java 9, useful with ordered streams
                 .forEach(i -> log.info("{}", i)); // 1 2 3 4 5
     }
 

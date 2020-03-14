@@ -9,18 +9,18 @@ public class PrivateInterfaceMethodTest {
         default void doStuff() {
             doPublicStuff();
             doPrivateStuff();
-            doStaticStuff();
+            doPrivateStaticStuff();
         }
 
-        private void doPublicStuff() {
+        default void doPublicStuff() {
             System.out.println("Do public stuff");
         }
 
-        private void doPrivateStuff() {
+        private void doPrivateStuff() { // new in Java 9
             System.out.println("Do private stuff");
         }
 
-        private static void doStaticStuff() {
+        private static void doPrivateStaticStuff() { // new in Java 9
             System.out.println("Do static stuff");
         }
     }

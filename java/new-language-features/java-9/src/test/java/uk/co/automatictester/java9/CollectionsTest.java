@@ -1,49 +1,39 @@
 package uk.co.automatictester.java9;
 
-import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-@Slf4j
+@SuppressWarnings("ALL")
 public class CollectionsTest {
 
-    @Test
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void listJava9() {
+        List<Integer> listJava9 = List.of(1, 2, 3);
+        listJava9.add(4); // throws UnsupportedOperationException
+
+        List<Integer> listJava8 = Arrays.asList(1, 2, 3);
+        listJava8.add(4);
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
     public void setJava9() {
-        Set<Integer> set = Set.of(1, 2, 3);
-        log.info("{}", set);
+        Set<Integer> setJava9 = Set.of(1, 2, 3);
+        setJava9.add(4); // throws UnsupportedOperationException
+
+        Set<Integer> setJava8 = new HashSet<>(Arrays.asList(1, 2, 3));
+        setJava8.add(4);
     }
 
-    @Test
-    public void setJava8() {
-        Set<Integer> set = new HashSet<>(Arrays.asList(1, 2, 3));
-        log.info("{}", set);
-    }
-
-    @Test
+    @Test(expectedExceptions = UnsupportedOperationException.class)
     public void mapJava9() {
-        Map<Integer, Integer> map = Map.of(1, 11, 2, 22);
-        log.info("{}", map);
-    }
+        Map<Integer, Integer> mapJava9 = Map.of(1, 11, 2, 22);
+        mapJava9.put(3, 33); // throws UnsupportedOperationException
 
-    @Test
-    public void mapJava8() {
-        Map<Integer, Integer> map = new HashMap<>() {{
+        Map<Integer, Integer> mapJava8 = new HashMap<>() {{
             put(1, 11);
             put(2, 22);
         }};
-        log.info("{}", map);
-    }
-
-    @Test
-    public void listJava9() {
-        List<Integer> list = List.of(1, 2, 3);
-        log.info("{}", list);
-    }
-
-    @Test
-    public void listJava8() {
-        List<Integer> list = Arrays.asList(1, 2, 3);
-        log.info("{}", list);
+        mapJava8.put(3, 33);
     }
 }

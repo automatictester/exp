@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@SuppressWarnings("ALL")
 public class UnmodifiableCollectorsTest {
 
     @Test(expectedExceptions = UnsupportedOperationException.class)
