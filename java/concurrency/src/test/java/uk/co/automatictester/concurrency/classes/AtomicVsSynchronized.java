@@ -107,7 +107,7 @@ public class AtomicVsSynchronized {
         assertThat(j, is(equalTo(0)));
     }
 
-    @Test
+    @Test(description = "fail")
     public void testNotThreadSafe() throws InterruptedException {
         ExecutorService service = Executors.newFixedThreadPool(THREAD_COUNT);
         Runnable incr = () -> {
