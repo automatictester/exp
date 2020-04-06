@@ -29,6 +29,7 @@ public class AtomicVsSynchronized {
 
     private AtomicInteger i = new AtomicInteger(0);
     private int j = 0;
+    private int k = 0;
 
     private void increment() {
         i.incrementAndGet();
@@ -44,6 +45,14 @@ public class AtomicVsSynchronized {
 
     private synchronized void synchronizedDecrement() {
         j--;
+    }
+
+    private void notThreadSafeIncrement() {
+        k++;
+    }
+
+    private void notThreadSafeDecrement() {
+        k--;
     }
 
     @Test(invocationCount = 5)
@@ -96,5 +105,31 @@ public class AtomicVsSynchronized {
         service.awaitTermination(20, TimeUnit.SECONDS);
         System.out.println(j);
         assertThat(j, is(equalTo(0)));
+    }
+
+    @Test
+    public void testNotThreadSafe() throws InterruptedException {
+        ExecutorService service = Executors.newFixedThreadPool(THREAD_COUNT);
+        Runnable incr = () -> {
+            for (int i = 0; i < LIMIT; i++) {
+                notThreadSafeIncrement();
+            }
+        };
+        Runnable decr = () -> {
+            for (int i = 0; i < LIMIT; i++) {
+                notThreadSafeDecrement();
+            }
+        };
+        try {
+            for (int i = 0; i < THREAD_COUNT; i++) {
+                service.submit(incr);
+                service.submit(decr);
+            }
+        } finally {
+            service.shutdown();
+        }
+        service.awaitTermination(20, TimeUnit.SECONDS);
+        System.out.println(k);
+        assertThat(k, is(equalTo(0)));
     }
 }
