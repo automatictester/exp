@@ -1,17 +1,20 @@
 package uk.co.automatictester.concurrency.basics;
 
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
-public class ExtendsThread extends Thread {
-
-    private String output = "output";
-
-    public void run() {
-        System.out.println(output);
-    }
+public class ExtendsThread {
 
     @Test
     public void runThread() {
-        new Thread(new ExtendsThread()).start();
+        new Thread(new MyThread()).start();
+    }
+}
+
+@Slf4j
+class MyThread extends Thread {
+
+    public void run() {
+        log.info("output");
     }
 }

@@ -12,37 +12,83 @@ import static org.hamcrest.Matchers.is;
 
 public class SynchronizedMethod {
 
-    private static final int LIMIT = 1_000_000;
+    private final int invocationCount = 1_000_000;
+    private final int threadPool = 4;
 
-    private static int i = 0;
+    @Test(invocationCount = 5)
+    public void testIncrementSynchronizedV1() throws InterruptedException {
+        ExecutorService service = Executors.newFixedThreadPool(threadPool);
+        Counter counter = new Counter();
+        Runnable r = counter::incrementSynchronizedV1;
 
-    private synchronized void increment() {
-        i++;
-    }
-
-    private void incrementEquivalent() {
-        synchronized (this) {
-            i++;
-        }
-    }
-
-    private void incrementNotSynchronized() {
-        i++;
-    }
-
-    @Test
-    public void testSynchronization() throws InterruptedException {
-        ExecutorService service = Executors.newFixedThreadPool(4);
-        Runnable r = () -> increment();
         try {
-            for (int i = 0; i < LIMIT; i++) {
+            for (int i = 0; i < invocationCount; i++) {
                 service.submit(r);
             }
         } finally {
             service.shutdown();
         }
+
         service.awaitTermination(10, TimeUnit.SECONDS);
-        System.out.println(i);
-        assertThat(i, is(equalTo(LIMIT)));
+        assertThat(counter.get(), is(equalTo(invocationCount)));
+    }
+
+    @Test(invocationCount = 5)
+    public void testIncrementSynchronizedV2() throws InterruptedException {
+        ExecutorService service = Executors.newFixedThreadPool(threadPool);
+        Counter counter = new Counter();
+        Runnable r = counter::incrementSynchronizedV2;
+
+        try {
+            for (int i = 0; i < invocationCount; i++) {
+                service.submit(r);
+            }
+        } finally {
+            service.shutdown();
+        }
+
+        service.awaitTermination(10, TimeUnit.SECONDS);
+        assertThat(counter.get(), is(equalTo(invocationCount)));
+    }
+
+    @Test(invocationCount = 5, description = "fail")
+    public void testIncrement() throws InterruptedException {
+        ExecutorService service = Executors.newFixedThreadPool(threadPool);
+        Counter counter = new Counter();
+        Runnable r = counter::increment;
+
+        try {
+            for (int i = 0; i < invocationCount; i++) {
+                service.submit(r);
+            }
+        } finally {
+            service.shutdown();
+        }
+
+        service.awaitTermination(10, TimeUnit.SECONDS);
+        assertThat(counter.get(), is(equalTo(invocationCount)));
+    }
+}
+
+class Counter {
+
+    private int i = 0;
+
+    public synchronized void incrementSynchronizedV1() {
+        i++;
+    }
+
+    public void incrementSynchronizedV2() {
+        synchronized (this) {
+            i++;
+        }
+    }
+
+    public void increment() {
+        i++;
+    }
+
+    public int get() {
+        return i;
     }
 }

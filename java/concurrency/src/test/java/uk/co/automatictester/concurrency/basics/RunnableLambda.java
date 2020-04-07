@@ -1,26 +1,15 @@
 package uk.co.automatictester.concurrency.basics;
 
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
+@Slf4j
 public class RunnableLambda {
 
-    private static int c = 0;
-    private static final int LIMIT = 1000000;
+    private Runnable r = () -> log.info("output");
 
     @Test
-    public void runThread() throws InterruptedException {
-        Runnable r = () -> {
-            for (int i = 0; i < LIMIT; i++) {
-                c++;
-            }
-        };
+    public void runThread() {
         new Thread(r).start();
-
-
-        while (c < LIMIT) {
-            System.out.println("waiting... " + c);
-            Thread.sleep(1);
-        }
-        System.out.println("done: " + c);
     }
 }

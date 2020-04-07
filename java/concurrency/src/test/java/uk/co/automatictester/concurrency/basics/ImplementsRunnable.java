@@ -1,17 +1,20 @@
 package uk.co.automatictester.concurrency.basics;
 
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
-public class ImplementsRunnable implements Runnable {
-
-    private String output = "output";
-
-    public void run() {
-        System.out.println(output);
-    }
+public class ImplementsRunnable {
 
     @Test
     public void runThread() {
-        new Thread(new ImplementsRunnable()).start();
+        new Thread(new MyRunnable()).start();
+    }
+}
+
+@Slf4j
+class MyRunnable implements Runnable {
+
+    public void run() {
+        log.info("output");
     }
 }
