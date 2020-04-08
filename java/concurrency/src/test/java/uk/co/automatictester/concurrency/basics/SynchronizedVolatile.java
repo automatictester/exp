@@ -6,7 +6,7 @@ public class SynchronizedVolatile {
 
     private final int loopCount = 100_000_000;
 
-    @Test(invocationCount = 5, description = "volatile is much faster than synchronized")
+    @Test(invocationCount = 2, description = "volatile is much faster than synchronized")
     public void testGetVolatile() {
         State state = new State();
         for (int i = 0; i < loopCount; i++) {
@@ -14,7 +14,7 @@ public class SynchronizedVolatile {
         }
     }
 
-    @Test(invocationCount = 5)
+    @Test(invocationCount = 2)
     public void testGetSynchronized() {
         State state = new State();
         for (int i = 0; i < loopCount; i++) {

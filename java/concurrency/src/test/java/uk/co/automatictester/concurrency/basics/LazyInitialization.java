@@ -13,14 +13,14 @@ import static org.hamcrest.Matchers.is;
 
 public class LazyInitialization {
 
-    private final int threadCount = 1_000;
-    private ConcurrentSkipListSet<Singleton> instances = new ConcurrentSkipListSet<>();
+    private final int threads = 1_000;
+    private final ConcurrentSkipListSet<Singleton> instances = new ConcurrentSkipListSet<>();
 
     @Test(invocationCount = 5, description = "random pass/fail")
     public void testLazyInit() throws InterruptedException {
         instances.clear();
 
-        ExecutorService service = Executors.newFixedThreadPool(threadCount);
+        ExecutorService service = Executors.newFixedThreadPool(threads);
 
         Runnable r = () -> {
             Singleton instance = Singleton.getInstance();
@@ -28,7 +28,7 @@ public class LazyInitialization {
         };
 
         try {
-            for (int i = 0; i < threadCount; i++) {
+            for (int i = 0; i < threads; i++) {
                 service.submit(r);
             }
         } finally {

@@ -1,50 +1,58 @@
 package uk.co.automatictester.concurrency.classes;
 
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.*;
 
 public class CyclicBarrierClass {
 
-    private Runnable barrierAction = () -> System.out.println("Bareer broken");
+    private final int threads = 4;
+
+    /**
+     * Sample output for a CyclicBarrier with 2 parties:
+     * <p>
+     * Thread starting
+     * Thread starting
+     * Bareer broken
+     * Thread starting
+     * Thread finishing
+     * Thread finishing
+     * Thread starting
+     * Bareer broken
+     * Thread finishing
+     * Thread finishing
+     */
+    @Test
+    public void demoBarrier() throws InterruptedException {
+        MyCyclicBarrier myCyclicBarrier = new MyCyclicBarrier();
+        ExecutorService service = Executors.newFixedThreadPool(threads);
+        try {
+            for (int i = 0; i < threads; i++) {
+                service.submit(myCyclicBarrier.getRunnable());
+            }
+        } finally {
+            service.shutdown();
+        }
+        service.awaitTermination(10, TimeUnit.SECONDS);
+    }
+}
+
+@Slf4j
+class MyCyclicBarrier {
+
+    private Runnable barrierAction = () -> log.info("Bareer broken");
     private CyclicBarrier barrier = new CyclicBarrier(2, barrierAction);
 
-    private Thread getThread() {
-        Runnable r = () -> {
-            System.out.println("Thread starting");
+    public Runnable getRunnable() {
+        return () -> {
+            log.info("Thread starting");
             try {
                 barrier.await();
             } catch (InterruptedException | BrokenBarrierException e) {
                 e.printStackTrace();
             }
-            System.out.println("Thread finishing");
+            log.info("Thread finishing");
         };
-        return new Thread(r);
-    }
-
-    /**
-     * Sample output for a CyclicBarrier with 2 parties:
-     *
-     * Thread starting
-     * Thread starting
-     * Bareer broken
-     * Thread starting
-     * Thread finishing
-     * Thread finishing
-     * Thread starting
-     * Bareer broken
-     * Thread finishing
-     * Thread finishing
-     *
-     */
-    @Test
-    public void demoBarrier() throws InterruptedException {
-        Thread t1 = getThread();
-        Thread t2 = getThread();
-        Thread t3 = getThread();
-        Thread t4 = getThread();
-        t1.start(); t2.start(); t3.start(); t4.start();
-        t1.join(); t2.join();; t3.join(); t4.join();
     }
 }

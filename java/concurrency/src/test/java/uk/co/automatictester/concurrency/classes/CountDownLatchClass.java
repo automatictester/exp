@@ -1,29 +1,19 @@
 package uk.co.automatictester.concurrency.classes;
 
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class CountDownLatchClass {
 
-    private CountDownLatch latch = new CountDownLatch(4);
-
-    private Thread getThread() {
-        Runnable r = () -> {
-            System.out.println("Thread starting");
-            latch.countDown();
-            try {
-                latch.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Thread finishing");
-        };
-        return new Thread(r);
-    }
+    private final int threads = 4;
 
     /**
-     * Output for a CountDownLatch with count = 4:
+     * Output:
      * Thread starting
      * Thread starting
      * Thread starting
@@ -35,11 +25,38 @@ public class CountDownLatchClass {
      */
     @Test
     public void demoCountDown() throws InterruptedException {
-        Thread t1 = getThread();
-        Thread t2 = getThread();
-        Thread t3 = getThread();
-        Thread t4 = getThread();
-        t1.start(); t2.start(); t3.start(); t4.start();
-        t1.join(); t2.join(); t3.join(); t4.join();
+        MyCountDown myCountDown = new MyCountDown(threads);
+        ExecutorService service = Executors.newFixedThreadPool(threads);
+        try {
+            for (int i = 0; i < threads; i++) {
+                service.submit(myCountDown.getRunnable());
+            }
+        } finally {
+            service.shutdown();
+        }
+        service.awaitTermination(10, TimeUnit.SECONDS);
+    }
+}
+
+@Slf4j
+class MyCountDown {
+
+    private final CountDownLatch latch;
+
+    public MyCountDown(int threads) {
+        latch = new CountDownLatch(threads);
+    }
+
+    public Runnable getRunnable() {
+        return () -> {
+            log.info("Thread starting");
+            latch.countDown();
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            log.info("Thread finishing");
+        };
     }
 }

@@ -20,8 +20,12 @@
 
 - Java 5:
     - `Atomic*`
+    - `BlockingQueue`
     - `ConcurrentHashMap`
+    - `ConcurrentMap`
     - `ConcurrentLinkedQueue`
+    - `CopyOnWriteArrayList`
+    - `CopyOnWriteArraySet`
     - `CountDownLatch`
     - `CyclicBarrier`
     - `ExecutorService`

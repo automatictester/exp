@@ -10,7 +10,7 @@ public class ParallelAddRecursiveTaskTest {
     @Test
     public void test() throws ExecutionException, InterruptedException {
         int[] input = {1, 2, 3, 2, 2, 1, 2, 3, 2, 2};
-        ParallelAddRecursiveTask task = new ParallelAddRecursiveTask(0, input.length, input);
+        ParallelAddRecursiveTask task = new ParallelAddRecursiveTask(0, input.length, input, 3);
         ForkJoinPool.commonPool().invoke(task);
         assert task.get() == 20;
     }

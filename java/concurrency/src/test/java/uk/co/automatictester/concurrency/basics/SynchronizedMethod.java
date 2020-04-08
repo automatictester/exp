@@ -12,17 +12,17 @@ import static org.hamcrest.Matchers.is;
 
 public class SynchronizedMethod {
 
-    private final int invocationCount = 1_000_000;
-    private final int threadPool = 4;
+    private final int loopCount = 1_000_000;
+    private final int threads = 4;
 
     @Test(invocationCount = 5)
     public void testIncrementSynchronizedV1() throws InterruptedException {
-        ExecutorService service = Executors.newFixedThreadPool(threadPool);
+        ExecutorService service = Executors.newFixedThreadPool(threads);
         Counter counter = new Counter();
         Runnable r = counter::incrementSynchronizedV1;
 
         try {
-            for (int i = 0; i < invocationCount; i++) {
+            for (int i = 0; i < loopCount; i++) {
                 service.submit(r);
             }
         } finally {
@@ -30,17 +30,17 @@ public class SynchronizedMethod {
         }
 
         service.awaitTermination(10, TimeUnit.SECONDS);
-        assertThat(counter.get(), is(equalTo(invocationCount)));
+        assertThat(counter.get(), is(equalTo(loopCount)));
     }
 
     @Test(invocationCount = 5)
     public void testIncrementSynchronizedV2() throws InterruptedException {
-        ExecutorService service = Executors.newFixedThreadPool(threadPool);
+        ExecutorService service = Executors.newFixedThreadPool(threads);
         Counter counter = new Counter();
         Runnable r = counter::incrementSynchronizedV2;
 
         try {
-            for (int i = 0; i < invocationCount; i++) {
+            for (int i = 0; i < loopCount; i++) {
                 service.submit(r);
             }
         } finally {
@@ -48,17 +48,17 @@ public class SynchronizedMethod {
         }
 
         service.awaitTermination(10, TimeUnit.SECONDS);
-        assertThat(counter.get(), is(equalTo(invocationCount)));
+        assertThat(counter.get(), is(equalTo(loopCount)));
     }
 
     @Test(invocationCount = 5, description = "fail")
     public void testIncrement() throws InterruptedException {
-        ExecutorService service = Executors.newFixedThreadPool(threadPool);
+        ExecutorService service = Executors.newFixedThreadPool(threads);
         Counter counter = new Counter();
         Runnable r = counter::increment;
 
         try {
-            for (int i = 0; i < invocationCount; i++) {
+            for (int i = 0; i < loopCount; i++) {
                 service.submit(r);
             }
         } finally {
@@ -66,7 +66,7 @@ public class SynchronizedMethod {
         }
 
         service.awaitTermination(10, TimeUnit.SECONDS);
-        assertThat(counter.get(), is(equalTo(invocationCount)));
+        assertThat(counter.get(), is(equalTo(loopCount)));
     }
 }
 

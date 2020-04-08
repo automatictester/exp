@@ -1,100 +1,67 @@
 package uk.co.automatictester.concurrency.classes;
 
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.*;
-import java.util.stream.IntStream;
 
+@Slf4j
 public class ExecutorServiceClass {
 
-    private Runnable r = () -> {
-        for (int i = 0; i < 100; i++) {
-            System.out.println(i);
-        }
+    private final Runnable r = () -> log.info("running");
+
+    private final Callable<Integer> c = () -> {
+        log.info("running");
+        return 2;
     };
 
     @Test
     public void execute() throws InterruptedException {
-
-        ExecutorService service = null;
+        ExecutorService service = Executors.newCachedThreadPool();
         try {
-            service = Executors.newCachedThreadPool();
-            service.execute(r);
-            service.execute(r);
-            service.execute(r);
-            service.execute(r);
+            service.execute(r); // like submit(), but void (doesn't return Future)
         } finally {
-            if (service != null) {
-                service.shutdown();
-            }
+            service.shutdown();
         }
         service.awaitTermination(10, TimeUnit.SECONDS);
-        System.out.println("last statement");
+        log.info("last statement");
     }
 
     @Test
-    public void submit() {
-
-        ExecutorService service = null;
+    public void submit() throws InterruptedException {
+        ExecutorService service = Executors.newCachedThreadPool();
         try {
-            service = Executors.newSingleThreadExecutor();
             service.submit(r);
-            service.submit(r);
-            System.out.println("last statement");
         } finally {
-            if (service != null) {
-                service.shutdown();
-            }
+            service.shutdown();
         }
-    }
-
-    @Test
-    public void submitAndWaitToTerminate() throws InterruptedException {
-
-        ExecutorService service = null;
-        try {
-            service = Executors.newSingleThreadExecutor();
-            service.submit(r);
-            System.out.println("last statement");
-        } finally {
-            if (service != null) {
-                service.shutdown();
-            }
-        }
-        service.awaitTermination(5, TimeUnit.SECONDS);
+        service.awaitTermination(10, TimeUnit.SECONDS);
     }
 
     @Test
     public void submitAndWaitToFinish() throws ExecutionException, InterruptedException {
-
-        ExecutorService service = null;
+        ExecutorService service = Executors.newCachedThreadPool();
         try {
-            service = Executors.newSingleThreadExecutor();
-            Future<?> f = service.submit(r);
-            f.get(); // will return null as r is Runnable not Callable
-            System.out.println("last statement");
+            Future<?> future = service.submit(r);
+            future.get(); // blocks until submit() finished execution; will return null as r is Runnable not Callable
+            log.info("statement after future.get()");
         } finally {
-            if (service != null) {
-                service.shutdown();
-            }
+            service.shutdown();
         }
+        service.awaitTermination(10, TimeUnit.SECONDS);
     }
 
-    private Callable<Integer> c = () -> IntStream.rangeClosed(1, 100).sum();
 
     @Test
     public void submitAndWaitForResult() throws ExecutionException, InterruptedException {
-
-        ExecutorService service = null;
+        ExecutorService service = Executors.newCachedThreadPool();
         try {
-            service = Executors.newSingleThreadExecutor();
-            Future<Integer> f = service.submit(c);
-            int i = f.get();
-            System.out.println("Total: " + i);
+            Future<Integer> future = service.submit(c);
+            int i = future.get();
+            log.info("Value: {}", i);
         } finally {
-            if (service != null) {
-                service.shutdown();
-            }
+            service.shutdown();
         }
+        service.awaitTermination(10, TimeUnit.SECONDS);
     }
 }
