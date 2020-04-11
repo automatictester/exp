@@ -1,38 +1,50 @@
-### Common tools for solving concurrency problems in Java
-- global synchronization (synchronized methods), an example of a structured lock
-- object-based synchronization (synchronized blocks), an example of a structured lock
-- coarse-grained unstructured locking with `ReentrantLock`
-- fine-grained unstructured locking with `ReentrantReadWriteLock`
-- atomic constructs, most importantly - `AtomicInteger`, `AtomicReference(V)` - 
-  which should outperform synchronization as they rely on hardware-specific primitives
-- concurrent constructs, most importantly: `ConcurrentHashMap`, `ConcurrentLinkedQueue`, `PriorityBlockingQueue`, 
-  `ConcurrentSkipListSet`
-- `volatile` keyword - see [this guideline](https://www.ibm.com/developerworks/java/library/j-jtp06197)
-- `CyclicBarrier`, `CountDownLatch` (both static) and `Phaser` (dynamic) classes 
+### Overview
 
-### Higher-level constructs
+Concurrency in Java is all about:
+- Synchronization
+- Visibility
+
+### Common tools for solving concurrency problems in Java
+- Global synchronization (synchronized methods), an example of structured lock
+- Object-based synchronization (synchronized blocks), an example of structured lock
+- Coarse-grained unstructured locking with `ReentrantLock`
+- Fine-grained unstructured locking with `ReentrantReadWriteLock`
+- Atomic classes, e.g. `AtomicInteger`, `AtomicReference(V)`
+- Volatile - see [this guideline](https://www.ibm.com/developerworks/java/library/j-jtp06197)
+- Synchronizers, e.g. `CyclicBarrier`, `CountDownLatch`, `Phaser`
+- Implementing wrapper classes with custom synchronized methods for already synchronized classes through inheritance, if no such concurrent class exists
+- Implementing wrapper classes with custom synchronized methods for synchronized or not synchronized classes through composition
 - Actor model with no shared state
-- Embedding lock constructs inside elements stored by concurrent collection - for use cases, where more than
- one thread may access the same element of the collection, e.g. Boruvka's algorithm which uses more than one element 
- as part of the same iteration
+- Embedding lock constructs inside elements stored by concurrent collection
+- Concurrent collections - see below
+
+### Concurrent collections
+
+| Single-threaded | Synchronized | Concurrent |
+|-----------------|--------------|------------|
+|List|Collections.synchronizedList|CopyOnWriteArrayList|
+|Set|Collections.synchronizedSet|ConcurrentSkipListSet (concurrent replacement for TreeSet), CopyOnWriteArraySet|
+|Map|Collections.synchronizedMap|ConcurrentSkipListMap (concurrent replacement for TreeMap), ConcurrentMap, ConcurrentHashMap|
 
 ### Timeline
 
 - Java 5:
     - `Atomic*`
-    - `BlockingQueue`
     - `ConcurrentHashMap`
     - `ConcurrentMap`
-    - `ConcurrentLinkedQueue`
     - `CopyOnWriteArrayList`
     - `CopyOnWriteArraySet`
     - `CountDownLatch`
     - `CyclicBarrier`
     - `ExecutorService`
-    - `*Lock`
-    - `PriorityBlockingQueue`
+    - `ReentrantLock`
+    - `ReentrantReadWriteLock`
 - Java 6:
+    - `ConcurrentSkipListMap`
     - `ConcurrentSkipListSet`
 - Java 7:
     - `ForkJoinPool`
+    - `ForkJoinTask`
     - `Phaser`
+    - `RecursiveAction`
+    - `RecursiveTask`

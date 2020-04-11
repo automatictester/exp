@@ -8,20 +8,22 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Requirements:
  * - alpha cannot execute in parallel with beta
  * - execution order is not important
  */
-public class ConcurrentCucumberTestExecution {
+public class ConcurrentCompositeCounterTest {
 
     private final int maxExecutionDuration = 10;
     private final int threadRetryWaitTime = 10;
     private final int threads = 1_000;
 
-    private ExecutionMutex mutex = new ExecutionMutex();
+    private ConcurrentCompositeCounter mutex;
 
     private Runnable alpha = () -> {
         while (true) {
@@ -61,8 +63,9 @@ public class ConcurrentCucumberTestExecution {
      * [INFO] ALPHA: phase started
      * [INFO] BETA:  phase started
      */
-    @Test
+    @Test(invocationCount = 5)
     public void trialMutex() throws InterruptedException {
+        mutex = new ConcurrentCompositeCounter();
         generateRunnables();
         ExecutorService service = Executors.newFixedThreadPool(threads);
         try {
@@ -71,6 +74,7 @@ public class ConcurrentCucumberTestExecution {
             service.shutdown();
         }
         service.awaitTermination(10, TimeUnit.SECONDS);
+        mutex.logHighestThreadCount();
     }
 
     private void generateRunnables() {
@@ -92,43 +96,75 @@ public class ConcurrentCucumberTestExecution {
     }
 }
 
+/**
+ * Improved version of SynchronizedCompositeCounter:
+ * - decrement operations are not synchronised and thus always allowed
+ * - as a consequence, highestThreadCount is 4xx, in comparison to 6xx in SynchronizedCompositeCounter
+ * - logging will include estimates (conscious trade-off)
+ */
 @Slf4j
-class ExecutionMutex {
+class ConcurrentCompositeCounter {
 
-    private int alphaCount = 0;
-    private int betaCount = 0;
+    private AtomicInteger alphaCount = new AtomicInteger(0);
+    private AtomicInteger betaCount = new AtomicInteger(0);
+    private Semaphore incrementSynchronizer = new Semaphore(1);
+    private AtomicInteger highestThreadCount = new AtomicInteger(0);
 
-    public synchronized boolean tryIncrementAlpha() {
-        if (betaCount == 0) {
-            if (alphaCount == 0) {
-                log.info("ALPHA: phase started");
+    public boolean tryIncrementAlpha() {
+        try {
+            incrementSynchronizer.acquire();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        if (betaCount.get() == 0) {
+            if (alphaCount.get() == 0) {
+                log.debug("ALPHA: phase started");
             }
-            alphaCount++;
-            log.info("ALPHA: {} - BETA: {}", alphaCount, betaCount);
+            alphaCount.incrementAndGet();
+            if (alphaCount.get() > highestThreadCount.get()) {
+                highestThreadCount.set(alphaCount.get());
+            }
+            log.debug("ALPHA: {} - BETA: {}", alphaCount.get(), betaCount.get());
+            incrementSynchronizer.release();
             return true;
         } else {
+            incrementSynchronizer.release();
             return false;
         }
     }
 
-    public synchronized boolean tryIncrementBeta() {
-        if (alphaCount == 0) {
-            if (betaCount == 0) {
-                log.info("BETA:  phase started");
+    public boolean tryIncrementBeta() {
+        try {
+            incrementSynchronizer.acquire();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        if (alphaCount.get() == 0) {
+            if (betaCount.get() == 0) {
+                log.debug("BETA:  phase started");
             }
-            betaCount++;
-            log.info("ALPHA: {} - BETA: {}", alphaCount, betaCount);
+            betaCount.incrementAndGet();
+            if (betaCount.get() > highestThreadCount.get()) {
+                highestThreadCount.set(betaCount.get());
+            }
+            log.debug("ALPHA: {} - BETA: {}", alphaCount.get(), betaCount.get());
+            incrementSynchronizer.release();
             return true;
         } else {
+            incrementSynchronizer.release();
             return false;
         }
     }
 
-    public synchronized void decrementAlpha() {
-        alphaCount--;
+    public void decrementAlpha() {
+        alphaCount.decrementAndGet();
     }
 
-    public synchronized void decrementBeta() {
-        betaCount--;
+    public void decrementBeta() {
+        betaCount.decrementAndGet();
+    }
+
+    public void logHighestThreadCount() {
+        log.info("Highest thread count: {}", highestThreadCount.get());
     }
 }
