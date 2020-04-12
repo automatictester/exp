@@ -21,14 +21,10 @@ public class SynchronizedMethod {
         Counter counter = new Counter();
         Runnable r = counter::incrementSynchronizedV1;
 
-        try {
-            for (int i = 0; i < loopCount; i++) {
-                service.submit(r);
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < loopCount; i++) {
+            service.submit(r);
         }
-
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
         assertThat(counter.get(), is(equalTo(loopCount)));
     }
@@ -39,14 +35,10 @@ public class SynchronizedMethod {
         Counter counter = new Counter();
         Runnable r = counter::incrementSynchronizedV2;
 
-        try {
-            for (int i = 0; i < loopCount; i++) {
-                service.submit(r);
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < loopCount; i++) {
+            service.submit(r);
         }
-
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
         assertThat(counter.get(), is(equalTo(loopCount)));
     }
@@ -57,14 +49,10 @@ public class SynchronizedMethod {
         Counter counter = new Counter();
         Runnable r = counter::increment;
 
-        try {
-            for (int i = 0; i < loopCount; i++) {
-                service.submit(r);
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < loopCount; i++) {
+            service.submit(r);
         }
-
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
         assertThat(counter.get(), is(equalTo(loopCount)));
     }

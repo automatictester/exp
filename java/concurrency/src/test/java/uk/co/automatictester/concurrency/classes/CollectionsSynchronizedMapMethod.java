@@ -2,7 +2,9 @@ package uk.co.automatictester.concurrency.classes;
 
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -39,13 +41,10 @@ public class CollectionsSynchronizedMapMethod {
 
     private void doStuff(Runnable r) throws InterruptedException {
         ExecutorService service = Executors.newFixedThreadPool(threads);
-        try {
-            for (int i = 0; i < threads; i++) {
-                service.submit(r);
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < threads; i++) {
+            service.submit(r);
         }
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
     }
 }

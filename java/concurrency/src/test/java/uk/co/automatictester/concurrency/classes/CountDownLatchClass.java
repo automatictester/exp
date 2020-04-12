@@ -27,13 +27,10 @@ public class CountDownLatchClass {
     public void demoCountDown() throws InterruptedException {
         MyCountDown myCountDown = new MyCountDown(threads);
         ExecutorService service = Executors.newFixedThreadPool(threads);
-        try {
-            for (int i = 0; i < threads; i++) {
-                service.submit(myCountDown.getRunnable());
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < threads; i++) {
+            service.submit(myCountDown.getRunnable());
         }
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
     }
 }

@@ -25,11 +25,8 @@ public class PhaserClass {
     public void runThread() throws InterruptedException {
         MyPhaser myPhaser = new MyPhaser();
         ExecutorService service = Executors.newFixedThreadPool(myPhaser.getRunnables().size());
-        try {
-            myPhaser.getRunnables().forEach(service::submit);
-        } finally {
-            service.shutdown();
-        }
+        myPhaser.getRunnables().forEach(service::submit);
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
     }
 }

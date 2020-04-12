@@ -1,7 +1,6 @@
 package uk.co.automatictester.concurrency.classes;
 
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -81,11 +80,8 @@ public class CopyOnWriteArrayListTest {
 
     private void run(Runnable r) throws InterruptedException {
         ExecutorService service = Executors.newFixedThreadPool(4);
-        try {
-            service.submit(r);
-        } finally {
-            service.shutdown();
-        }
+        service.submit(r);
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
     }
 }

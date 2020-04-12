@@ -27,13 +27,10 @@ public class CyclicBarrierClass {
     public void demoBarrier() throws InterruptedException {
         MyCyclicBarrier myCyclicBarrier = new MyCyclicBarrier();
         ExecutorService service = Executors.newFixedThreadPool(threads);
-        try {
-            for (int i = 0; i < threads; i++) {
-                service.submit(myCyclicBarrier.getRunnable());
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < threads; i++) {
+            service.submit(myCyclicBarrier.getRunnable());
         }
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
     }
 }

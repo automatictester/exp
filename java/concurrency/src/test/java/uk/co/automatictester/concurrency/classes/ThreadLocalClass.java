@@ -29,13 +29,10 @@ public class ThreadLocalClass {
     public void testThreadLocal() throws InterruptedException {
         threadNames.clear();
         ExecutorService service = Executors.newFixedThreadPool(threads);
-        try {
-            for (int i = 0; i < threads; i++) {
-                service.submit(r);
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < threads; i++) {
+            service.submit(r);
         }
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
         assertThat(threadNames.size(), equalTo(threads));
     }

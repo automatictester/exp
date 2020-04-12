@@ -41,13 +41,10 @@ public class CollectionsSynchronizedListMethod {
 
     private void doStuff(Runnable r) throws InterruptedException {
         ExecutorService service = Executors.newFixedThreadPool(threads);
-        try {
-            for (int i = 0; i < threads; i++) {
-                service.submit(r);
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < threads; i++) {
+            service.submit(r);
         }
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
     }
 }

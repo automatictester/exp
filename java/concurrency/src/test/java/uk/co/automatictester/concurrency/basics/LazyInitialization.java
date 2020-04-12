@@ -27,14 +27,10 @@ public class LazyInitialization {
             instances.add(instance);
         };
 
-        try {
-            for (int i = 0; i < threads; i++) {
-                service.submit(r);
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < threads; i++) {
+            service.submit(r);
         }
-
+        service.shutdown();
         service.awaitTermination(5, TimeUnit.SECONDS);
         assertThat(instances.size(), is(equalTo(1)));
     }

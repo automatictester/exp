@@ -18,11 +18,8 @@ public class ExecutorServiceClass {
     @Test
     public void execute() throws InterruptedException {
         ExecutorService service = Executors.newCachedThreadPool();
-        try {
-            service.execute(r); // like submit(), but void (doesn't return Future)
-        } finally {
-            service.shutdown();
-        }
+        service.execute(r); // like submit(), but void (doesn't return Future)
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
         log.info("last statement");
     }
@@ -30,24 +27,18 @@ public class ExecutorServiceClass {
     @Test
     public void submit() throws InterruptedException {
         ExecutorService service = Executors.newCachedThreadPool();
-        try {
-            service.submit(r);
-        } finally {
-            service.shutdown();
-        }
+        service.submit(r);
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
     }
 
     @Test
     public void submitAndWaitToFinish() throws ExecutionException, InterruptedException {
         ExecutorService service = Executors.newCachedThreadPool();
-        try {
-            Future<?> future = service.submit(r);
-            future.get(); // blocks until submit() finished execution; will return null as r is Runnable not Callable
-            log.info("statement after future.get()");
-        } finally {
-            service.shutdown();
-        }
+        Future<?> future = service.submit(r);
+        future.get(); // blocks until submit() finished execution; will return null as r is Runnable not Callable
+        log.info("statement after future.get()");
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
     }
 
@@ -55,13 +46,10 @@ public class ExecutorServiceClass {
     @Test
     public void submitAndWaitForResult() throws ExecutionException, InterruptedException {
         ExecutorService service = Executors.newCachedThreadPool();
-        try {
-            Future<Integer> future = service.submit(c);
-            int i = future.get();
-            log.info("Value: {}", i);
-        } finally {
-            service.shutdown();
-        }
+        Future<Integer> future = service.submit(c);
+        int i = future.get();
+        log.info("Value: {}", i);
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
     }
 }

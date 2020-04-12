@@ -17,13 +17,10 @@ public class ConcurrentHashMapClass {
         MyConcurrentMap myConcurrentMap = new MyConcurrentMap();
         ExecutorService service = Executors.newFixedThreadPool(threads);
         Runnable r = myConcurrentMap::computeIfPresent;
-        try {
-            for (int j = 0; j < loopCount; j++) {
-                service.submit(r);
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < loopCount; i++) {
+            service.submit(r);
         }
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
         assertThat(myConcurrentMap.get("e"), equalTo(loopCount));
     }
@@ -33,13 +30,10 @@ public class ConcurrentHashMapClass {
         MyConcurrentMap myConcurrentMap = new MyConcurrentMap();
         ExecutorService service = Executors.newFixedThreadPool(threads);
         Runnable r = myConcurrentMap::replaceSynchronized;
-        try {
-            for (int j = 0; j < loopCount; j++) {
-                service.submit(r);
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < loopCount; i++) {
+            service.submit(r);
         }
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
         assertThat(myConcurrentMap.get("e"), equalTo(loopCount));
     }
@@ -49,13 +43,10 @@ public class ConcurrentHashMapClass {
         MyConcurrentMap myConcurrentMap = new MyConcurrentMap();
         ExecutorService service = Executors.newFixedThreadPool(threads);
         Runnable r = myConcurrentMap::replace;
-        try {
-            for (int j = 0; j < loopCount; j++) {
-                service.submit(r);
-            }
-        } finally {
-            service.shutdown();
+        for (int i = 0; i < loopCount; i++) {
+            service.submit(r);
         }
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
         assertThat(myConcurrentMap.get("e"), equalTo(loopCount));
     }

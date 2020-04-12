@@ -41,12 +41,9 @@ public class AtomicClasses {
                 counter.decrementAtomic();
             }
         };
-        try {
-            service.submit(incr);
-            service.submit(decr);
-        } finally {
-            service.shutdown();
-        }
+        service.submit(incr);
+        service.submit(decr);
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
         assertThat(counter.getAtomic(), is(equalTo(0)));
     }

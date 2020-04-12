@@ -68,11 +68,8 @@ public class ConcurrentCompositeCounterTest {
         mutex = new ConcurrentCompositeCounter();
         generateRunnables();
         ExecutorService service = Executors.newFixedThreadPool(threads);
-        try {
-            runnables.forEach(service::submit);
-        } finally {
-            service.shutdown();
-        }
+        runnables.forEach(service::submit);
+        service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
         mutex.logHighestThreadCount();
     }
