@@ -9,15 +9,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class ExecutorServiceClass {
 
-    private final Runnable r = () -> log.info("running");
-
-    private final Callable<Integer> c = () -> {
-        log.info("running");
-        return 2;
-    };
-
     @Test
     public void execute() throws InterruptedException {
+        Runnable r = () -> log.info("running");
         ExecutorService service = Executors.newCachedThreadPool();
         service.execute(r); // like submit(), but void (doesn't return Future)
         service.shutdown();
@@ -27,6 +21,7 @@ public class ExecutorServiceClass {
 
     @Test
     public void submit() throws InterruptedException {
+        Runnable r = () -> log.info("running");
         ExecutorService service = Executors.newCachedThreadPool();
         service.submit(r);
         service.shutdown();
@@ -35,6 +30,7 @@ public class ExecutorServiceClass {
 
     @Test
     public void submitAndWaitToFinish() throws ExecutionException, InterruptedException {
+        Runnable r = () -> log.info("running");
         ExecutorService service = Executors.newCachedThreadPool();
         Future<?> future = service.submit(r);
         future.get(); // blocks until submit() finished execution; will return null as r is Runnable not Callable
@@ -46,6 +42,12 @@ public class ExecutorServiceClass {
 
     @Test
     public void submitAndWaitForResult() throws ExecutionException, InterruptedException {
+
+        Callable<Integer> c = () -> {
+            log.info("running");
+            return 2;
+        };
+
         ExecutorService service = Executors.newCachedThreadPool();
         Future<Integer> future = service.submit(c);
         int i = future.get();
@@ -142,22 +144,14 @@ public class ExecutorServiceClass {
     @Test
     public void tryCustomThreadStackSize() throws InterruptedException {
 
-        class ThreadCounter {
-            private AtomicInteger value = new AtomicInteger(1);
-
-            public int getValue() {
-                return value.getAndIncrement();
-            }
-        }
-
         Runnable r = () -> log.info(Thread.currentThread().getName());
 
         ThreadGroup threadGroup = null;
         long suggestedAndMostLikelyIgnoredThreadStackSize = 64 * 1024; // 64k
-        ThreadCounter threadCounter = new ThreadCounter();
+        AtomicInteger threadCounter = new AtomicInteger(0);
 
         ThreadFactory threadFactory = threadFactoryRunnable -> {
-            String threadName = String.valueOf(threadCounter.getValue());
+            String threadName = String.valueOf(threadCounter.incrementAndGet());
             return new Thread(
                     threadGroup,
                     threadFactoryRunnable,
@@ -177,6 +171,8 @@ public class ExecutorServiceClass {
 
     @Test
     public void customThreadPoolExecutorConfig() throws InterruptedException {
+        Runnable r = () -> log.info("running");
+
         ExecutorService service = Executors.newFixedThreadPool(10);
         ((ThreadPoolExecutor) service).setCorePoolSize(10);
         ((ThreadPoolExecutor) service).setMaximumPoolSize(10);
@@ -191,8 +187,8 @@ public class ExecutorServiceClass {
 
     @Test(expectedExceptions = RejectedExecutionException.class)
     public void saturationPolicyDefaultAbort() throws InterruptedException {
+        Runnable r = () -> log.info("running");
         ExecutorService service = Executors.newCachedThreadPool();
-
         service.shutdown();
         service.submit(r); // throws RejectedExecutionException
         service.awaitTermination(10, TimeUnit.SECONDS);
@@ -200,11 +196,39 @@ public class ExecutorServiceClass {
 
     @Test
     public void saturationPolicyDiscard() throws InterruptedException {
+        Runnable r = () -> log.info("running");
+
         ExecutorService service = Executors.newCachedThreadPool();
         ((ThreadPoolExecutor) service).setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
 
         service.shutdown();
         service.submit(r); // silently ignore
         service.awaitTermination(10, TimeUnit.SECONDS);
+    }
+
+    @Test(invocationCount = 5)
+    public void saturationPolicyCallerRuns() throws InterruptedException {
+        int corePoolSize = 4;
+        int maximumPoolSize = 4;
+        long keepAliveTime = 1;
+        TimeUnit unit = TimeUnit.MINUTES;
+        BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(50); // the smaller the bounded queue, the more likely for caller to run instead
+        ExecutorService service = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
+        ((ThreadPoolExecutor) service).setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+
+        AtomicInteger counter = new AtomicInteger(0);
+        Runnable r = () -> {
+            if (Thread.currentThread().getName().equals("main")) {
+                counter.incrementAndGet();
+            }
+        };
+
+        int threads = 1_000;
+        for (int i = 0; i < threads; i++) {
+            service.execute(r);
+        }
+        service.shutdown();
+        service.awaitTermination(10, TimeUnit.SECONDS);
+        log.info("Caller ran: {}", counter.get());
     }
 }
