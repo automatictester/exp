@@ -15,11 +15,7 @@ public class ThreadFromCallable {
 
     @Test
     public void runThread() throws ExecutionException, InterruptedException {
-        Callable<Integer> c = () -> {
-            Thread.sleep(1000);
-            log.info("output");
-            return 1;
-        };
+        Callable<Integer> c = () -> 1;
 
         FutureTask<Integer> ft = new FutureTask<>(c);
         new Thread(ft).start();

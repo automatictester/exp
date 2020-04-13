@@ -1,10 +1,10 @@
 package uk.co.automatictester.concurrency.classes;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class ExecutorServiceClass {
@@ -142,16 +142,29 @@ public class ExecutorServiceClass {
     @Test
     public void tryCustomThreadStackSize() throws InterruptedException {
 
-        ThreadGroup threadGroup = null;
-        long suggestedThreadStackSize = 64 * 1024; // 64k
-        String threadName = RandomStringUtils.randomAlphanumeric(8); // probably not the best idea ever
+        class ThreadCounter {
+            private AtomicInteger value = new AtomicInteger(1);
 
-        ThreadFactory threadFactory = threadFactoryRunnable -> new Thread(
-                threadGroup,
-                threadFactoryRunnable,
-                threadName,
-                suggestedThreadStackSize // platform-dependent and likely to be ignored
-        );
+            public int getValue() {
+                return value.getAndIncrement();
+            }
+        }
+
+        Runnable r = () -> log.info(Thread.currentThread().getName());
+
+        ThreadGroup threadGroup = null;
+        long suggestedAndMostLikelyIgnoredThreadStackSize = 64 * 1024; // 64k
+        ThreadCounter threadCounter = new ThreadCounter();
+
+        ThreadFactory threadFactory = threadFactoryRunnable -> {
+            String threadName = String.valueOf(threadCounter.getValue());
+            return new Thread(
+                    threadGroup,
+                    threadFactoryRunnable,
+                    threadName,
+                    suggestedAndMostLikelyIgnoredThreadStackSize
+            );
+        };
 
         int threads = 1_000;
         ExecutorService service = Executors.newFixedThreadPool(threads, threadFactory);
@@ -159,6 +172,39 @@ public class ExecutorServiceClass {
             service.execute(r);
         }
         service.shutdown();
+        service.awaitTermination(10, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void customThreadPoolExecutorConfig() throws InterruptedException {
+        ExecutorService service = Executors.newFixedThreadPool(10);
+        ((ThreadPoolExecutor) service).setCorePoolSize(10);
+        ((ThreadPoolExecutor) service).setMaximumPoolSize(10);
+        ((ThreadPoolExecutor) service).setKeepAliveTime(0L, TimeUnit.MILLISECONDS);
+        ((ThreadPoolExecutor) service).setThreadFactory(Thread::new);
+        ((ThreadPoolExecutor) service).setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+
+        service.submit(r);
+        service.shutdown();
+        service.awaitTermination(10, TimeUnit.SECONDS);
+    }
+
+    @Test(expectedExceptions = RejectedExecutionException.class)
+    public void saturationPolicyDefaultAbort() throws InterruptedException {
+        ExecutorService service = Executors.newCachedThreadPool();
+
+        service.shutdown();
+        service.submit(r); // throws RejectedExecutionException
+        service.awaitTermination(10, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void saturationPolicyDiscard() throws InterruptedException {
+        ExecutorService service = Executors.newCachedThreadPool();
+        ((ThreadPoolExecutor) service).setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
+
+        service.shutdown();
+        service.submit(r); // silently ignore
         service.awaitTermination(10, TimeUnit.SECONDS);
     }
 }
