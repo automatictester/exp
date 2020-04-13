@@ -9,7 +9,9 @@ public class RunnableLambda {
     private Runnable r = () -> log.info("output");
 
     @Test
-    public void runThread() {
-        new Thread(r).start();
+    public void runThread() throws InterruptedException {
+        Thread t = new Thread(r);
+        t.start();
+        t.join();
     }
 }

@@ -144,7 +144,7 @@ public class ExecutorServiceClass {
 
         ThreadGroup threadGroup = null;
         long suggestedThreadStackSize = 64 * 1024; // 64k
-        String threadName = RandomStringUtils.randomAlphabetic(8); // probably not the best idea ever
+        String threadName = RandomStringUtils.randomAlphanumeric(8); // probably not the best idea ever
 
         ThreadFactory threadFactory = threadFactoryRunnable -> new Thread(
                 threadGroup,

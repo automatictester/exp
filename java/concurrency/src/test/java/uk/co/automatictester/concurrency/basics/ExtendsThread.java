@@ -6,8 +6,10 @@ import org.testng.annotations.Test;
 public class ExtendsThread {
 
     @Test
-    public void runThread() {
-        new Thread(new MyThread()).start();
+    public void runThread() throws InterruptedException {
+        Thread t = new MyThread();
+        t.start();
+        t.join();
     }
 }
 
