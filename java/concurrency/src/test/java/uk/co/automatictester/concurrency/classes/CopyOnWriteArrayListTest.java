@@ -22,8 +22,8 @@ public class CopyOnWriteArrayListTest {
      * - concurrent writes 25% slower
      */
 
-    private List<Integer> synchronizedList = Collections.synchronizedList(new ArrayList<>());
-    private List<Integer> concurrentList = new CopyOnWriteArrayList<>();
+    private final List<Integer> synchronizedList = Collections.synchronizedList(new ArrayList<>());
+    private final List<Integer> concurrentList = new CopyOnWriteArrayList<>();
 
     @BeforeClass
     public void setup() {
