@@ -11,77 +11,78 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class CopyOnWriteArrayListTest {
 
-    private final int listSize = 50_000;
-    private List<Integer> synchronizedList;
+    /**
+     * This example:
+     * - concurrent reads over 100x faster
+     * - concurrent writes 25% slower
+     */
 
-    // a bit faster reads, much slower writes
+    private List<Integer> synchronizedList = Collections.synchronizedList(new ArrayList<>());
     private List<Integer> concurrentList = new CopyOnWriteArrayList<>();
-
-    private List<Integer> synchronizedListForWriteOperations = Collections.synchronizedList(new ArrayList<>());
-    private List<Integer> concurrentListForWriteOperations = new CopyOnWriteArrayList<>();
 
     @BeforeClass
     public void setup() {
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < listSize; i++) {
-            list.add(i);
-            concurrentList.add(i);
+        for (int i = 0; i < 50_000; i++) {
+            synchronizedList.add(i * 2);
+            concurrentList.add(i * 2);
         }
-        synchronizedList = Collections.synchronizedList(list);
-    }
-
-    @Test(invocationCount = 5)
-    public void testReadSynchronized() throws InterruptedException {
-        Runnable r = () -> {
-            for (int i = 0; i < listSize; i++) {
-                synchronizedList.get(i);
-            }
-        };
-        run(r);
-    }
-
-    @Test(invocationCount = 5)
-    public void testReadConcurrent() throws InterruptedException {
-        Runnable r = () -> {
-            for (int i = 0; i < listSize; i++) {
-                concurrentList.get(i);
-            }
-        };
-        run(r);
     }
 
     @Test(invocationCount = 5)
     public void testWriteSynchronized() throws InterruptedException {
-        Runnable r = () -> {
-            for (int i = 0; i < listSize; i++) {
-                synchronizedListForWriteOperations.add(1);
-            }
-            for (int i = 0; i < listSize; i++) {
-                synchronizedListForWriteOperations.remove(0);
-            }
-        };
-        run(r);
+        List<Integer> list = Collections.synchronizedList(new ArrayList<>());
+        write(list);
     }
 
     @Test(invocationCount = 5)
     public void testWriteConcurrent() throws InterruptedException {
-        Runnable r = () -> {
-            for (int i = 0; i < listSize; i++) {
-                concurrentListForWriteOperations.add(i);
-            }
-            for (int i = 0; i < listSize; i++) {
-                concurrentListForWriteOperations.remove(0);
-            }
-        };
-        run(r);
+        List<Integer> list = new CopyOnWriteArrayList<>();
+        write(list);
     }
 
-    private void run(Runnable r) throws InterruptedException {
-        ExecutorService service = Executors.newFixedThreadPool(4);
-        service.submit(r);
-        service.shutdown();
-        service.awaitTermination(10, TimeUnit.SECONDS);
+    private void write(List<Integer> list) throws InterruptedException {
+        Runnable r = () -> {
+            for (int i = 0; i < 20_000; i++) {
+                list.add(i * 2);
+                list.remove(0);
+            }
+        };
+        ExecutorService executor = Executors.newFixedThreadPool(8);
+        for (int i = 0; i < 1_000; i++) {
+            executor.submit(r);
+        }
+        executor.shutdown();
+        executor.awaitTermination(10, TimeUnit.SECONDS);
+        assertThat(list.size(), equalTo(0));
+    }
+
+    @Test(invocationCount = 5)
+    public void testReadSynchronized() throws InterruptedException {
+        read(synchronizedList);
+    }
+
+    @Test(invocationCount = 5)
+    public void testReadConcurrent() throws InterruptedException {
+        read(concurrentList);
+    }
+
+    private void read(List<Integer> list) throws InterruptedException {
+        Runnable r = () -> {
+            for (int i = 0; i < 50_000; i++) {
+                list.get(i);
+            }
+        };
+        ExecutorService executor = Executors.newFixedThreadPool(8);
+        for (int i = 0; i < 1_000; i++) {
+            executor.submit(r);
+        }
+        executor.shutdown();
+        executor.awaitTermination(10, TimeUnit.SECONDS);
+        assertThat(list.size(), equalTo(50_000));
     }
 }

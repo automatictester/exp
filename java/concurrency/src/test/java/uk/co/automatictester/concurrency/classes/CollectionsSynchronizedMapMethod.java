@@ -14,18 +14,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class CollectionsSynchronizedMapMethod {
 
-    private final int threads = 1_000;
-    private final int loopCount = 10;
     private Map<Integer, Integer> map;
 
     private Runnable r = () -> {
-        for (int i = 0; i < loopCount; i++) {
+        for (int i = 0; i < 10; i++) {
             map.put(1, 1);
             map.remove(1);
         }
     };
 
-    @Test(invocationCount = 50, description = "random fail")
+    @Test(invocationCount = 5, description = "random fail")
     public void testMap() throws InterruptedException {
         map = new HashMap<>();
         doStuff(r);
@@ -40,8 +38,8 @@ public class CollectionsSynchronizedMapMethod {
     }
 
     private void doStuff(Runnable r) throws InterruptedException {
-        ExecutorService service = Executors.newFixedThreadPool(threads);
-        for (int i = 0; i < threads; i++) {
+        ExecutorService service = Executors.newFixedThreadPool(4);
+        for (int i = 0; i < 50; i++) {
             service.submit(r);
         }
         service.shutdown();
