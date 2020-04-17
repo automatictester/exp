@@ -71,10 +71,10 @@ public class CopyOnWriteArrayListTest {
 
     private void read(List<Integer> list) throws InterruptedException {
         Runnable r = () -> {
+            int x = ThreadLocalRandom.current().nextInt();
             for (int i = 0; i < 50_000; i++) {
-                int x = list.get(i);
-                int y = ThreadLocalRandom.current().nextInt();
-                if (x == y) {
+                int y = list.get(i);
+                if (y == x) {
                     log.info("x");
                 }
             }

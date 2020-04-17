@@ -71,8 +71,9 @@ public class ConcurrentHashMapClass {
 
     private void read(Map<Integer, Integer> map) throws InterruptedException {
         Runnable r = () -> {
+            int x = ThreadLocalRandom.current().nextInt();
             for (int i = 0; i < 1_000; i++) {
-                if (map.get(i) == ThreadLocalRandom.current().nextInt()) {
+                if (map.get(i) == x) {
                     log.info("x");
                 }
             }
