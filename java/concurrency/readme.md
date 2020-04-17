@@ -5,10 +5,10 @@ Concurrency in Java is all about:
 - Visibility
 
 ### Common tools for solving concurrency problems in Java
-- Global synchronization (synchronized methods), an example of structured lock
-- Object-based synchronization (synchronized blocks), an example of structured lock
-- Coarse-grained unstructured locking with `ReentrantLock`
-- Fine-grained unstructured locking with `ReentrantReadWriteLock`
+- Synchronized methods
+- Synchronized blocks
+- Explicit locking with `ReentrantLock`
+- Fine-grained explicit locking with `ReentrantReadWriteLock`
 - Atomic classes, e.g. `AtomicInteger`, `AtomicReference(V)`
 - Volatile - see [this guideline](https://www.ibm.com/developerworks/java/library/j-jtp06197)
 - Synchronizers, e.g. `CyclicBarrier`, `CountDownLatch`, `Phaser`
@@ -48,3 +48,4 @@ Concurrency in Java is all about:
     - `Phaser`
     - `RecursiveAction`
     - `RecursiveTask`
+    - `ThreadLocalRandom`
