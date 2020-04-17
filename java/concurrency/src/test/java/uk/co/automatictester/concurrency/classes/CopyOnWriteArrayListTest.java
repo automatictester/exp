@@ -73,8 +73,7 @@ public class CopyOnWriteArrayListTest {
         Runnable r = () -> {
             int x = ThreadLocalRandom.current().nextInt();
             for (int i = 0; i < 50_000; i++) {
-                int y = list.get(i);
-                if (y == x) {
+                if (list.get(i) == x) {
                     log.info("x");
                 }
             }
