@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 
 public class LazyInitialization {
 
@@ -32,7 +31,7 @@ public class LazyInitialization {
         }
         service.shutdown();
         service.awaitTermination(5, TimeUnit.SECONDS);
-        assertThat(instances.size(), is(equalTo(1)));
+        assertThat(instances.size(), equalTo(1));
     }
 }
 

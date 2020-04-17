@@ -9,9 +9,8 @@ public class CyclicBarrierClass {
 
     private final int threads = 4;
 
-    /**
+    /*
      * Sample output for a CyclicBarrier with 2 parties:
-     * <p>
      * Thread starting
      * Thread starting
      * Bareer broken

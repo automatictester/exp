@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 
 public class SynchronizedMethod {
 
@@ -17,44 +16,33 @@ public class SynchronizedMethod {
 
     @Test(invocationCount = 5)
     public void testIncrementSynchronizedV1() throws InterruptedException {
-        ExecutorService service = Executors.newFixedThreadPool(threads);
         Counter counter = new Counter();
-        Runnable r = counter::incrementSynchronizedV1;
-
-        for (int i = 0; i < loopCount; i++) {
-            service.submit(r);
-        }
-        service.shutdown();
-        service.awaitTermination(10, TimeUnit.SECONDS);
-        assertThat(counter.get(), is(equalTo(loopCount)));
+        Runnable runnable = counter::incrementSynchronizedV1;
+        test(counter, runnable);
     }
 
     @Test(invocationCount = 5)
     public void testIncrementSynchronizedV2() throws InterruptedException {
-        ExecutorService service = Executors.newFixedThreadPool(threads);
         Counter counter = new Counter();
-        Runnable r = counter::incrementSynchronizedV2;
-
-        for (int i = 0; i < loopCount; i++) {
-            service.submit(r);
-        }
-        service.shutdown();
-        service.awaitTermination(10, TimeUnit.SECONDS);
-        assertThat(counter.get(), is(equalTo(loopCount)));
+        Runnable runnable = counter::incrementSynchronizedV2;
+        test(counter, runnable);
     }
 
-    @Test(invocationCount = 5, description = "fail")
-    public void testIncrement() throws InterruptedException {
-        ExecutorService service = Executors.newFixedThreadPool(threads);
+    @Test(invocationCount = 5, expectedExceptions = AssertionError.class)
+    public void test() throws InterruptedException {
         Counter counter = new Counter();
-        Runnable r = counter::increment;
+        Runnable runnable = counter::increment;
+        test(counter, runnable);
+    }
 
+    private void test(Counter counter, Runnable runnable) throws InterruptedException {
+        ExecutorService service = Executors.newFixedThreadPool(threads);
         for (int i = 0; i < loopCount; i++) {
-            service.submit(r);
+            service.submit(runnable);
         }
         service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
-        assertThat(counter.get(), is(equalTo(loopCount)));
+        assertThat(counter.get(), equalTo(loopCount));
     }
 }
 

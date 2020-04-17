@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
+/*
  * Requirements:
  * - alpha cannot execute in parallel with beta
  * - execution order is not important
@@ -49,7 +49,7 @@ public class ConcurrentCompositeCounterTest {
 
     private List<Runnable> runnables = new ArrayList<>();
 
-    /**
+    /*
      * Sample output:
      * [INFO] ALPHA: phase started
      * [INFO] BETA:  phase started
@@ -89,10 +89,9 @@ public class ConcurrentCompositeCounterTest {
     }
 }
 
-/**
+/*
  * Improved version of SynchronizedCompositeCounter:
  * - decrement operations are not synchronised and thus always allowed
- * - as a consequence, highestThreadCount is 4xx, in comparison to 6xx in SynchronizedCompositeCounter
  * - logging will include estimates (conscious trade-off)
  */
 @Slf4j

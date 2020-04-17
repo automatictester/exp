@@ -19,7 +19,6 @@ public class ThreadFromCallable {
 
         FutureTask<Integer> ft = new FutureTask<>(c);
         new Thread(ft).start();
-        int i = ft.get();
-        assertThat(i, equalTo(1));
+        assertThat(ft.get(), equalTo(1));
     }
 }

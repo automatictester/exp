@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PhaserClass {
 
-    /**
+    /*
      * Sample output:
      * 3
      * 1
@@ -24,7 +24,7 @@ public class PhaserClass {
     @Test
     public void runThread() throws InterruptedException {
         MyPhaser myPhaser = new MyPhaser();
-        ExecutorService service = Executors.newFixedThreadPool(myPhaser.getRunnables().size());
+        ExecutorService service = Executors.newCachedThreadPool();
         myPhaser.getRunnables().forEach(service::submit);
         service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);

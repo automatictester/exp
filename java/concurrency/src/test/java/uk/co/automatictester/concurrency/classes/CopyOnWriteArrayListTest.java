@@ -1,26 +1,19 @@
 package uk.co.automatictester.concurrency.classes;
 
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+@Slf4j
 public class CopyOnWriteArrayListTest {
-
-    /**
-     * This example:
-     * - concurrent reads over 100x faster
-     * - concurrent writes 25% slower
-     */
 
     private final List<Integer> synchronizedList = Collections.synchronizedList(new ArrayList<>());
     private final List<Integer> concurrentList = new CopyOnWriteArrayList<>();
@@ -46,15 +39,20 @@ public class CopyOnWriteArrayListTest {
     }
 
     private void write(List<Integer> list) throws InterruptedException {
-        Runnable r = () -> {
-            for (int i = 0; i < 20_000; i++) {
-                list.add(i * 2);
-                list.remove(0);
+        Runnable runnable = () -> {
+            for (int i = 0; i < 1_000; i++) {
+                int x = ThreadLocalRandom.current().nextInt();
+                list.add(x);
             }
+            int y = ThreadLocalRandom.current().nextInt();
+            if (list.contains(y)) {
+                log.info("x");
+            }
+            list.clear();
         };
         ExecutorService executor = Executors.newFixedThreadPool(8);
         for (int i = 0; i < 1_000; i++) {
-            executor.submit(r);
+            executor.submit(runnable);
         }
         executor.shutdown();
         executor.awaitTermination(10, TimeUnit.SECONDS);
@@ -74,7 +72,11 @@ public class CopyOnWriteArrayListTest {
     private void read(List<Integer> list) throws InterruptedException {
         Runnable r = () -> {
             for (int i = 0; i < 50_000; i++) {
-                list.get(i);
+                int x = list.get(i);
+                int y = ThreadLocalRandom.current().nextInt();
+                if (x == y) {
+                    log.info("x");
+                }
             }
         };
         ExecutorService executor = Executors.newFixedThreadPool(8);

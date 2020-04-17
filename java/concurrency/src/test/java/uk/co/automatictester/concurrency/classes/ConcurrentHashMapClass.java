@@ -1,5 +1,6 @@
 package uk.co.automatictester.concurrency.classes;
 
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -11,13 +12,8 @@ import java.util.concurrent.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+@Slf4j
 public class ConcurrentHashMapClass {
-
-    /**
-     * This example:
-     * - concurrent reads 5x faster
-     * - concurrent writes 50% slower
-     */
 
     private final Map<Integer, Integer> synchronizedMap = Collections.synchronizedMap(new HashMap<>());
     private final ConcurrentMap<Integer, Integer> concurrentMap = new ConcurrentHashMap<>();
@@ -25,8 +21,9 @@ public class ConcurrentHashMapClass {
     @BeforeClass
     public void setup() {
         for (int i = 0; i < 1_000; i++) {
-            synchronizedMap.put(i, i * 2);
-            concurrentMap.put(i, i * 2);
+            int value = ThreadLocalRandom.current().nextInt();
+            synchronizedMap.put(i, value);
+            concurrentMap.put(i, value);
         }
     }
 
@@ -43,20 +40,23 @@ public class ConcurrentHashMapClass {
     }
 
     private void write(Map<Integer, Integer> map) throws InterruptedException {
-        Runnable r = () -> {
+        Runnable runnable = () -> {
             for (int i = 0; i < 1_000; i++) {
-                map.put(1, 2);
-                map.remove(1);
+                int value = ThreadLocalRandom.current().nextInt();
+                map.put(i, value);
             }
         };
         ExecutorService executor = Executors.newFixedThreadPool(8);
         for (int i = 0; i < 1_000; i++) {
-            executor.submit(r);
+            executor.submit(runnable);
         }
+        int value = ThreadLocalRandom.current().nextInt();
         executor.shutdown();
         executor.awaitTermination(10, TimeUnit.SECONDS);
-        assertThat(map.size(), equalTo(0));
-
+        if (map.containsValue(value)) {
+            log.info("x");
+        }
+        assertThat(map.size(), equalTo(1_000));
     }
 
     @Test(invocationCount = 5)
@@ -72,7 +72,9 @@ public class ConcurrentHashMapClass {
     private void read(Map<Integer, Integer> map) throws InterruptedException {
         Runnable r = () -> {
             for (int i = 0; i < 1_000; i++) {
-                map.get(i);
+                if (map.get(i) == ThreadLocalRandom.current().nextInt()) {
+                    log.info("x");
+                }
             }
         };
         ExecutorService executor = Executors.newFixedThreadPool(8);

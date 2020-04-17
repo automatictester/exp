@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-/**
+/*
  * Requirements:
  * - alpha cannot execute in parallel with beta
  * - execution order is not important
@@ -51,7 +51,7 @@ public class SynchronizedCompositeCounterTest {
 
     private List<Runnable> runnables = new ArrayList<>();
 
-    /**
+    /*
      * Sample output:
      * [INFO] ALPHA: phase started
      * [INFO] BETA:  phase started

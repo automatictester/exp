@@ -1,5 +1,6 @@
 package uk.co.automatictester.concurrency.classes;
 
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.ExecutorService;
@@ -9,8 +10,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 
+@Slf4j
 public class AtomicClasses {
 
     /*
@@ -27,25 +28,25 @@ public class AtomicClasses {
     private final int loopCount = 1_000_000;
     private final int threads = 4;
 
-    @Test(invocationCount = 5)
+    @Test
     public void testAtomic() throws InterruptedException {
         Counter counter = new Counter();
         ExecutorService service = Executors.newFixedThreadPool(threads);
         Runnable incr = () -> {
             for (int i = 0; i < loopCount; i++) {
-                counter.incrementAtomic();
+                counter.incrementAndGet();
             }
         };
         Runnable decr = () -> {
             for (int i = 0; i < loopCount; i++) {
-                counter.decrementAtomic();
+                counter.decrementAndGet();
             }
         };
         service.submit(incr);
         service.submit(decr);
         service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
-        assertThat(counter.getAtomic(), is(equalTo(0)));
+        assertThat(counter.get(), equalTo(0));
     }
 }
 
@@ -53,15 +54,15 @@ class Counter {
 
     private AtomicInteger a = new AtomicInteger(0);
 
-    public int incrementAtomic() {
+    public int incrementAndGet() {
         return a.incrementAndGet();
     }
 
-    public int decrementAtomic() {
+    public int decrementAndGet() {
         return a.decrementAndGet();
     }
 
-    public int getAtomic() {
+    public int get() {
         return a.get();
     }
 }

@@ -12,7 +12,7 @@ public class CountDownLatchClass {
 
     private final int threads = 4;
 
-    /**
+    /*
      * Output:
      * Thread starting
      * Thread starting
