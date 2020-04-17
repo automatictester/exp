@@ -5,9 +5,9 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,7 +27,7 @@ public class SynchronizedCompositeCounterTest {
         while (true) {
             boolean success = mutex.tryIncrementAlpha();
             if (success) {
-                int duration = new Random().nextInt(maxExecutionDuration);
+                int duration = ThreadLocalRandom.current().nextInt(maxExecutionDuration);
                 wait(duration);
                 mutex.decrementAlpha();
                 break;
@@ -40,7 +40,7 @@ public class SynchronizedCompositeCounterTest {
         while (true) {
             boolean success = mutex.tryIncrementBeta();
             if (success) {
-                int duration = new Random().nextInt(maxExecutionDuration);
+                int duration = ThreadLocalRandom.current().nextInt(maxExecutionDuration);
                 wait(duration);
                 mutex.decrementBeta();
                 break;
