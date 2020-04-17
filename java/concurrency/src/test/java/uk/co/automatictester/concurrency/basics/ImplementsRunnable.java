@@ -24,6 +24,7 @@ public class ImplementsRunnable {
 @Slf4j
 class MyRunnable implements Runnable {
 
+    @Override
     public void run() {
         log.info("output");
     }

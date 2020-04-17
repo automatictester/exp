@@ -16,6 +16,7 @@ public class ExtendsThread {
 @Slf4j
 class MyThread extends Thread {
 
+    @Override
     public void run() {
         log.info("output");
     }
