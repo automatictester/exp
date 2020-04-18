@@ -1,4 +1,4 @@
-package uk.co.automatictester.concurrency.classes;
+package uk.co.automatictester.concurrency.classes.collections;
 
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeClass;
@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @Slf4j
-public class CopyOnWriteArrayListTest {
+public class CopyOnWriteArrayListClass {
 
     private final List<Integer> synchronizedList = Collections.synchronizedList(new ArrayList<>());
     private final List<Integer> concurrentList = new CopyOnWriteArrayList<>();

@@ -1,11 +1,11 @@
-package uk.co.automatictester.concurrency.classes;
+package uk.co.automatictester.concurrency.classes.collections;
 
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
@@ -16,31 +16,32 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @Slf4j
-public class CollectionsSynchronizedSetMethod {
+public class CollectionsSynchronizedMapMethod {
 
     private final int threads = 8;
     private final int loopCount = 1_000;
-    private Set<Integer> set;
+    private Map<Integer, Integer> map;
 
     private Runnable r = () -> {
         for (int i = 0; i < loopCount; i++) {
+            int key = ThreadLocalRandom.current().nextInt();
             int value = ThreadLocalRandom.current().nextInt();
-            set.add(value);
+            map.put(key, value);
         }
     };
 
     @Test(invocationCount = 5)
-    public void testList() throws InterruptedException {
-        set = new HashSet<>();
+    public void testMap() throws InterruptedException {
+        map = new HashMap<>();
         test(r);
-        assertThat(set.size(), not(equalTo(8_000)));
+        assertThat(map.size(), not(equalTo(8_000)));
     }
 
     @Test
-    public void testSynchronizedList() throws InterruptedException {
-        set = Collections.synchronizedSet(new HashSet<>());
+    public void testSynchronizedMap() throws InterruptedException {
+        map = Collections.synchronizedMap(new HashMap<>());
         test(r);
-        assertThat(set.size(), equalTo(8_000));
+        assertThat(map.size(), equalTo(8_000));
     }
 
     private void test(Runnable r) throws InterruptedException {
@@ -51,7 +52,7 @@ public class CollectionsSynchronizedSetMethod {
         service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
         int value = ThreadLocalRandom.current().nextInt();
-        if (set.contains(value)) {
+        if (map.containsKey(value)) {
             log.info("x");
         }
     }

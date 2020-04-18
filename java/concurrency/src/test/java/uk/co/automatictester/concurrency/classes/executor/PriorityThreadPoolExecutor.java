@@ -1,4 +1,4 @@
-package uk.co.automatictester.concurrency.classes;
+package uk.co.automatictester.concurrency.classes.executor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;

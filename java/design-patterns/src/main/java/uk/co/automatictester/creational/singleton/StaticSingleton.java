@@ -10,7 +10,7 @@ public class StaticSingleton {
 
     private StaticSingleton() {}
 
-    public StaticSingleton getInstance() {
+    public static StaticSingleton getInstance() {
         return INSTANCE;
     }
 }
