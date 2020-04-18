@@ -5,8 +5,13 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /*
  * Requirements:
@@ -99,52 +104,52 @@ class ConcurrentCompositeCounter {
 
     private AtomicInteger alphaCount = new AtomicInteger(0);
     private AtomicInteger betaCount = new AtomicInteger(0);
-    private Semaphore incrementSynchronizer = new Semaphore(1);
+    private Lock incrementSynchronizer = new ReentrantLock();
     private AtomicInteger highestThreadCount = new AtomicInteger(0);
 
     public boolean tryIncrementAlpha() {
         try {
-            incrementSynchronizer.acquire();
-        } catch (InterruptedException e) {
+            incrementSynchronizer.lock();
+            if (betaCount.get() == 0) {
+                if (alphaCount.get() == 0) {
+                    log.debug("ALPHA: phase started");
+                }
+                alphaCount.incrementAndGet();
+                if (alphaCount.get() > highestThreadCount.get()) {
+                    highestThreadCount.set(alphaCount.get());
+                }
+                log.debug("ALPHA: {} - BETA: {}", alphaCount.get(), betaCount.get());
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-        if (betaCount.get() == 0) {
-            if (alphaCount.get() == 0) {
-                log.debug("ALPHA: phase started");
-            }
-            alphaCount.incrementAndGet();
-            if (alphaCount.get() > highestThreadCount.get()) {
-                highestThreadCount.set(alphaCount.get());
-            }
-            log.debug("ALPHA: {} - BETA: {}", alphaCount.get(), betaCount.get());
-            incrementSynchronizer.release();
-            return true;
-        } else {
-            incrementSynchronizer.release();
-            return false;
+        } finally {
+            incrementSynchronizer.unlock();
         }
     }
 
     public boolean tryIncrementBeta() {
         try {
-            incrementSynchronizer.acquire();
-        } catch (InterruptedException e) {
+            incrementSynchronizer.lock();
+            if (alphaCount.get() == 0) {
+                if (betaCount.get() == 0) {
+                    log.debug("BETA:  phase started");
+                }
+                betaCount.incrementAndGet();
+                if (betaCount.get() > highestThreadCount.get()) {
+                    highestThreadCount.set(betaCount.get());
+                }
+                log.debug("ALPHA: {} - BETA: {}", alphaCount.get(), betaCount.get());
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-        if (alphaCount.get() == 0) {
-            if (betaCount.get() == 0) {
-                log.debug("BETA:  phase started");
-            }
-            betaCount.incrementAndGet();
-            if (betaCount.get() > highestThreadCount.get()) {
-                highestThreadCount.set(betaCount.get());
-            }
-            log.debug("ALPHA: {} - BETA: {}", alphaCount.get(), betaCount.get());
-            incrementSynchronizer.release();
-            return true;
-        } else {
-            incrementSynchronizer.release();
-            return false;
+        } finally {
+            incrementSynchronizer.unlock();
         }
     }
 

@@ -5,18 +5,18 @@ Concurrency in Java is all about:
 - Visibility
 
 ### Common tools for solving concurrency problems in Java
-- Synchronized methods
-- Synchronized blocks
-- Explicit locking with `ReentrantLock`
-- Fine-grained explicit locking with `ReentrantReadWriteLock`
+- `synchronized` methods
+- `synchronized` blocks
+- Explicit locking with `ReentrantLock` and `ReentrantReadWriteLock`, when `synchronized` doesn't offer required functionality
+- `Semaphore` as a N-permit lock mechanism
 - Atomic classes, e.g. `AtomicInteger`, `AtomicReference(V)`
-- Volatile - see [this guideline](https://www.ibm.com/developerworks/java/library/j-jtp06197)
+- `volatile` for read-by-many, written-by-one situations - see [this guideline](https://www.ibm.com/developerworks/java/library/j-jtp06197)
 - Synchronizers, e.g. `CyclicBarrier`, `CountDownLatch`, `Phaser`
 - Implementing wrapper classes with custom synchronized methods for already synchronized classes through inheritance, if no such concurrent class exists
 - Implementing wrapper classes with custom synchronized methods for synchronized or not synchronized classes through composition
-- Actor model with no shared state
-- Embedding lock constructs inside elements stored by concurrent collection
+- Embedding `ReentrantLock` and `ReentrantReadWriteLock` constructs inside elements stored by concurrent collection
 - Concurrent collections - see below
+- Actor model with no shared state
 
 ### Concurrent collections
 
