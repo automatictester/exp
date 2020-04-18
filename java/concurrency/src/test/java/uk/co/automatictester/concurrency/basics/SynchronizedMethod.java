@@ -5,7 +5,9 @@ import org.testng.annotations.Test;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -17,32 +19,38 @@ public class SynchronizedMethod {
     @Test(invocationCount = 5)
     public void testIncrementSynchronizedV1() throws InterruptedException {
         Counter counter = new Counter();
-        Runnable runnable = counter::incrementSynchronizedV1;
-        test(counter, runnable);
+        Consumer<Counter> consumer = Counter::incrementSynchronizedV1;
+        test(counter, consumer);
+        assertThat(counter.get(), equalTo(loopCount));
     }
 
     @Test(invocationCount = 5)
     public void testIncrementSynchronizedV2() throws InterruptedException {
         Counter counter = new Counter();
-        Runnable runnable = counter::incrementSynchronizedV2;
-        test(counter, runnable);
+        Consumer<Counter> consumer = Counter::incrementSynchronizedV2;
+        test(counter, consumer);
+        assertThat(counter.get(), equalTo(loopCount));
     }
 
-    @Test(invocationCount = 5, expectedExceptions = AssertionError.class)
+    @Test(invocationCount = 5)
     public void test() throws InterruptedException {
         Counter counter = new Counter();
-        Runnable runnable = counter::increment;
-        test(counter, runnable);
+        Consumer<Counter> consumer = Counter::increment;
+        test(counter, consumer);
+        assertThat(counter.get(), not(equalTo(loopCount)));
     }
 
-    private void test(Counter counter, Runnable runnable) throws InterruptedException {
+    private void test(Counter counter, Consumer<Counter> consumer) throws InterruptedException {
+        Runnable runnable = () -> {
+            consumer.accept(counter);
+        };
+
         ExecutorService service = Executors.newFixedThreadPool(threads);
         for (int i = 0; i < loopCount; i++) {
             service.submit(runnable);
         }
         service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
-        assertThat(counter.get(), equalTo(loopCount));
     }
 }
 

@@ -17,10 +17,12 @@ public class ConcurrentHashMapClass {
 
     private final Map<Integer, Integer> synchronizedMap = Collections.synchronizedMap(new HashMap<>());
     private final ConcurrentMap<Integer, Integer> concurrentMap = new ConcurrentHashMap<>();
+    private final int listSize = 100_000;
+    private final int threads = 8;
 
     @BeforeClass
     public void setup() {
-        for (int i = 0; i < 1_000; i++) {
+        for (int i = 0; i < listSize; i++) {
             int value = ThreadLocalRandom.current().nextInt();
             synchronizedMap.put(i, value);
             concurrentMap.put(i, value);
@@ -40,14 +42,22 @@ public class ConcurrentHashMapClass {
     }
 
     private void write(Map<Integer, Integer> map) throws InterruptedException {
+        CyclicBarrier barrier = new CyclicBarrier(threads);
         Runnable runnable = () -> {
-            for (int i = 0; i < 1_000; i++) {
+            try {
+                barrier.await();
+            } catch (BrokenBarrierException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            for (int i = 0; i < listSize; i++) {
                 int value = ThreadLocalRandom.current().nextInt();
                 map.put(i, value);
             }
         };
-        ExecutorService executor = Executors.newFixedThreadPool(8);
-        for (int i = 0; i < 1_000; i++) {
+
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
+        for (int i = 0; i < threads; i++) {
             executor.submit(runnable);
         }
         int value = ThreadLocalRandom.current().nextInt();
@@ -56,7 +66,7 @@ public class ConcurrentHashMapClass {
         if (map.containsValue(value)) {
             log.info("x");
         }
-        assertThat(map.size(), equalTo(1_000));
+        assertThat(map.size(), equalTo(listSize));
     }
 
     @Test(invocationCount = 5)
@@ -70,20 +80,28 @@ public class ConcurrentHashMapClass {
     }
 
     private void read(Map<Integer, Integer> map) throws InterruptedException {
-        Runnable r = () -> {
+        CyclicBarrier barrier = new CyclicBarrier(threads);
+        Runnable runnable = () -> {
+            try {
+                barrier.await();
+            } catch (BrokenBarrierException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
             int x = ThreadLocalRandom.current().nextInt();
-            for (int i = 0; i < 1_000; i++) {
+            for (int i = 0; i < listSize; i++) {
                 if (map.get(i) == x) {
                     log.info("x");
                 }
             }
         };
-        ExecutorService executor = Executors.newFixedThreadPool(8);
-        for (int i = 0; i < 1_000; i++) {
-            executor.submit(r);
+
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
+        for (int i = 0; i < threads; i++) {
+            executor.submit(runnable);
         }
         executor.shutdown();
         executor.awaitTermination(10, TimeUnit.SECONDS);
-        assertThat(map.size(), equalTo(1_000));
+        assertThat(map.size(), equalTo(listSize));
     }
 }

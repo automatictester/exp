@@ -6,10 +6,7 @@ import org.testng.annotations.Test;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
@@ -20,9 +17,15 @@ public class CollectionsSynchronizedSetMethod {
 
     private final int threads = 8;
     private final int loopCount = 1_000;
+    private final CyclicBarrier barrier = new CyclicBarrier(threads);
     private Set<Integer> set;
 
     private Runnable r = () -> {
+        try {
+            barrier.await();
+        } catch (BrokenBarrierException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         for (int i = 0; i < loopCount; i++) {
             int value = ThreadLocalRandom.current().nextInt();
             set.add(value);
@@ -33,14 +36,14 @@ public class CollectionsSynchronizedSetMethod {
     public void testList() throws InterruptedException {
         set = new HashSet<>();
         test(r);
-        assertThat(set.size(), not(equalTo(8_000)));
+        assertThat(set.size(), not(equalTo(threads * loopCount)));
     }
 
     @Test
     public void testSynchronizedList() throws InterruptedException {
         set = Collections.synchronizedSet(new HashSet<>());
         test(r);
-        assertThat(set.size(), equalTo(8_000));
+        assertThat(set.size(), equalTo(threads * loopCount));
     }
 
     private void test(Runnable r) throws InterruptedException {

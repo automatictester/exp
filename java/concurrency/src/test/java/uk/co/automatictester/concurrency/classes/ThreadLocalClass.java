@@ -1,6 +1,7 @@
 package uk.co.automatictester.concurrency.classes;
 
 import lombok.extern.slf4j.Slf4j;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Set;
@@ -25,9 +26,13 @@ public class ThreadLocalClass {
         threadNames.add(threadLocal.get());
     };
 
+    @BeforeMethod
+    public void setup() {
+        threadNames.clear();
+    }
+
     @Test(invocationCount = 5)
     public void testThreadLocal() throws InterruptedException {
-        threadNames.clear();
         ExecutorService service = Executors.newFixedThreadPool(threads);
         for (int i = 0; i < threads; i++) {
             service.submit(r);
