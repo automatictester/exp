@@ -10,10 +10,12 @@ Concurrency in Java is all about:
 - Explicit locking with `ReentrantLock` and `ReentrantReadWriteLock`, when `synchronized` doesn't offer required functionality
 - `Semaphore` as a N-permit lock mechanism
 - Atomic classes, e.g. `AtomicInteger`, `AtomicReference(V)`
-- `volatile` for read-by-many, written-by-one situations - see [this guideline](https://www.ibm.com/developerworks/java/library/j-jtp06197)
+- `volatile` for written-by-one, read-by-many scenarios - see [this guideline](https://www.ibm.com/developerworks/java/library/j-jtp06197)
 - Synchronizers, e.g. `CyclicBarrier`, `CountDownLatch`, `Phaser`
-- Implementing wrapper classes with custom synchronized methods for already synchronized classes through inheritance, if no such concurrent class exists
-- Implementing wrapper classes with custom synchronized methods for synchronized or not synchronized classes through composition
+- Wrapper classes with custom synchronized methods for already synchronized classes through inheritance, if no such concurrent class exists
+- Wrapper classes with custom synchronized methods for synchronized or not synchronized classes through composition
+- Custom synchronizers for single condition predicates with condition queues (`wait()` / `notify()` / `notifyAll()`)
+- Custom synchronizers for multiple condition predicates with condition objects (`await()` / `signal()` / `signalAll()`)
 - Embedding `ReentrantLock` and `ReentrantReadWriteLock` constructs inside elements stored by concurrent collection
 - Concurrent collections - see below
 - Actor model with no shared state

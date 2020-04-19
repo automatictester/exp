@@ -95,9 +95,9 @@ class LockProtectedValue implements ProtectedValue {
 
     @Override
     public void increment() {
+        // always lock() before try and unlock() inside finally
+        lock.lock();
         try {
-            // always lock() inside try and unlock() inside finally
-            lock.lock();
             this.value++;
         } finally {
             lock.unlock();

@@ -73,8 +73,8 @@ class ReadWriteLockValue implements LockedValue {
 
     @Override
     public void increment() {
+        lock.writeLock().lock();
         try {
-            lock.writeLock().lock();
             this.value++;
             try {
                 Thread.sleep(1);
@@ -88,8 +88,8 @@ class ReadWriteLockValue implements LockedValue {
 
     @Override
     public int get() {
+        lock.readLock().lock();
         try {
-            lock.readLock().lock();
             return value;
         } finally {
             lock.readLock().unlock();
@@ -104,8 +104,8 @@ class LockValue implements LockedValue {
 
     @Override
     public void increment() {
+        lock.lock();
         try {
-            lock.lock();
             this.value++;
             try {
                 Thread.sleep(2);
@@ -119,8 +119,8 @@ class LockValue implements LockedValue {
 
     @Override
     public int get() {
+        lock.lock();
         try {
-            lock.lock();
             return value;
         } finally {
             lock.unlock();
