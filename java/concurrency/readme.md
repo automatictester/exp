@@ -9,7 +9,7 @@ Concurrency in Java is all about:
 - `synchronized` blocks
 - Explicit locking with `ReentrantLock` and `ReentrantReadWriteLock`, when `synchronized` doesn't offer required functionality
 - `Semaphore` as a N-permit lock mechanism
-- Atomic classes, e.g. `AtomicInteger`, `AtomicReference(V)`
+- Atomic classes, e.g. `AtomicInteger`, `AtomicReference(V)`, `AtomicIntegerArray`, `AtomicReferenceArray<E>`
 - `volatile` for written-by-one, read-by-many scenarios - see [this guideline](https://www.ibm.com/developerworks/java/library/j-jtp06197)
 - Synchronizers, e.g. `CyclicBarrier`, `CountDownLatch`, `Phaser`
 - Wrapper classes with custom synchronized methods for already synchronized classes through inheritance, if no such concurrent class exists
