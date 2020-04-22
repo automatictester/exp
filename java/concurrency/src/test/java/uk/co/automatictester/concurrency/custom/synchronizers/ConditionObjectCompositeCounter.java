@@ -2,11 +2,13 @@ package uk.co.automatictester.concurrency.custom.synchronizers;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
+@ThreadSafe
 class ConditionObjectCompositeCounter extends CompositeCounter {
 
     private final Lock lock = new ReentrantLock();

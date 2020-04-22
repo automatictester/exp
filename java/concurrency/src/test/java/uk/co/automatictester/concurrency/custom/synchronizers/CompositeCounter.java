@@ -2,11 +2,14 @@ package uk.co.automatictester.concurrency.custom.synchronizers;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 @Slf4j
+@ThreadSafe
 public abstract class CompositeCounter {
 
-    private int alphaCount = 0;
-    private int betaCount = 0;
+    private volatile int alphaCount = 0;
+    private volatile int betaCount = 0;
 
     public abstract void incrementAlpha() throws InterruptedException;
 

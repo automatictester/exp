@@ -2,9 +2,11 @@ package uk.co.automatictester.concurrency.custom.synchronizers;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
+@ThreadSafe
 class SynchronizedCompositeCounter extends CompositeCounter {
 
     public void incrementAlpha() {

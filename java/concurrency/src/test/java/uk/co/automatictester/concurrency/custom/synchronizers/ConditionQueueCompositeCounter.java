@@ -2,7 +2,10 @@ package uk.co.automatictester.concurrency.custom.synchronizers;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 @Slf4j
+@ThreadSafe
 class ConditionQueueCompositeCounter extends CompositeCounter {
 
     public synchronized void incrementAlpha() throws InterruptedException {
