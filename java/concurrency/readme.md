@@ -54,7 +54,7 @@ Concurrency in Java is all about:
 
 ### Java Memory Model
 
-Random notes on JMM, its implications and related:
+The theory:
 
 - To guarantee that the thread executing action B can see the results of action A, there must be a happens-before
   relationship between two operations. In the absence of a happens-before relationship, JVM is free to reorder them 
@@ -62,7 +62,6 @@ Random notes on JMM, its implications and related:
 - Ordinary actions are partially ordered, synchronizations are totally ordered.
 - An unlock on a monitor happens-before every subsequent lock on that same monitor. Applies both to explicit Lock
   objects and intrinsic locks.
-- A write to a volatile or atomic variable happens-before every subsequent read of that same field.
 - A call to Thread.start on a thread happens-before every action in that started thread.
 - Any action in a thread happens-before any other thread detects that the thread has terminated, either by Thread.join
   or Thread.isAlive == false.
@@ -72,6 +71,21 @@ Random notes on JMM, its implications and related:
 - If A happens-before B and B happens-before C, then A happens-before C.
 - If thread A execution happens-before thread B, thread B will see value X at least as up-to-date as thread A set it.
   Subsequent writes may or may not be visible.
+
+Memory semantics of synchronization:
+
+- When acquiring the monitor, local memory is invalidated and subsequent reads go directly to main memory.
+- When releasing the monitor, local memory is flushed to main memory.
+- Above process guarantees that when a variable V is written by a thread X with a given monitor M acquired and read by
+  thread Y with the same monitor M acquired, the write to the variable V will be visible for thread Y.
+- Moreover, when thread X released monitor M, and thread Y reads acquired the same monitor M, any variable values
+  that were visible to X at the time that monitor M was released n are guaranteed now to be visible to thread Y.
+  This is called piggy backing on synchronization.
+- Implicit and explicit locking have the same memory semantics.
+- Local memory can be defined as caches, registers, and other hardware and compiler optimizations.
+- Read and writing a volatile variable have half of the memory semantics of synchronization:
+  - Read of a volatile has the same memory semantics as a monitor acquire.
+  - Write of a volatile has the same semantics as a monitor release.
 
 Library classes:
 
@@ -136,9 +150,12 @@ public class MyStaticClass {
 }
 ```
 
-- Initialization safety guarantees that for properly constructed objects, another threads will see the correct values
-  of final fields that were set by the constructor. Same applies to any variables that can be reached only through 
-  a final field, e.g. items in a final ArrayList, as long as they don't change after construction:
+- Initialization safety guarantees that for properly constructed objects (reference to the object is not published
+  before the constructor has completed, e.g. through starting a thread from within a constructor, assigning it 
+  to a static field, registering it as a listener with any other object etc), another threads will see the correct values
+  of final fields that were set by the constructor without synchronization.  Same applies to any variables
+  that can be reached only through a final field, e.g. items in a final ArrayList, as long as they don't change 
+  after construction:
 
 ```java
 @ThreadSafe
