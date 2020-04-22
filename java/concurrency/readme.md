@@ -51,3 +51,125 @@ Concurrency in Java is all about:
     - `RecursiveAction`
     - `RecursiveTask`
     - `ThreadLocalRandom`
+
+### Java Memory Model
+
+Random notes on JMM, its implications and related:
+
+- To guarantee that the thread executing action B can see the results of action A, there must be a happens-before
+  relationship between two operations. In the absence of a happens-before relationship, JVM is free to reorder them 
+  as it sees fit.
+- Ordinary actions are partially ordered, synchronizations are totally ordered.
+- An unlock on a monitor happens-before every subsequent lock on that same monitor. Applies both to explicit Lock
+  objects and intrinsic locks.
+- A write to a volatile or atomic variable happens-before every subsequent read of that same field.
+- A call to Thread.start on a thread happens-before every action in that started thread.
+- Any action in a thread happens-before any other thread detects that the thread has terminated, either by Thread.join
+  or Thread.isAlive == false.
+- A thread calling interrupt on another thread happens-before the interruptied threads detects the interrupt,
+  either by having InterruptedException thrown, or invoking isInterrupted or interrupted.
+- The end of a constructor for an object happens-before the start of the finalizer for that object.
+- If A happens-before B and B happens-before C, then A happens-before C.
+- If thread A execution happens-before thread B, thread B will see value X at least as up-to-date as thread A set it.
+  Subsequent writes may or may not be visible.
+
+Library classes:
+
+- Placing an item in a thread-safe collection happens-before another thread reads it.
+- Counting down on a CountDownLatch happens-before a thread returns from await on that latch.
+- Releasing a permit to a Semaphore happens-before acquiring a permit from the same Semaphore.
+- Actions taken by the task represented by a Future happens-before another thread successfully returns from Future.get.
+- Submitting a Runnable or Callable to an executor happens-before the task begins execution.
+- A thread arriving at a CyclicBarrier happens-before the other threads are released from that same barrier.
+- If CyclicBarrier uses a barrier action, arriving at the barrier happens-before the barrier action,
+  which in turns happens-before threads are released from the barrier.
+
+Initialization:
+
+- Immutable objects are always thread-safe.
+- Initializing a new object involves writing to new object's fields. Publishing a reference involves writing to another
+  variable - the reference to the new object. These can be reordered, if happens-before relationship is not enforced.
+  As a result, another thread may see stale values in the object's fields, as well as stale reference in a lazily
+  initialized singleton:
+  
+ ```java
+@NotThreadSafe
+class Singleton {
+
+    private static Singleton singleton;
+
+    // as there is no happens-before relationship, another thread can see either the default value of 0, or 2
+    // this is the result of potential reordering of write to the field and setting the reference
+    private int value;
+    
+    private Singleton() {
+        this.value = 2;
+    }
+
+    // as there is no happens-before relationship, more than one instance may be created by concurrent threads
+    public static Singleton getInstance() {
+        if (singleton == null) {
+            singleton = new Singleton();
+        }
+        return singleton;
+    }
+
+    // ...
+}
+```
+
+- For mutable objects, it is not safe to use an object initialized by another thread, unless the publication
+  happens-before the consuming thread uses it.
+- Static initialization is thread-safe, as it is internally guided by locks:
+
+```java
+@TheadSafe
+public class MyStaticClass {
+    private static int x = 10; // thread-safe unless re-written later
+    private static int y;
+
+    static {
+        y = 20; // thread-safe unless re-written later
+    }
+
+    // ...
+}
+```
+
+- Initialization safety guarantees that for properly constructed objects, another threads will see the correct values
+  of final fields that were set by the constructor. Same applies to any variables that can be reached only through 
+  a final field, e.g. items in a final ArrayList, as long as they don't change after construction:
+
+```java
+@ThreadSafe
+public class MyClass {
+    private final Set<Integer> set;
+
+    public MyClass() {
+        set = new HashSet<>();
+        set.add(1);
+        set.add(2);
+    }
+}
+```
+
+- Double-checked locking was not thread-safe pre-Java 5, due to observing possibly partially constructed object.
+  Since Java 5 it is thread-safe, if the resource is volatile. However, it is no longer recommended as it addresses
+  no longer existing problem of slow uncontended synchronization and slow JVM startup:
+
+```java
+@ThreadSafe
+public class MyDcl {
+    private volatile static MyResource myResource;
+
+    public static MyResource getInstance() {
+        if (myResource == null) {
+            synchronized (MyDcl.class) {
+                if (myResource == null) {
+                    myResource = new MyResource();
+                }
+            }
+        }
+    }
+}
+```

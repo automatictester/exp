@@ -3,6 +3,7 @@ package uk.co.automatictester.concurrency.basics;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,6 +40,7 @@ public class LazyInitialization {
     }
 }
 
+@NotThreadSafe
 class Singleton implements Comparable<Singleton> {
 
     private static Singleton singleton;
