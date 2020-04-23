@@ -1,8 +1,9 @@
 ### Overview
 
-Concurrency in Java is all about:
-- Synchronization
+Concurrency in Java is about:
+- Mutual exclusion / atomicity
 - Visibility
+- Performance
 
 ### Common tools for solving concurrency problems in Java
 - `synchronized` methods
@@ -12,13 +13,13 @@ Concurrency in Java is all about:
 - Atomic classes, e.g. `AtomicInteger`, `AtomicReference(V)`, `AtomicIntegerArray`, `AtomicReferenceArray<E>`
 - `volatile` for written-by-one, read-by-many scenarios - see [this guideline](https://www.ibm.com/developerworks/java/library/j-jtp06197)
 - Synchronizers, e.g. `CyclicBarrier`, `CountDownLatch`, `Phaser`
-- Wrapper classes with custom synchronized methods for already synchronized classes through inheritance, if no such concurrent class exists
+- Wrapper classes with custom synchronized methods for already synchronized classes through inheritance
 - Wrapper classes with custom synchronized methods for synchronized or not synchronized classes through composition
 - Custom synchronizers for single condition predicates with condition queues (`wait()` / `notify()` / `notifyAll()`)
 - Custom synchronizers for multiple condition predicates with condition objects (`await()` / `signal()` / `signalAll()`)
 - Embedding `ReentrantLock` and `ReentrantReadWriteLock` constructs inside elements stored by concurrent collection
-- Concurrent collections - see below
 - Actor model with no shared state
+- Concurrent collections - see below
 
 ### Concurrent collections
 
@@ -54,8 +55,6 @@ Concurrency in Java is all about:
 
 ### Java Memory Model
 
-The theory:
-
 - To guarantee that the thread executing action B can see the results of action A, there must be a happens-before
   relationship between two operations. In the absence of a happens-before relationship, JVM is free to reorder them 
   as it sees fit.
@@ -69,25 +68,10 @@ The theory:
   either by having InterruptedException thrown, or invoking isInterrupted or interrupted.
 - The end of a constructor for an object happens-before the start of the finalizer for that object.
 - If A happens-before B and B happens-before C, then A happens-before C.
-- If thread A execution happens-before thread B, thread B will see value X at least as up-to-date as thread A set it.
+- If thread A execution happens-before thread B, thread B will see value V at least as up-to-date as thread A set it.
   Subsequent writes may or may not be visible.
 
-Memory semantics of synchronization:
-
-- When acquiring the monitor, local memory is invalidated and subsequent reads go directly to main memory.
-- When releasing the monitor, local memory is flushed to main memory.
-- Above process guarantees that when a variable V is written by a thread X with a given monitor M acquired and read by
-  thread Y with the same monitor M acquired, the write to the variable V will be visible for thread Y.
-- Moreover, when thread X released monitor M, and thread Y reads acquired the same monitor M, any variable values
-  that were visible to X at the time that monitor M was released n are guaranteed now to be visible to thread Y.
-  This is called piggy backing on synchronization.
-- Implicit and explicit locking have the same memory semantics.
-- Local memory can be defined as caches, registers, and other hardware and compiler optimizations.
-- Read and writing a volatile variable have half of the memory semantics of synchronization:
-  - Read of a volatile has the same memory semantics as a monitor acquire.
-  - Write of a volatile has the same semantics as a monitor release.
-
-Library classes:
+### Java Memory Model and library classes
 
 - Placing an item in a thread-safe collection happens-before another thread reads it.
 - Counting down on a CountDownLatch happens-before a thread returns from await on that latch.
@@ -98,13 +82,28 @@ Library classes:
 - If CyclicBarrier uses a barrier action, arriving at the barrier happens-before the barrier action,
   which in turns happens-before threads are released from the barrier.
 
-Initialization:
+### Memory semantics
 
-- Immutable objects are always thread-safe.
-- Initializing a new object involves writing to new object's fields. Publishing a reference involves writing to another
-  variable - the reference to the new object. These can be reordered, if happens-before relationship is not enforced.
-  As a result, another thread may see stale values in the object's fields, as well as stale reference in a lazily
-  initialized singleton:
+- When acquiring the monitor, local memory (*) is invalidated and subsequent reads go directly to main memory.
+- When releasing the monitor, local memory (*) is flushed to main memory.
+- Above process guarantees that when a variable V is written by a thread A with a given monitor M acquired and read by
+  thread B with the same monitor M acquired, the write to the variable V will be visible for thread B.
+- Moreover, when thread A released monitor M, and thread B reads acquired the same monitor M, any variable values
+  that were visible to A at the time that monitor M was released are guaranteed now to be visible to thread B 
+  (piggybacking on synchronization).
+- All the following have the same memory semantics of acquiring the lock: acquiring implicit lock, acquiring explicit
+  lock, reading volatile variable, reading atomic variable.
+- All the following have the same memory semantics of releasing the lock: releasing implicit lock, releasing explicit
+  lock, writing volatile variable, writing atomic variable.
+
+Local memory can be defined as caches, registers, and other hardware and compiler optimizations.
+
+### Partially constructed objects
+
+Initializing a new object involves writing to new object's fields. Publishing a reference involves writing to another
+variable - the reference to the new object. These can be reordered, if happens-before relationship is not enforced.
+As a result, another thread may see stale values in the object's fields, as well as stale reference in a lazily
+initialized singleton:
   
  ```java
 @NotThreadSafe
@@ -132,9 +131,12 @@ class Singleton {
 }
 ```
 
-- For mutable objects, it is not safe to use an object initialized by another thread, unless the publication
-  happens-before the consuming thread uses it.
-- Static initialization is thread-safe, as it is internally guided by locks:
+For mutable objects, it is not safe to use an object initialized by another thread, unless the publication
+happens-before the consuming thread uses it.
+
+### Static initialization
+
+Static initialization is thread-safe, as it is internally guided by locks by the JVM:
 
 ```java
 @TheadSafe
@@ -150,12 +152,12 @@ public class MyStaticClass {
 }
 ```
 
-- Initialization safety guarantees that for properly constructed objects (reference to the object is not published
-  before the constructor has completed, e.g. through starting a thread from within a constructor, assigning it 
-  to a static field, registering it as a listener with any other object etc), another threads will see the correct values
-  of final fields that were set by the constructor without synchronization.  Same applies to any variables
-  that can be reached only through a final field, e.g. items in a final ArrayList, as long as they don't change 
-  after construction:
+### Initialization safety
+
+Initialization safety guarantees that properly constructed immutable objects (*) are always thread-safe and 
+another threads will see the correct values of final fields that were set by the constructor without synchronization.
+Same applies to any variables that can be reached only through a final field, e.g. items in a final ArrayList, 
+as long as they don't change after construction:
 
 ```java
 @ThreadSafe
@@ -170,9 +172,15 @@ public class MyClass {
 }
 ```
 
-- Double-checked locking was not thread-safe pre-Java 5, due to observing possibly partially constructed object.
-  Since Java 5 it is thread-safe, if the resource is volatile. However, it is no longer recommended as it addresses
-  no longer existing problem of slow uncontended synchronization and slow JVM startup:
+Properly constructed objects are objects, which reference is not published before the constructor has completed, 
+e.g. through starting a thread from within a constructor, assigning it to a static field, registering it as a listener
+with any other object etc.
+
+### Double-checked locking
+
+Double-checked locking was not thread-safe pre-Java 5, due to observing possibly partially constructed object.
+Since Java 5 it is thread-safe, if the resource is volatile. However, it is no longer recommended as it addresses
+no longer existing problem of slow uncontended synchronization and slow JVM startup:
 
 ```java
 @ThreadSafe
