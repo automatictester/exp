@@ -35,6 +35,7 @@ Concurrency in Java is about:
     - `Atomic*`
     - `ConcurrentHashMap`
     - `ConcurrentMap`
+    - `Condition`
     - `CopyOnWriteArrayList`
     - `CopyOnWriteArraySet`
     - `CountDownLatch`
@@ -52,6 +53,9 @@ Concurrency in Java is about:
     - `RecursiveAction`
     - `RecursiveTask`
     - `ThreadLocalRandom`
+- Java 8:
+    - `Runnable` and `Callable` as lambda functions
+    - Parallel streams
 
 ### Java Memory Model
 
