@@ -8,14 +8,20 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 class ConditionQueueCompositeCounter extends CompositeCounter {
 
+    @Override
     public synchronized void incrementAlpha() throws InterruptedException {
         while (!canStartAlpha()) {
+            // must be called from synchronized method or block,
+            // it releases the lock prior to waiting and
+            // reacquires the lock prior to returning from the method
             wait();
         }
         doIncrementAlpha();
+        // must be called from synchronized method or block
         notifyAll();
     }
 
+    @Override
     public synchronized void incrementBeta() throws InterruptedException {
         while (!canStartBeta()) {
             wait();
@@ -24,6 +30,7 @@ class ConditionQueueCompositeCounter extends CompositeCounter {
         notifyAll();
     }
 
+    @Override
     public synchronized void decrementAlpha() {
         doDecrementAlpha();
         if (getAlpha() == 0) {
@@ -31,6 +38,7 @@ class ConditionQueueCompositeCounter extends CompositeCounter {
         }
     }
 
+    @Override
     public synchronized void decrementBeta() {
         doDecrementBeta();
         if (getBeta() == 0) {

@@ -15,6 +15,7 @@ class ConditionObjectCompositeCounter extends CompositeCounter {
     private final Condition canStartAlpha = lock.newCondition();
     private final Condition canStartBeta = lock.newCondition();
 
+    @Override
     public void incrementAlpha() throws InterruptedException {
         lock.lock();
         try {
@@ -28,6 +29,7 @@ class ConditionObjectCompositeCounter extends CompositeCounter {
         }
     }
 
+    @Override
     public void incrementBeta() throws InterruptedException {
         lock.lock();
         try {
@@ -41,6 +43,7 @@ class ConditionObjectCompositeCounter extends CompositeCounter {
         }
     }
 
+    @Override
     public void decrementAlpha() {
         lock.lock();
         try {
@@ -53,6 +56,7 @@ class ConditionObjectCompositeCounter extends CompositeCounter {
         }
     }
 
+    @Override
     public void decrementBeta() {
         lock.lock();
         try {

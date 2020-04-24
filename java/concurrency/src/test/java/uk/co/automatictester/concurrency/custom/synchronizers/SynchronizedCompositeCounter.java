@@ -9,6 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @ThreadSafe
 class SynchronizedCompositeCounter extends CompositeCounter {
 
+    @Override
     public void incrementAlpha() {
         while (true) {
             synchronized (this) {
@@ -22,6 +23,7 @@ class SynchronizedCompositeCounter extends CompositeCounter {
         }
     }
 
+    @Override
     public void incrementBeta() {
         while (true) {
             synchronized (this) {
@@ -34,10 +36,12 @@ class SynchronizedCompositeCounter extends CompositeCounter {
         }
     }
 
+    @Override
     public synchronized void decrementAlpha() {
         doDecrementAlpha();
     }
 
+    @Override
     public synchronized void decrementBeta() {
         doDecrementBeta();
     }
