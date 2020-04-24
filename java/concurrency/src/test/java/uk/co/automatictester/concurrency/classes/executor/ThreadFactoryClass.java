@@ -69,7 +69,15 @@ class StackSizeSettingThreadFactory implements ThreadFactory {
     @Override
     public Thread newThread(@Nonnull Runnable runnable) {
         String threadName = String.valueOf(COUNTER.incrementAndGet());
-        long suggestedAndMostLikelyIgnoredThreadStackSize = 64 * 1024; // 64k
+
+        // default maximum thread stack size: 1024k
+        //
+        // this override is most likely going to be ignored
+        // other option would be to specify VM option instead: -Xss256k
+        // it sets the maximum stack size for threads
+        // if your goal is to reduce thread stack size hoping to increase maximum number of threads,
+        // you should first check ulimit -u
+        long suggestedAndMostLikelyIgnoredThreadStackSize = 256 * 1024; // 256k
 
         return new Thread(
                 null,
