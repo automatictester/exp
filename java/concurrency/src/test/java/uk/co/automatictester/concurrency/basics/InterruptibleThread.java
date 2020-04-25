@@ -19,7 +19,7 @@ public class InterruptibleThread {
         Runnable r = () -> {
             while (!Thread.currentThread().isInterrupted()) {
             }
-            // Runnable cannot throw exceptions
+            // Runnable cannot throw checked exceptions
             log.info("Thread interrupted");
         };
 
