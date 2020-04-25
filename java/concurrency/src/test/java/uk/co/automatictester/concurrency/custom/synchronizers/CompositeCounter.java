@@ -51,6 +51,8 @@ public abstract class CompositeCounter {
         return alphaCount == 0;
     }
 
+    // with synchronized setters and variable declared as volatile,
+    // getters don't need to be synchronized
     protected int getAlpha() {
         return alphaCount;
     }
