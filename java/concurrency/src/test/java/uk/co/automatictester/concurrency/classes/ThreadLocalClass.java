@@ -17,7 +17,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ThreadLocalClass {
 
     private final int threads = 100;
-    private final ThreadLocal<String> threadLocal = new ThreadLocal<>();
+    private final String initialValue = "NOT_SET";
+    private final ThreadLocal<String> threadLocal = ThreadLocal.withInitial(() -> initialValue);
     private final Set<String> threadNames = new ConcurrentSkipListSet<>();
 
     private final Runnable r = () -> {
@@ -33,12 +34,18 @@ public class ThreadLocalClass {
 
     @Test(invocationCount = 5)
     public void testThreadLocal() throws InterruptedException {
+        assertThat(threadLocal.get(), equalTo(initialValue));
+
         ExecutorService service = Executors.newFixedThreadPool(threads);
         for (int i = 0; i < threads; i++) {
             service.submit(r);
         }
         service.shutdown();
         service.awaitTermination(10, TimeUnit.SECONDS);
+
         assertThat(threadNames.size(), equalTo(threads));
+
+        threadLocal.remove();
+        assertThat(threadLocal.get(), equalTo(initialValue));
     }
 }
