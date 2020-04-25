@@ -6,101 +6,60 @@ Concurrency in Java is about:
 - Performance
 
 ### Common tools for solving concurrency problems in Java
-- `synchronized` methods
-- `synchronized` blocks
-- Explicit locking with `ReentrantLock` and `ReentrantReadWriteLock`, when `synchronized` doesn't offer required functionality
-- `Semaphore` as a N-permit lock mechanism
-- Atomic classes, e.g. `AtomicInteger`, `AtomicReference(V)`, `AtomicIntegerArray`, `AtomicReferenceArray<E>`
-- `volatile` for written-by-one, read-by-many scenarios - see [this guideline](https://www.ibm.com/developerworks/java/library/j-jtp06197)
-- Synchronizers, e.g. `CyclicBarrier`, `CountDownLatch`, `Phaser`
-- Wrapper classes with custom synchronized methods for already synchronized classes through inheritance
-- Wrapper classes with custom synchronized methods for synchronized or not synchronized classes through composition
+- Intrinsic locking with `synchronized` methods and blocks
+- Explicit locking with `ReentrantLock` and `ReentrantReadWriteLock`
+- N-permit locking with `Semaphore` 
+- Synchronizers
+- Volatile variables
+- Atomic classes
+- Concurrent collections
+- Inheritance-based wrappers for already synchronized classes with custom synchronized methods 
+- Composition-based wrappers for synchronized or not synchronized classes with custom synchronized methods
 - Custom synchronizers for single condition predicates with condition queues (`wait()` / `notify()` / `notifyAll()`)
-- Custom synchronizers for multiple condition predicates with condition objects (`await()` / `signal()` / `signalAll()`)
+- Custom synchronizers for N-condition predicates with condition objects (`await()` / `signal()` / `signalAll()`)
 - Embedding `ReentrantLock` and `ReentrantReadWriteLock` constructs inside elements stored by concurrent collection
-- Actor model with no shared state
-- Concurrent collections - see below
+- Actor model
 
 ### Concurrent collections
 
-| Single-threaded | Synchronized | Concurrent |
+| Collection      | Synchronized | Concurrent |
 |-----------------|--------------|------------|
 |List|Collections.synchronizedList|CopyOnWriteArrayList|
 |Set|Collections.synchronizedSet|ConcurrentSkipListSet (concurrent replacement for TreeSet), CopyOnWriteArraySet|
 |Map|Collections.synchronizedMap|ConcurrentSkipListMap (concurrent replacement for TreeMap), ConcurrentMap, ConcurrentHashMap|
 
-### Timeline
-
-- Java 5:
-    - `Atomic*`
-    - `ConcurrentHashMap`
-    - `ConcurrentMap`
-    - `Condition`
-    - `CopyOnWriteArrayList`
-    - `CopyOnWriteArraySet`
-    - `CountDownLatch`
-    - `CyclicBarrier`
-    - `ExecutorService`
-    - `ReentrantLock`
-    - `ReentrantReadWriteLock`
-- Java 6:
-    - `ConcurrentSkipListMap`
-    - `ConcurrentSkipListSet`
-- Java 7:
-    - `ForkJoinPool`
-    - `ForkJoinTask`
-    - `Phaser`
-    - `RecursiveAction`
-    - `RecursiveTask`
-    - `ThreadLocalRandom`
-- Java 8:
-    - `Runnable` and `Callable` as lambda functions
-    - Parallel streams
-
-### Java Memory Model
-
-- To guarantee that the thread executing action B can see the results of action A, there must be a happens-before
-  relationship between two operations. In the absence of a happens-before relationship, JVM is free to reorder them 
-  as it sees fit.
-- Ordinary actions are partially ordered, synchronizations are totally ordered.
-- An unlock on a monitor happens-before every subsequent lock on that same monitor. Applies both to explicit Lock
-  objects and intrinsic locks.
-- A call to Thread.start on a thread happens-before every action in that started thread.
-- Any action in a thread happens-before any other thread detects that the thread has terminated, either by Thread.join
-  or Thread.isAlive == false.
-- A thread calling interrupt on another thread happens-before the interruptied threads detects the interrupt,
-  either by having InterruptedException thrown, or invoking isInterrupted or interrupted.
-- The end of a constructor for an object happens-before the start of the finalizer for that object.
-- If A happens-before B and B happens-before C, then A happens-before C.
-- If thread A execution happens-before thread B, thread B will see value V at least as up-to-date as thread A set it.
-  Subsequent writes may or may not be visible.
-
-### Java Memory Model and library classes
-
-- Placing an item in a thread-safe collection happens-before another thread reads it.
-- Counting down on a CountDownLatch happens-before a thread returns from await on that latch.
-- Releasing a permit to a Semaphore happens-before acquiring a permit from the same Semaphore.
-- Actions taken by the task represented by a Future happens-before another thread successfully returns from Future.get.
-- Submitting a Runnable or Callable to an executor happens-before the task begins execution.
-- A thread arriving at a CyclicBarrier happens-before the other threads are released from that same barrier.
-- If CyclicBarrier uses a barrier action, arriving at the barrier happens-before the barrier action,
-  which in turns happens-before threads are released from the barrier.
-
 ### Memory semantics
+
+Summary of key Java Memory Model implications:
 
 - When acquiring the monitor, local memory (*) is invalidated and subsequent reads go directly to main memory.
 - When releasing the monitor, local memory (*) is flushed to main memory.
-- Above process guarantees that when a variable V is written by a thread A with a given monitor M acquired and read by
-  thread B with the same monitor M acquired, the write to the variable V will be visible for thread B.
-- Moreover, when thread A released monitor M, and thread B reads acquired the same monitor M, any variable values
-  that were visible to A at the time that monitor M was released are guaranteed now to be visible to thread B 
-  (piggybacking on synchronization).
+- The above process guarantees that all writes by thread A prior to releasing monitor M will be visible to thread B
+  after it subsequently acquires the same monitor M.
 - All the following have the same memory semantics of acquiring the lock: acquiring implicit lock, acquiring explicit
   lock, reading volatile variable, reading atomic variable.
 - All the following have the same memory semantics of releasing the lock: releasing implicit lock, releasing explicit
   lock, writing volatile variable, writing atomic variable.
 
 Local memory can be defined as caches, registers, and other hardware and compiler optimizations.
+
+### Reordering
+
+There are only 2 allowed reorderings, which involve monitor acquire or release actions:
+
+1. Moving regular action after acquiring lock / volatile read:
+
+    ```
+    1. regular action       ==>     2. monitor acquire 
+    2. monitor acquire              1. regular action
+    ```
+
+2. Moving releasing lock / volatile write after regular action: 
+
+    ```
+    1. monitor release      ==>     2. regular action 
+    2. regular action               1. monitor release
+    ```
 
 ### Partially constructed objects
 
@@ -202,3 +161,32 @@ public class MyDcl {
     }
 }
 ```
+
+### Timeline
+
+- Java 5:
+    - `Atomic*`
+    - `Callable`
+    - `ConcurrentHashMap`
+    - `ConcurrentMap`
+    - `Condition`
+    - `CopyOnWriteArrayList`
+    - `CopyOnWriteArraySet`
+    - `CountDownLatch`
+    - `CyclicBarrier`
+    - `ExecutorService`
+    - `ReentrantLock`
+    - `ReentrantReadWriteLock`
+- Java 6:
+    - `ConcurrentSkipListMap`
+    - `ConcurrentSkipListSet`
+- Java 7:
+    - `ForkJoinPool`
+    - `ForkJoinTask`
+    - `Phaser`
+    - `RecursiveAction`
+    - `RecursiveTask`
+    - `ThreadLocalRandom`
+- Java 8:
+    - `Runnable` and `Callable` as lambda functions
+    - Parallel streams
