@@ -27,6 +27,7 @@ Concurrency in Java is about:
 |List|Collections.synchronizedList|CopyOnWriteArrayList|
 |Set|Collections.synchronizedSet|ConcurrentSkipListSet (concurrent replacement for TreeSet), CopyOnWriteArraySet|
 |Map|Collections.synchronizedMap|ConcurrentSkipListMap (concurrent replacement for TreeMap), ConcurrentMap, ConcurrentHashMap|
+|Queue| |ConcurrentLinkedQueue, ConcurrentLinkedDeque, implementations of BlockingQueue|
 
 ### Memory semantics
 
