@@ -1,4 +1,4 @@
-package uk.co.automatictester.concurrency.custom.synchronizers;
+package uk.co.automatictester.concurrency.custom;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;

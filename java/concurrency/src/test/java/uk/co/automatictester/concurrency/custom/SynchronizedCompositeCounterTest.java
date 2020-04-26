@@ -1,4 +1,4 @@
-package uk.co.automatictester.concurrency.custom.synchronizers;
+package uk.co.automatictester.concurrency.custom;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -10,12 +10,12 @@ import java.util.concurrent.CountDownLatch;
  * - alpha cannot execute in parallel with beta
  * - execution order is not important
  */
-public class ConditionQueueCompositeCounterTest extends CompositeCounterTest {
+public class SynchronizedCompositeCounterTest extends CompositeCounterTest {
 
     @BeforeMethod
     public void setup() {
         latch = new CountDownLatch(threads);
-        mutex = new ConditionQueueCompositeCounter();
+        mutex = new SynchronizedCompositeCounter();
     }
 
     /*
