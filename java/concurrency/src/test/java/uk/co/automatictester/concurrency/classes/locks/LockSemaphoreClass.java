@@ -58,6 +58,7 @@ public class LockSemaphoreClass {
         }
         executor.shutdown();
         executor.awaitTermination(10, TimeUnit.SECONDS);
+
         assertThat(value.get(), equalTo(40_000));
     }
 }

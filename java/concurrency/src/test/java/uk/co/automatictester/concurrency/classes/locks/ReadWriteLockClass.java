@@ -56,6 +56,7 @@ public class ReadWriteLockClass {
         }
         executor.shutdown();
         executor.awaitTermination(10, TimeUnit.SECONDS);
+
         assertThat(value.get(), equalTo(1_000));
     }
 }

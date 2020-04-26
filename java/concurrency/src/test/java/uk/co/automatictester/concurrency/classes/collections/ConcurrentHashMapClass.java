@@ -43,6 +43,7 @@ public class ConcurrentHashMapClass {
 
     private void write(Map<Integer, Integer> map) throws InterruptedException {
         CyclicBarrier barrier = new CyclicBarrier(threads);
+
         Runnable runnable = () -> {
             try {
                 barrier.await();
@@ -66,6 +67,7 @@ public class ConcurrentHashMapClass {
         if (map.containsValue(value)) {
             log.info("x");
         }
+
         assertThat(map.size(), equalTo(listSize));
     }
 

@@ -20,7 +20,7 @@ public class CollectionsSynchronizedSetMethod {
     private final CyclicBarrier barrier = new CyclicBarrier(threads);
     private Set<Integer> set;
 
-    private Runnable r = () -> {
+    private final Runnable r = () -> {
         try {
             barrier.await();
         } catch (BrokenBarrierException | InterruptedException e) {

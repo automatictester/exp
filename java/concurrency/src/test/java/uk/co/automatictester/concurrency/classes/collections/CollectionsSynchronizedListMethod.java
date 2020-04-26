@@ -20,7 +20,7 @@ public class CollectionsSynchronizedListMethod {
     private final CyclicBarrier barrier = new CyclicBarrier(threads);
     private List<Integer> list;
 
-    private Runnable r = () -> {
+    private final Runnable r = () -> {
         try {
             barrier.await();
         } catch (BrokenBarrierException | InterruptedException e) {

@@ -42,6 +42,7 @@ public class CopyOnWriteArrayListClass {
 
     private void write(List<Integer> list) throws InterruptedException {
         CyclicBarrier barrier = new CyclicBarrier(threads);
+
         Runnable runnable = () -> {
             try {
                 barrier.await();
@@ -66,6 +67,7 @@ public class CopyOnWriteArrayListClass {
         }
         executor.shutdown();
         executor.awaitTermination(10, TimeUnit.SECONDS);
+
         assertThat(list.size(), equalTo(0));
     }
 
