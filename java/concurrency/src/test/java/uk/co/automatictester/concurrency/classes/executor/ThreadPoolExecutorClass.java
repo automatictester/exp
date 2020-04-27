@@ -15,15 +15,16 @@ public class ThreadPoolExecutorClass {
     public void customThreadPoolExecutorConfig() throws InterruptedException {
         Runnable r = () -> log.info("running");
 
-        ExecutorService service = Executors.newFixedThreadPool(10);
-        ((ThreadPoolExecutor) service).setCorePoolSize(10);
-        ((ThreadPoolExecutor) service).setMaximumPoolSize(10);
-        ((ThreadPoolExecutor) service).setKeepAliveTime(0L, TimeUnit.MILLISECONDS);
-        ((ThreadPoolExecutor) service).setThreadFactory(Thread::new);
-        ((ThreadPoolExecutor) service).setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        ((ThreadPoolExecutor) executor).setCorePoolSize(10);
+        ((ThreadPoolExecutor) executor).setMaximumPoolSize(10);
+        ((ThreadPoolExecutor) executor).setKeepAliveTime(0L, TimeUnit.MILLISECONDS);
+        ((ThreadPoolExecutor) executor).setThreadFactory(Thread::new);
+        ((ThreadPoolExecutor) executor).setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        ((ThreadPoolExecutor) executor).prestartAllCoreThreads();
 
-        service.submit(r);
-        service.shutdown();
-        service.awaitTermination(10, TimeUnit.SECONDS);
+        executor.submit(r);
+        executor.shutdown();
+        executor.awaitTermination(10, TimeUnit.SECONDS);
     }
 }
