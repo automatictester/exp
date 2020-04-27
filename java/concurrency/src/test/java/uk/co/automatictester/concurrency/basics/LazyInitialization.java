@@ -4,11 +4,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -16,27 +14,36 @@ public class LazyInitialization {
 
     private final int threads = 4;
     private final ConcurrentSkipListSet<Singleton> instances = new ConcurrentSkipListSet<>();
+    private CountDownLatch latch;
 
     @BeforeMethod
     public void setup() {
         instances.clear();
     }
 
-    @Test(invocationCount = 5, description = "random pass/fail")
+    @Test
     public void testLazyInit() throws InterruptedException {
-        ExecutorService service = Executors.newFixedThreadPool(threads);
+        latch = new CountDownLatch(threads);
+
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
 
         Runnable r = () -> {
+            latch.countDown();
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             Singleton instance = Singleton.getInstance();
             instances.add(instance);
         };
 
         for (int i = 0; i < threads; i++) {
-            service.submit(r);
+            executor.submit(r);
         }
-        service.shutdown();
-        service.awaitTermination(5, TimeUnit.SECONDS);
-        assertThat(instances.size(), equalTo(1));
+        executor.shutdown();
+        executor.awaitTermination(5, TimeUnit.SECONDS);
+        assertThat(instances.size(), not(equalTo(1)));
     }
 }
 
