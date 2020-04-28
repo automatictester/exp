@@ -1,4 +1,4 @@
-package uk.co.automatictester.concurrency.custom;
+package uk.co.automatictester.concurrency.custom.synchronizers;
 
 import lombok.extern.slf4j.Slf4j;
 
