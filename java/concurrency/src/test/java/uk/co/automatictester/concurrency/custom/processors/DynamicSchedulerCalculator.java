@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -46,7 +46,7 @@ public class DynamicSchedulerCalculator {
         private final int size = 36_000_000;
         private final int chunkSize = 1_000_000;
         private final float[] lookupValues = new float[size];
-        private final Queue<Integer> workQueue = new LinkedBlockingQueue<>();
+        private final Queue<Integer> workQueue = new ConcurrentLinkedQueue<>();
 
         public float[] getValues() throws InterruptedException {
             splitWork();
