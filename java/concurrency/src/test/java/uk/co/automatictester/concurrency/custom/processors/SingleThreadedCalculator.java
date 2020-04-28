@@ -8,17 +8,19 @@ import static org.hamcrest.Matchers.closeTo;
 
 public class SingleThreadedCalculator {
 
+    private static final int ELEMENT_COUNT = 36_000_000;
+
     @Test(invocationCount = 10)
     public void test() {
-        float[] element = new Calculator().getValues();
-        assertThat(element.length, equalTo(36_000_000));
-        assertThat((double) element[36_000_000 - 1], closeTo(-3490.48, 0.01));
+        float[] result = new Calculator().getValues();
+        assertThat(result.length, equalTo(ELEMENT_COUNT));
+        assertThat((double) result[ELEMENT_COUNT - 1], closeTo(-3490.48, 0.01));
     }
 
     static class Calculator {
 
         public float[] getValues() {
-            int size = 36_000_000;
+            int size = ELEMENT_COUNT;
             float[] lookupValues = new float[size];
             for (int i = 0; i < (size); i++) {
                 float sinValue = (float) Math.sin((i % 360) * Math.PI / 180.0);

@@ -16,6 +16,8 @@ import static org.hamcrest.Matchers.closeTo;
 @Slf4j
 public class DynamicSchedulerCalculator {
 
+    private static final int ELEMENT_COUNT = 36_000_000;
+
     @Test
     public void assertCorrectness() throws InterruptedException {
         float[] sequential = new SingleThreadedCalculator.Calculator().getValues();
@@ -31,19 +33,20 @@ public class DynamicSchedulerCalculator {
         }
 
         assertThat((double) parallelTotal, closeTo(sequentialTotal, 0.0));
+        assertThat(parallel, equalTo(sequential));
     }
 
     @Test(invocationCount = 10)
     public void test() throws InterruptedException {
-        float[] element = new Calculator().getValues();
-        assertThat(element.length, equalTo(36_000_000));
-        assertThat((double) element[36_000_000 - 1], closeTo(-3490.48, 0.01));
+        float[] result = new Calculator().getValues();
+        assertThat(result.length, equalTo(ELEMENT_COUNT));
+        assertThat((double) result[ELEMENT_COUNT - 1], closeTo(-3490.48, 0.01));
     }
 
     @Slf4j
     static class Calculator {
 
-        private final int size = 36_000_000;
+        private final int size = ELEMENT_COUNT;
         private final int chunkSize = 1_000_000;
         private final float[] lookupValues = new float[size];
         private final Queue<Integer> workQueue = new ConcurrentLinkedQueue<>();
@@ -60,21 +63,23 @@ public class DynamicSchedulerCalculator {
             }
         }
 
-        private void doWorkInParallel() throws InterruptedException {
-            Runnable doWork = () -> {
-                do {
-                    Integer chunkNumber = workQueue.poll();
-                    if (chunkNumber != null) {
-                        int start = chunkNumber * chunkSize;
-                        int end = (chunkNumber + 1) * chunkSize;
-                        log.debug("Range: {}-{}", start, end);
-                        for (int i = start; i < end; i++) {
-                            calculateElement(i);
-                        }
+        private final Runnable doWork = () -> {
+            while (true) {
+                Integer chunkNumber = workQueue.poll();
+                if (chunkNumber != null) {
+                    int start = chunkNumber * chunkSize;
+                    int end = (chunkNumber + 1) * chunkSize;
+                    log.debug("Range: {}-{}", start, end);
+                    for (int i = start; i < end; i++) {
+                        calculateElement(i);
                     }
-                } while (!workQueue.isEmpty());
-            };
+                } else {
+                    break;
+                }
+            }
+        };
 
+        private void doWorkInParallel() throws InterruptedException {
             ExecutorService executor = Executors.newCachedThreadPool();
             int maxThreads = Runtime.getRuntime().availableProcessors();
             for (int i = 0; i < maxThreads; i++) {
