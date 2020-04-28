@@ -10,16 +10,16 @@ public class SingleThreadedCalculator {
 
     @Test(invocationCount = 10)
     public void test() {
-        double[] element = new Calculator().getValues();
+        float[] element = new Calculator().getValues();
         assertThat(element.length, equalTo(36_000_000));
-        assertThat(element[36_000_000 - 1], closeTo(-3490.48, 0.01));
+        assertThat((double) element[36_000_000 - 1], closeTo(-3490.48, 0.01));
     }
 
     static class Calculator {
 
-        public double[] getValues() {
+        public float[] getValues() {
             int size = 36_000_000;
-            double[] lookupValues = new double[size];
+            float[] lookupValues = new float[size];
             for (int i = 0; i < (size); i++) {
                 float sinValue = (float) Math.sin((i % 360) * Math.PI / 180.0);
                 lookupValues[i] = sinValue * (float) i / 180.0f;

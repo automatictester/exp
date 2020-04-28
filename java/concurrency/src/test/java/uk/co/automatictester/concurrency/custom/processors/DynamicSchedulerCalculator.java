@@ -18,26 +18,26 @@ public class DynamicSchedulerCalculator {
 
     @Test
     public void assertCorrectness() throws InterruptedException {
-        double[] sequential = new SingleThreadedCalculator.Calculator().getValues();
-        double sequentialTotal = 0;
+        float[] sequential = new SingleThreadedCalculator.Calculator().getValues();
+        float sequentialTotal = 0;
         for (int i = 0; i < sequential.length; i++) {
             sequentialTotal += i;
         }
 
-        double[] parallel = new Calculator().getValues();
-        double parallelTotal = 0;
+        float[] parallel = new Calculator().getValues();
+        float parallelTotal = 0;
         for (int i = 0; i < parallel.length; i++) {
             parallelTotal += i;
         }
 
-        assertThat(parallelTotal, closeTo(sequentialTotal, 0.0));
+        assertThat((double) parallelTotal, closeTo(sequentialTotal, 0.0));
     }
 
     @Test(invocationCount = 10)
     public void test() throws InterruptedException {
-        double[] element = new Calculator().getValues();
+        float[] element = new Calculator().getValues();
         assertThat(element.length, equalTo(36_000_000));
-        assertThat(element[36_000_000 - 1], closeTo(-3490.48, 0.01));
+        assertThat((double) element[36_000_000 - 1], closeTo(-3490.48, 0.01));
     }
 
     @Slf4j
@@ -45,10 +45,10 @@ public class DynamicSchedulerCalculator {
 
         private final int size = 36_000_000;
         private final int chunkSize = 1_000_000;
-        private final double[] lookupValues = new double[size];
+        private final float[] lookupValues = new float[size];
         private final Queue<Integer> workQueue = new LinkedBlockingQueue<>();
 
-        public double[] getValues() throws InterruptedException {
+        public float[] getValues() throws InterruptedException {
             splitWork();
             doWorkInParallel();
             return lookupValues;
