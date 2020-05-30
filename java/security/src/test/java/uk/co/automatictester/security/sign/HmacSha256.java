@@ -20,7 +20,6 @@ public class HmacSha256 {
         KeyGenerator keyGenerator;
         try {
             keyGenerator = KeyGenerator.getInstance(ALGORITHM);
-            keyGenerator.init(256);
             KEY = keyGenerator.generateKey();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
