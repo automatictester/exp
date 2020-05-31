@@ -6,9 +6,12 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyAgreement;
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
-import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.*;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
@@ -99,7 +102,12 @@ public class Party {
     }
 
     private Cipher getCipher() throws Exception {
-        return Cipher.getInstance("AES/CBC/PKCS5Padding");
+        return Cipher.getInstance("AES/GCM/NoPadding");
+    }
+
+    private GCMParameterSpec getGcmParams(byte[] iv) {
+        int authenticationTagBitLength = 128;
+        return new GCMParameterSpec(authenticationTagBitLength, iv);
     }
 
     // public API
@@ -107,14 +115,16 @@ public class Party {
     public byte[] encrypt(String input, byte[] iv) throws Exception {
         log.info("{} sent: '{}'", name, input);
         Cipher cipher = getCipher();
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
+        GCMParameterSpec gcmParams = getGcmParams(iv);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmParams);
         return cipher.doFinal(input.getBytes());
     }
 
     public String decrypt(byte[] encrypted, byte[] iv) throws Exception {
         log.info("{} received: '{}'", name, encrypted);
         Cipher cipher = getCipher();
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
+        GCMParameterSpec gcmParams = getGcmParams(iv);
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParams);
         String decprypted = new String(cipher.doFinal(encrypted));
         log.info("{} decrypted: '{}'", name, decprypted);
         return decprypted;
