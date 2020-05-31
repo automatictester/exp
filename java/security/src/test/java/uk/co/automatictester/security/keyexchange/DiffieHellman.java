@@ -23,11 +23,27 @@ public class DiffieHellman {
         bob = new Party("Bob", alicePublicKey);
         String bobPublicKey = bob.getPublicKey();
 
-        alice.generateSecretKey(bobPublicKey);
+        alice.finalizeKeyExchange(bobPublicKey);
     }
 
     @Test
     public void testKeyExchange() throws Exception {
+        send(alice, bob, "message #1", getIv());
+        send(bob, alice, "message #2", getIv());
+        send(alice, bob, "message #3", getIv());
+        send(bob, alice, "message #4", getIv());
+    }
+
+    @Test
+    public void testKeyRotation() throws Exception {
+        alice.prepareForKeyExchange();
+        String alicePublicKey = alice.getPublicKey();
+
+        bob.exchangeKey(alicePublicKey);
+        String bobPublicKey = bob.getPublicKey();
+
+        alice.finalizeKeyExchange(bobPublicKey);
+
         send(alice, bob, "message #1", getIv());
         send(bob, alice, "message #2", getIv());
         send(alice, bob, "message #3", getIv());

@@ -15,39 +15,53 @@ import java.util.Base64;
 @Slf4j
 public class Party {
 
-    private final KeyPair keyPair;
     private final String name;
-    private final KeyAgreement keyAgreement;
+    private KeyPair keyPair;
+    private KeyAgreement keyAgreement;
     private SecretKeySpec secretKey;
+
+    // initial setup
 
     public Party(String name) throws Exception {
         this.name = name;
-        keyPair = getKeyPair();
-        keyAgreement = KeyAgreement.getInstance("DH");
-        keyAgreement.init(keyPair.getPrivate());
+        prepareForKeyExchange();
     }
 
     public Party(String name, String otherPartyBase64EncodedPublicKey) throws Exception {
         this.name = name;
-        PublicKey otherPartyPublicKey = base64ToPublicKey(otherPartyBase64EncodedPublicKey);
-        DHParameterSpec dhParamFromOtherPartyPublicKey = ((DHPublicKey) otherPartyPublicKey).getParams();
-        keyPair = getKeyPair(dhParamFromOtherPartyPublicKey);
-        keyAgreement = KeyAgreement.getInstance("DH");
-        keyAgreement.init(keyPair.getPrivate());
-        generateSecretKey(otherPartyPublicKey);
+        exchangeKey(otherPartyBase64EncodedPublicKey);
     }
 
-    public void generateSecretKey(String otherPartyBase64EncodedPublicKey) throws Exception {
+    public void finalizeKeyExchange(String otherPartyBase64EncodedPublicKey) throws Exception {
         PublicKey otherPartyPublicKey = base64ToPublicKey(otherPartyBase64EncodedPublicKey);
-        generateSecretKey(otherPartyPublicKey);
+        finalizeKeyExchange(otherPartyPublicKey);
     }
 
-    private void generateSecretKey(PublicKey otherPartyPublicKey) throws Exception {
+    private void finalizeKeyExchange(PublicKey otherPartyPublicKey) throws Exception {
         keyAgreement.doPhase(otherPartyPublicKey, true);
         byte[] sharedSecret = keyAgreement.generateSecret();
         secretKey = getSecretKey(sharedSecret);
         log.info("{} secret key: {}", name, secretKey.getEncoded());
     }
+
+    // key exchange and rotation
+
+    public void prepareForKeyExchange() throws Exception {
+        keyPair = getKeyPair();
+        keyAgreement = KeyAgreement.getInstance("DH");
+        keyAgreement.init(keyPair.getPrivate());
+    }
+
+    public void exchangeKey(String otherPartyBase64EncodedPublicKey) throws Exception {
+        PublicKey otherPartyPublicKey = base64ToPublicKey(otherPartyBase64EncodedPublicKey);
+        DHParameterSpec dhParamFromOtherPartyPublicKey = ((DHPublicKey) otherPartyPublicKey).getParams();
+        keyPair = getKeyPair(dhParamFromOtherPartyPublicKey);
+        keyAgreement = KeyAgreement.getInstance("DH");
+        keyAgreement.init(keyPair.getPrivate());
+        finalizeKeyExchange(otherPartyPublicKey);
+    }
+
+    // internal methods
 
     private KeyPair getKeyPair() throws Exception {
         KeyPairGenerator keyPairGenerator = getKeyPairGenerator();
@@ -87,6 +101,8 @@ public class Party {
     private Cipher getCipher() throws Exception {
         return Cipher.getInstance("AES/CBC/PKCS5Padding");
     }
+
+    // public API
 
     public byte[] encrypt(String input, byte[] iv) throws Exception {
         log.info("{} sent: '{}'", name, input);
