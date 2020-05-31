@@ -57,7 +57,7 @@ public class DiffieHellman {
     }
 
     private byte[] getIv() {
-        byte[] iv = new byte[16];
+        byte[] iv = new byte[12];
         new SecureRandom().nextBytes(iv);
         log.debug("Initialization vector: {}", iv);
         return iv;
