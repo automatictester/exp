@@ -1,0 +1,49 @@
+package uk.co.automatictester.security.keyexchange;
+
+import lombok.extern.slf4j.Slf4j;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import java.security.SecureRandom;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+@Slf4j
+public class DiffieHellman {
+
+    private Party alice;
+    private Party bob;
+
+    @BeforeClass
+    public void setup() throws Exception {
+        alice = new Party("Alice");
+        String alicePublicKey = alice.getPublicKey();
+
+        bob = new Party("Bob", alicePublicKey);
+        String bobPublicKey = bob.getPublicKey();
+
+        alice.generateSecretKey(bobPublicKey);
+    }
+
+    @Test
+    public void testKeyExchange() throws Exception {
+        send(alice, bob, "message #1", getIv());
+        send(bob, alice, "message #2", getIv());
+        send(alice, bob, "message #3", getIv());
+        send(bob, alice, "message #4", getIv());
+    }
+
+    private void send(Party sender, Party recipient, String message, byte[] iv) throws Exception {
+        byte[] encrypted = sender.encrypt(message, iv);
+        String decrypted = recipient.decrypt(encrypted, iv);
+        assertThat(message, equalTo(decrypted));
+    }
+
+    private byte[] getIv() {
+        byte[] iv = new byte[16];
+        new SecureRandom().nextBytes(iv);
+        log.debug("Initialization vector: {}", iv);
+        return iv;
+    }
+}
