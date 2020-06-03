@@ -1,12 +1,11 @@
 package uk.co.automatictester.security.history;
 
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class Rot13 {
+public class ROT13 {
 
     private static final int SHIFT = 13;
     private static final int LOWER_BOUND = 65;
@@ -21,19 +20,6 @@ public class Rot13 {
 
         String reversed = encrypt(output);
         assertThat(reversed, equalTo(input));
-    }
-
-    @DataProvider(name = "getInvalidData")
-    private Object[][] getInvalidData() {
-        return new Object[][]{
-                {"@"},
-                {"["}
-        };
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "getInvalidData")
-    public void testInvalidInput(String input) {
-        encrypt(input);
     }
 
     private String encrypt(String s) {

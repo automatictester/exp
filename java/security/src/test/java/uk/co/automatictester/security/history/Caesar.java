@@ -1,6 +1,5 @@
 package uk.co.automatictester.security.history;
 
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -26,19 +25,6 @@ public class Caesar {
         String output = decrypt(input);
         String expected = "XYZABCUVW";
         assertThat(expected, equalTo(output));
-    }
-
-    @DataProvider(name = "getInvalidData")
-    private Object[][] getInvalidData() {
-        return new Object[][]{
-                {"@"},
-                {"["}
-        };
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "getInvalidData")
-    public void testInvalidInput(String input) {
-        encrypt(input);
     }
 
     private String encrypt(String s) {
