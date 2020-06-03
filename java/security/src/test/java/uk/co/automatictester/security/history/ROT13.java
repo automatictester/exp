@@ -13,17 +13,17 @@ public class ROT13 {
 
     @Test
     public void testEncrypt() {
-        String input = "ABCDEFXYZ";
-        String output = encrypt(input);
+        String plaintext = "ABCDEFXYZ";
+        String ciphertext = encrypt(plaintext);
         String expected = "NOPQRSKLM";
-        assertThat(expected, equalTo(output));
+        assertThat(expected, equalTo(ciphertext));
 
-        String reversed = encrypt(output);
-        assertThat(reversed, equalTo(input));
+        String plaintextAgain = encrypt(ciphertext);
+        assertThat(plaintextAgain, equalTo(plaintext));
     }
 
     private String encrypt(String s) {
-        StringBuilder output = new StringBuilder();
+        StringBuilder cippertext = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             validate(c);
@@ -32,9 +32,9 @@ public class ROT13 {
                 int offset = next - UPPER_BOUND;
                 next = (char) (LOWER_BOUND + offset - 1);
             }
-            output.append(next);
+            cippertext.append(next);
         }
-        return output.toString();
+        return cippertext.toString();
     }
 
     private char encryptChar(char c) {

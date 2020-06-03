@@ -13,22 +13,22 @@ public class Caesar {
 
     @Test
     public void testEncrypt() {
-        String input = "ABCDEFXYZ";
-        String output = encrypt(input);
+        String plaintext = "ABCDEFXYZ";
+        String ciphertext = encrypt(plaintext);
         String expected = "DEFGHIABC";
-        assertThat(expected, equalTo(output));
+        assertThat(expected, equalTo(ciphertext));
     }
 
     @Test
     public void testDecrypt() {
-        String input = "ABCDEFXYZ";
-        String output = decrypt(input);
+        String ciphertext = "ABCDEFXYZ";
+        String plaintext = decrypt(ciphertext);
         String expected = "XYZABCUVW";
-        assertThat(expected, equalTo(output));
+        assertThat(expected, equalTo(plaintext));
     }
 
     private String encrypt(String s) {
-        StringBuilder output = new StringBuilder();
+        StringBuilder ciphertext = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             validate(c);
@@ -37,13 +37,13 @@ public class Caesar {
                 int offset = next - UPPER_BOUND;
                 next = (char) (LOWER_BOUND + offset - 1);
             }
-            output.append(next);
+            ciphertext.append(next);
         }
-        return output.toString();
+        return ciphertext.toString();
     }
 
     private String decrypt(String s) {
-        StringBuilder output = new StringBuilder();
+        StringBuilder plaintext = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             validate(c);
@@ -52,9 +52,9 @@ public class Caesar {
                 int offset = LOWER_BOUND - next;
                 next = (char) (UPPER_BOUND - offset + 1);
             }
-            output.append(next);
+            plaintext.append(next);
         }
-        return output.toString();
+        return plaintext.toString();
     }
 
     private char encryptChar(char c) {
