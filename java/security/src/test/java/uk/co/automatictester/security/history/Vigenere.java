@@ -41,6 +41,39 @@ public class Vigenere {
         assertThat(ciphertext, equalTo("LXFOPVEFRNHR"));
     }
 
+    @Test
+    public void testDecryption() {
+        log.debug("Generated encryption table: \n{}", tableToPrettyString(encryptionTable));
+        String ciphertext = "LXFOPVEFRNHR";
+        String rawKey = "LEMON";
+        String key = getKey(ciphertext, rawKey);
+        log.debug("Key: {}", key);
+        String plaintext = decrypt(ciphertext, key);
+        assertThat(plaintext, equalTo("ATTACKATDAWN"));
+    }
+
+    private String decrypt(String ciphertext, String key) {
+        StringBuilder plaintext = new StringBuilder();
+        for (int i = 0; i < ciphertext.length(); i++) {
+            String ciphertextCharacter = ciphertext.substring(i, i + 1);
+            String keyCharacter = key.substring(i, i + 1);
+            int row = getTableIndex(keyCharacter);
+            int characterPosition = getCharacterPosition(ciphertextCharacter, row);
+            String nextCharacter = String.valueOf((char) (characterPosition + asciiCodeForLetterA));
+            plaintext.append(nextCharacter);
+        }
+        return plaintext.toString();
+    }
+
+    private int getCharacterPosition(String character, int row) {
+        for (int i = 0; i < 26; i++) {
+            if (encryptionTable[row][i].equals(character)) {
+                return i;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
     private String encrypt(String plaintext, String key) {
         StringBuilder ciphertext = new StringBuilder();
         for (int i = 0; i < plaintext.length(); i++) {
