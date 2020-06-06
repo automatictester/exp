@@ -24,6 +24,13 @@ public class Playfair {
         assertThat(ciphertext, equalTo("NMSXNDBASP"));
     }
 
+    @Test
+    public void testDecryption() {
+        String ciphertext = "NMSXNDBASP";
+        String plaintext = decrypt(ciphertext);
+        assertThat(plaintext, equalTo("TEKSTIAWNY"));
+    }
+
     private String encrypt(String plaintext) {
         String sanitizedPlaintext = sanitize(plaintext);
         log.debug("Sanitized plaintext: {}", sanitizedPlaintext);
@@ -32,16 +39,35 @@ public class Playfair {
             String first = sanitizedPlaintext.substring(i, i + 1);
             String second = sanitizedPlaintext.substring(i + 1, i + 2);
             if (sameRow(first, second)) {
-                ciphertext.append(handleSameRow(first));
-                ciphertext.append(handleSameRow(second));
+                ciphertext.append(encryptSameRow(first));
+                ciphertext.append(encryptSameRow(second));
             } else if (sameCol(first, second)) {
-                ciphertext.append(handleSameCol(first));
-                ciphertext.append(handleSameCol(second));
+                ciphertext.append(encryptSameCol(first));
+                ciphertext.append(encryptSameCol(second));
             } else {
                 ciphertext.append(handleDifferentRowAndCol(first, second));
             }
         }
         return ciphertext.toString();
+    }
+
+    private String decrypt(String ciphertext) {
+        StringBuilder plaintext = new StringBuilder();
+        for (int i = 0; i < ciphertext.length(); i += 2) {
+            String first = ciphertext.substring(i, i + 1);
+            String second = ciphertext.substring(i + 1, i + 2);
+            if (sameRow(first, second)) {
+                plaintext.append(decryptSameRow(first));
+                plaintext.append(decryptSameRow(second));
+            } else if (sameCol(first, second)) {
+                plaintext.append(decryptSameCol(first));
+                plaintext.append(decryptSameCol(second));
+            } else {
+                plaintext.append(handleDifferentRowAndCol(first, second));
+            }
+        }
+        return plaintext.toString();
+
     }
 
     private String sanitize(String plaintext) {
@@ -106,7 +132,7 @@ public class Playfair {
         return false;
     }
 
-    private String handleSameRow(String character) {
+    private String encryptSameRow(String character) {
         int[] firstPosition = getPosition(character);
         int row = firstPosition[0];
         int col = firstPosition[1];
@@ -118,7 +144,7 @@ public class Playfair {
         return encryptionTable[row][col];
     }
 
-    private String handleSameCol(String character) {
+    private String encryptSameCol(String character) {
         int[] firstPosition = getPosition(character);
         int row = firstPosition[0];
         int col = firstPosition[1];
@@ -136,6 +162,30 @@ public class Playfair {
         String firstCipher = encryptionTable[firstPosition[0]][secondPosition[1]];
         String secondCipher = encryptionTable[secondPosition[0]][firstPosition[1]];
         return firstCipher + secondCipher;
+    }
+
+    private String decryptSameRow(String character) {
+        int[] firstPosition = getPosition(character);
+        int row = firstPosition[0];
+        int col = firstPosition[1];
+        if (col > 0) {
+            col--;
+        } else {
+            col = 4;
+        }
+        return encryptionTable[row][col];
+    }
+
+    private String decryptSameCol(String character) {
+        int[] firstPosition = getPosition(character);
+        int row = firstPosition[0];
+        int col = firstPosition[1];
+        if (row > 0) {
+            row--;
+        } else {
+            row = 4;
+        }
+        return encryptionTable[row][col];
     }
 
     private int[] getPosition(String character) {
