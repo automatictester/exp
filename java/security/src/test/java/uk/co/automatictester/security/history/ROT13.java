@@ -28,17 +28,15 @@ public class ROT13 {
             char c = s.charAt(i);
             validate(c);
             char next = encryptChar(c);
-            if (next > UPPER_BOUND) {
-                int offset = next - UPPER_BOUND;
-                next = (char) (LOWER_BOUND + offset - 1);
-            }
             cippertext.append(next);
         }
         return cippertext.toString();
     }
 
     private char encryptChar(char c) {
-        return (char) (c + SHIFT);
+        int zeroBasedValue = c - LOWER_BOUND;
+        int newZeroBasedValie = (zeroBasedValue + SHIFT) % 26;
+        return (char) (newZeroBasedValie + LOWER_BOUND);
     }
 
     private void validate(char c) {

@@ -17,13 +17,10 @@ public class Vigenere {
         for (int row = 0; row < 26; row++) {
             for (int col = 0; col < 26; col++) {
                 if (row == 0) {
-                    encryptionTable[0][col] = String.valueOf((char) (asciiCodeForLetterA + col));
+                    encryptionTable[row][col] = String.valueOf((char) (asciiCodeForLetterA + col));
                 } else {
-                    if (col == 25) {
-                        encryptionTable[row][col] = encryptionTable[row - 1][0];
-                    } else {
-                        encryptionTable[row][col] = encryptionTable[row - 1][col + 1];
-                    }
+                    int newCol = (col + 1) % 26;
+                    encryptionTable[row][col] = encryptionTable[row - 1][newCol];
                 }
             }
         }

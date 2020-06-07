@@ -16,7 +16,7 @@ public class Caesar {
         String plaintext = "ABCDEFXYZ";
         String ciphertext = encrypt(plaintext);
         String expected = "DEFGHIABC";
-        assertThat(expected, equalTo(ciphertext));
+        assertThat(ciphertext, equalTo(expected));
     }
 
     @Test
@@ -24,7 +24,7 @@ public class Caesar {
         String ciphertext = "ABCDEFXYZ";
         String plaintext = decrypt(ciphertext);
         String expected = "XYZABCUVW";
-        assertThat(expected, equalTo(plaintext));
+        assertThat(plaintext, equalTo(expected));
     }
 
     private String encrypt(String s) {
@@ -33,10 +33,6 @@ public class Caesar {
             char c = s.charAt(i);
             validate(c);
             char next = encryptChar(c);
-            if (next > UPPER_BOUND) {
-                int offset = next - UPPER_BOUND;
-                next = (char) (LOWER_BOUND + offset - 1);
-            }
             ciphertext.append(next);
         }
         return ciphertext.toString();
@@ -48,21 +44,22 @@ public class Caesar {
             char c = s.charAt(i);
             validate(c);
             char next = decryptChar(c);
-            if (next < LOWER_BOUND) {
-                int offset = LOWER_BOUND - next;
-                next = (char) (UPPER_BOUND - offset + 1);
-            }
             plaintext.append(next);
         }
         return plaintext.toString();
     }
 
     private char encryptChar(char c) {
-        return (char) (c + SHIFT);
+        int zeroBasedValue = c - LOWER_BOUND;
+        int newZeroBasedValue = (zeroBasedValue + SHIFT) % 26;
+        return (char) (newZeroBasedValue + LOWER_BOUND);
     }
 
     private char decryptChar(char c) {
-        return (char) (c - SHIFT);
+        int zeroBasedValue = c - LOWER_BOUND;
+        int forwardShift = -SHIFT + 26;
+        int newZeroBasedValue = (zeroBasedValue + forwardShift) % 26;
+        return (char) (newZeroBasedValue + LOWER_BOUND);
     }
 
     private void validate(char c) {

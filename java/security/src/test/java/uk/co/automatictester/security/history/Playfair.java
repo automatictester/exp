@@ -136,24 +136,16 @@ public class Playfair {
         int[] firstPosition = getPosition(character);
         int row = firstPosition[0];
         int col = firstPosition[1];
-        if (col < 4) {
-            col++;
-        } else {
-            col = 0;
-        }
-        return encryptionTable[row][col];
+        int newCol = ++col % 5;
+        return encryptionTable[row][newCol];
     }
 
     private String encryptSameCol(String character) {
         int[] firstPosition = getPosition(character);
         int row = firstPosition[0];
         int col = firstPosition[1];
-        if (row < 4) {
-            row++;
-        } else {
-            row = 0;
-        }
-        return encryptionTable[row][col];
+        int newRow = ++row % 5;
+        return encryptionTable[newRow][col];
     }
 
     private String handleDifferentRowAndCol(String first, String second) {
@@ -168,24 +160,16 @@ public class Playfair {
         int[] firstPosition = getPosition(character);
         int row = firstPosition[0];
         int col = firstPosition[1];
-        if (col > 0) {
-            col--;
-        } else {
-            col = 4;
-        }
-        return encryptionTable[row][col];
+        int newCol = (col + 4) % 5;
+        return encryptionTable[row][newCol];
     }
 
     private String decryptSameCol(String character) {
         int[] firstPosition = getPosition(character);
         int row = firstPosition[0];
         int col = firstPosition[1];
-        if (row > 0) {
-            row--;
-        } else {
-            row = 4;
-        }
-        return encryptionTable[row][col];
+        int newRow = (row + 4) % 5;
+        return encryptionTable[newRow][col];
     }
 
     private int[] getPosition(String character) {
