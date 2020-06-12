@@ -1,4 +1,4 @@
-package uk.co.automatictester.security.keyexchange;
+package uk.co.automatictester.security.key.exchange;
 
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeClass;
