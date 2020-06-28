@@ -1,54 +1,201 @@
 # Cryptography
 
-### Ciphers
+### Theory
 
+Kerckhoff's principle:
+- Cryptosystem should remain secure even if everything about the system, except the key, is public knowledge
+- Therefore, system may be stolen by the enemy, not causign any problems if key remains secret
+
+Ciphers:
 - Good cipher - brute force is the best possible attack
 - Broken cipher - an attack substantially better than brute force exists
 
-### Kerckhoff's Principle
+Security goals:
+- IND (indistinguishability) - ciphertext should be indistinguishable from random sequence
+- NM (non-malleability) - ciphertext cannot be transformed into another ciphertext, which decrypts to related plaintext
 
-- Cryptosystem should remain secure even if everything about the system, except the key, is public knowledge
+Semantic security:
+- Also known as IND-CPA (indistinguishability - chosen plaintext attack)
+- Ciphertext should reveal nothing about plaintext as long as key remains secret
+- Requires encrypting the same plaintext twice to produce different ciphertext
 
-### Trully Unbreakable Cryptographic System
+Information-theoretic security:
+- Defines purely theoretical concept of trully unbreakable cryptographic system
+- Attacker, even with unlimited time and processing power, cannot get to know anything except plaintext length
+- Only one such system exists - only one time pad, random key, len ( K ) >= len ( P )
+- Simple, although not non-malleable example: C = P ⊕ K
 
-- Only one such system exists:
-  - One time key
-  - Random key
-  - len ( K ) >= len ( P ) 
+Computational security:
+- Attacker with limited time and processing power cannot break the cipher
+- Even if you know P and C, this is still computationally secure because testing 2<sup>n</sup>, e.g. 2<sup>128</sup>
+  keys would take too much time
+
+Provable security:
+- Refers to the situation when breaking the cipher is proved to be at least as hard as solving some other mathematical
+  or statistical problem
+
+Heuristic security:
+- Although there is no direct relation to another hard problem, but others were unable to break the cipher
+- Example: AES
+
+### Randomness
+
+Overview:
+- Non-cryptographic PRNGs shouldn't be used in cryptography, because the focus on distribution, not predictability
+- Statistical tests are useless in determining cryptographic suitability (non-predictability) of a PRNG
+
+RNG:
+- Trully random/non-deterministic
+- Slow
+- Based on analog resources
+- Don't guarantee high levels of entropy
+
+PRNG:
+- Based on RNG (digital sources)
+- Deterministic
+- Offer maximum entropy
+- Can be either software or hardware
+
+PRNG types:
+- Cryptographic:
+  - Python `os.urandom()` and `secrets.SystemRandom` class
+  - OS-level `/dev/random` and `/dev/urandom`
+- Non-cryptographic:
+  - Very often based on Mersenne Twister
+  - Python `random`
+
+/dev/random vs /dev/urandom:
+- Both are secure, although `urandom` is stronger
+- `random` blocks if its estimate of entropy is too low
+- For that reason, implementations based on `random` are prone to DoS
+- `random` is based on entropy estimation, which is generally a challenge
+
+PRNG algorithms:
+- Yarrow:
+  - Based on SHA-1 and 3DES
+  - Used in iOS and macOS
+  - Used by FreeBSD until they migrated to Fortune
+- Fortuna:
+  - Successor to Yarrow
+  - Used by Windows and (currently) FreeBSD
+
+### Symmetric-key cryptography
+
+Overview:
+- Uses same key for encryption and decryption
+- Key length = level of security, 128 bit key = 128 bit security
+- For a 128 bit key, every single of 2<sup>128</sup> keys is valid
+
+Sub-categories:
+- Block ciphers
+- Stream ciphers
 
 ### Block Ciphers
+
+Overview:
+- Characterized by block size and key length
+- Consist of multiple rounds of relatively simple operations
+- Block cipher with 3 rounds:
+  - C = E<sub>RK3</sub> ( E<sub>RK2</sub> ( E<sub>RK1</sub> ( P ) ) )
+- Each round uses the same algorithm, but different round key, derived from main key
+- Derivation of round key is called key schedule
+- Key schedule is required to avoid sliding attacks
+- Consequences of too large block size:
+  - Longer ciphertext, due to longer padding
+  - Higher memory utilisation and slower speed, if it doesn't fit into CPU register
+- Too small block size = risk of code book attack
 
 Types:
 - Feistel network: early design, e.g. DES
 - SP network, modern design, e.g. AES
 
-### SP Network
+Secure:
+- AES
+- 3DES
 
-- Multiple rounds of the same substitution and permutation
-- R<sub>1</sub> = ( P ⊕ K<sub>1</sub> ), R<sub>2</sub> = ( P ⊕ K<sub>2</sub> ), ... , R<sub>n</sub> = C
+Insecure:
+- DES
+- GOST
+
+### DES
+
+- Key length: 56 bits, hence insecure from day one
+- Block size: 64 bits
+- Based on Feistel network
+- Rounds: 16
+- Optimized for dedicated hardware, not modern CPUs
+
+### 3DES
+
+- Secure by current standards, but slower than AES, hence no reason to use in new designs
+- C = E<sub>K3</sub> ( D<sub>K2</sub> ( E<sub>K1</sub> ( P ) ) )
+
+Keying options:
+- K<sub>1</sub> ≠ K<sub>2</sub> ≠ K<sub>3</sub> - 3x 56 bit key gives 168 bits total key length, however only 112 bits
+  of security due to meet-in-the-middle attacks
+- K<sub>1</sub> ≠ K<sub>2</sub>, K<sub>1</sub> = K<sub>3</sub> - 2x 56 bits gives 112 bits total key length
+- K<sub>1</sub> = K<sub>2</sub> = K<sub>3</sub> - same as original DES, only for compatibility reasons
+
+### GOST
+
+- Original name: Magma
+- Developed in 1970's in Soviet Union. Initially Top Secret, downgraded to Secret in 1990, published in 1994
+- Insecure, with nearly feasible attack at 2<sup>101</sup>
+- Design based on Feistel network and similar to DES
+
+| |DES|GOST|
+|---|---|---|
+|Key length|56 bits|256 bits|
+|Block size|64 bits|64 bits|
+|Rounds|16 rounds|32 rounds|
 
 ### AES
 
 - Previous name: Rijndael
 - Type: SP network
-- Block size: 128 bits (matrix 4x4 bytes)
-- Key length / rounds: 128 bit with 10 rounds, 196 bit with 12 rounds, 256 bit with 14 rounds
+- Block size: 128 bits, or 16 bytes (matrix of 4x4 bytes)
 - Operates on bytes, not bits
-- With AES being a standard, Intel and AMD CPUs provide native support making it very fast
-  (AES-NI - AES New Instructions)
+- Key length / rounds: 128 bit with 10 rounds, 196 bit with 12 rounds, 256 bit with 14 rounds
+- With AES being a standard, AES-NI (AES New Instructions) is currently implemented by vast majority of CPUs in
+  desktops, laptops, tables and mobile phones, includingIntel and AMD CPUs
+- AES-NI gives 10x boost; 2 GHz CPU with AES-NI offers over 0.7 GB/s throughput (per single thread) - with 4 threads
+  that would be 3 GB/s throughput 
 - Used in Microsoft BitLocker and Apple FileVault 2 disc encryption
+- Particular weakness - having a round key, attacker can get other round keys and main key
+
+AES, CBC and padding:
+- Defined by PKCS#7 and RFS 5652
+- Padding length: between 1 byte and 1 block
+- Padding depends on the number of empty bytes (not bits) in the last block:
+  - 1 - 1 (decimal) is added
+  - 2 - 2x 2 (decimal) is added
+  - ...
+  - 15 - 15x 15 (decimal) is added
+  - If there are no empty bytes in the last block, i.e. when P length is a multiple of block size, another block
+    filled with 16x 16 (decimal) is added. This is required to distibguish between last block ending with decimal 1
+    being a padding vs actial P
+- Problems with padding:
+  - Increased ciphertext length
+  - Prone to padding oracle attacks
+
+CTS:
+- Ciphertext stealing, an alternative to padding
+- Not prone to padding oracle attacks
+- Less elegant, more complex (standard defines 3 possible implementations) and less popular
 
 ### Block Cipher Modes
 
 |Mode|Encryption|Notes|
 |---|---|---|
-|ECB|C = E ( P )|
-|CBC|C = E ( P ⊕ C<sub>i-1</sub> )|see <sup>1</sup>|
+|ECB|C = E ( P )|see <sup>2</sup>; not semantically secure|
+|CBC|C = E ( P ⊕ C<sub>i-1</sub> )|see <sup>1</sup> and <sup>2</sup>|
 |CFB|C = E ( C<sub>i-1</sub> ) ⊕ P|see <sup>1</sup>|
 |OFB|C<sub>0</sub> = E ( IV ) ⊕ P<br> C<sub>1</sub> = E ( E ( IV )<sub>0</sub> ) ⊕ P<br>...|see <sup>1</sup>|
 |CTR|C = E ( N + C ) ⊕ P|uses nonce and counter|
 
-<sup>1</sup> - in first iteration IV is used, as there is no C<sub>i-1</sub> yet
+<sup>1</sup> - in first iteration IV is used, as there is no C<sub>i-1</sub> yet 
+
+<sup>2</sup> - requires padding
 
 |Mode|Encryption parallelizable|Decryption parallelizable|Random access|
 |---|---|---|---|
@@ -58,13 +205,66 @@ Types:
 |OFB|no|no|no|
 |CTR|yes|yes|yes|
 
+### Stream ciphers
+
+Overview:
+- In the past, weaker than block ciphers and cheaper to implement in hardware
+- They are closer to DRBG (Deterministic Random Bit Generators) than PRNG because they need to be deterministic
+- While DRBG takes one input: initial value / seed, stream ciphers take two: initial value and a key
+- Key is usually 128-256 bits, initial value 64-128 bits
+- Initial value is similar to nonce - doesn't have to be secret but has to be unique
+- General form: C = E ( K, N ) ⊕ P
+- Almost all stream ciphers are based on FSR (Feedback Stream Register)
+- Software stream ciphers operate on bytes or 32/64 bit words, which is more efficient on modern CPUs, which can execute
+  arithmetic instructions on words as quickly as on bits
+
+Types:
+- Stateful, e.g. RC4
+- Counter-based, e.g. Salsa20
+
+Types:
+- Hardware:
+  - A5/1 - insecure, used in 2G telecommunications
+  - Grain - secure, eSTREAM portfolio
+- Software:
+  - RC4 - insecure, doesn't use a nonce (!)
+  - Salsa20 - secure, eSTREAM portfolio
+  
+### Feedback Shift Register
+
+Overview:
+- Focussed on hardware implementations
+- Non-linear FSRs are more secure and contain not only XOR, but also AND and OR
+
+Example of Linear FSR:
+- Initial value: 1100
+- Shift all bits one to the left
+- Apply linear function f XORing all bits from previous values to calculate value of right-most bit
+- Iterations:
+  - 1100
+  - 1000
+  - 0001
+  - 0011
+  - 0110
+
+### Salsa20
+
+- Modern, counter-based stream cipher created by J. Bernstein
+- State size: 512 bits (4x4 matrix of 32 bit words), including:
+  - Key size: 256 bits
+  - Nonce: 64 bits
+  - Counter: 64 bits
+- 20 rounds, hence its name
+- Other variants: Salsa20/12, Salsa20/8, where 20 and 8 refer to number of rounds respectively
+- Improved version is called ChaCha
+
 ### Hash Functions
 
 - Hashing is not encryption - reversing is not only not the goal, but should be impossible
 - Should not be used to store masked passwords, due to ranbow table attacks
 
 Insecure hash functions:
-- CRC - non-cryptographic hash function
+- All non-cryptographic hash functions, e.g. CRC
 - MD5
 - SHA-1
 
@@ -75,8 +275,21 @@ Secure hash functions:
 
 Digest size:
 - MD5: 128 bit (32 hex)
-- SHA1: 160 bit (40 hex)
-- SHA256 - 256 bit (64 hex)
+- SHA-1: 160 bit (40 hex)
+- SHA-256 - 256 bit (64 hex)
+
+Types:
+- Based on Davies-Mayer compression function with Merkle-Damgard construction - majority of hash functions
+- Based on sponge function, e.g. SHA-3
+
+Merkle-Damgard construction:
+- Apply compression function to all blocks
+- Finalise
+- Hash
+
+Davies-Meyer compression function:
+- H<sub>i</sub> = F ( M<sub>i</sub>, H<sub>i-1</sub> ) ⊕ H<sub>i-1</sub>
+- Use IV in first iteration
 
 ### SHA-1
 
@@ -86,6 +299,27 @@ Digest size:
   - followed by `1`
   - followed by number of `0`'s
   - followed by `111` defining actual length of actual data in this block
+
+### SHA-2
+
+Overview:
+- SHA-256 and SHA-512 are base algorithms, from which SHA-224 and SHA-384 are derived with only minor modifications.
+- Rounds: 
+  - SHA-256 (and SHA-224) - 64 rounds
+  - SHA-512 (and SHA-384) - 80 rounds
+
+Family of 4 algorithms:
+- SHA-224
+- SHA-256
+- SHA-384
+- SHA-512
+
+### SHA-3
+
+- Designed as a futur ealternative if SHA-2 gets broken one day
+- Alternative, not a successor to SHA-2 family, because SHA-2 hasn't been broken yet
+- New structure, purposefully different from SHA-2 to keep it secure even if SHA-2 gets broken one day
+- Based on Keccak algorithm (sponge function)
 
 ### Public Key Cryptography
 
@@ -129,7 +363,7 @@ Key strength:
 
 Strength:
 - 256 bit EC = 3072 bit RSA
-- 384 bit EC = 7680 bit RSA - this is good enough for US Top Secret level
+- 384 bit EC = 7680 bit RSA - currently defined as good enough for US Top Secret level
 
 Benefits:
 - Shorter key length
