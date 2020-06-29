@@ -164,7 +164,7 @@ Keying options:
 - Particular weakness - having a round key, attacker can get other round keys and main key
 
 AES, CBC and padding:
-- Defined by PKCS#7 and RFS 5652
+- Defined by PKCS#7 and RFC 5652
 - Padding length: between 1 byte and 1 block
 - Padding depends on the number of empty bytes (not bits) in the last block:
   - 1 - 1 (decimal) is added
@@ -249,7 +249,7 @@ Example of Linear FSR:
 
 ### Salsa20
 
-- Modern, counter-based stream cipher created by J. Bernstein
+- Modern, counter-based stream cipher created by D. Bernstein
 - State size: 512 bits (4x4 matrix of 32 bit words), including:
   - Key size: 256 bits
   - Nonce: 64 bits
@@ -320,6 +320,35 @@ Family of 4 algorithms:
 - Alternative, not a successor to SHA-2 family, because SHA-2 hasn't been broken yet
 - New structure, purposefully different from SHA-2 to keep it secure even if SHA-2 gets broken one day
 - Based on Keccak algorithm (sponge function)
+- In contrary to older hash algorithms, not prone to length extension attacks
+
+### Keyed Hashing
+
+- T = MAC ( K, M ), where T stands for tag
+- Benefits of MAC:
+  - Integrity - without key, data cannot be changed in a way that attached tag remains valid
+  - Authenticity - only party with access to the key could have generated valid tag
+Types of MACs:
+  - HMAC - Hash-based Message Authentication Code or Keyed-Hash Message Authentication Code
+    - Very popular
+    - E.g. HMAC-SHA256
+  - CMAC - Cipher-based Message Authentication Code:
+    - Successor to CBC-MAC
+    - Less popular than HMAC
+    - Used e.g. in IKE (Internet Key Exchange) protocol
+  - Dedicated MAC constucts, e.g.:
+    - Poly1305:
+      - Initially designed as Poly1305-AES, later decoupled
+      - Currently other variants exists, including ChaCha20-Poly1305
+      - Optimised for modern CPUs and large messages
+      - Secure, but not as much as other types of MACs - focus on performance
+      - Used by Google in Chrome, Android and Google's websites
+    - SipHash:
+      - Designed to prevent DoS attacks against hash tables (hash flooding)
+      - Optimised for short messages
+      - SipHash-x-y, e.g. SipHash-2-4 (default) - 2 is the number of rounds per message block and 4 is the number of 
+        finalization rounds
+      - SipHash-4-8 is 2x slower but is a good choice for conservative security
 
 ### Public Key Cryptography
 
