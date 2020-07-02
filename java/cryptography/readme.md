@@ -350,6 +350,51 @@ Types of MACs:
         finalization rounds
       - SipHash-4-8 is 2x slower but is a good choice for conservative security
 
+### Authenticated Encryption
+
+- Approaches:
+  - Encrypt-and-MAC (E&M):
+    - Least secure:
+      - MAC validation requires decrypting C
+      - There is a risk that MAC will leak information about P
+  - MAC-then-Encrypt (MtE):
+    - Security in between the other two:
+      - MAC validation requires decrypting C
+      - Hiding MAC inside C prevents it leaking information about P
+  - Encrypt-then-MAC (EtM):
+    - Most secure:
+      - MAC validation doesn't require decrypting C
+
+Authenticated Encryption with Associated Data (AEAD):
+  - Currently all AE ciphers support AD
+  - All use IV
+  - Special cases:
+    - Blank AD - AE
+    - Blank P - MAC
+  - Ciphers:
+    - AES-GCM:
+      - Most popular
+      - EtM type
+      - Encryption is internally based on CTR, hence parallelisable both ways
+      - MAC calculation is not parallelisable
+      - Entire computation is parallelisable, because MAC doesn't require entire C to start calculations
+      - Recommended IV length is 96 bits (12 bytes), although other lengths are technically possible
+      - Sensitive to IV reuse
+      - GCM mode can work with any block cipher, but vast majority use it only in combination with AES
+      - GCM stands for Galois Counter Mode
+      - Produces tags of 128, 120, 112, 104 or 96 bits
+      - Using tags below 128 bits is discouraged, because bit strenght reduction is worse than linear
+    - OCB:
+      - Offset Codebook
+      - Older, faster and more simple than GCM
+      - Requires a license, however since 2013 licenses are granted free of charge for non-military use
+      - Less sensitive to IV reuse (but still)
+    - AES-GCM-SIV:
+      - Synthetic IV
+      - Less sensitive to IV reuse
+      - Almost as fast as pure AES-GCM
+      - Cannot process streams - requires entire P to be encrypted to C
+
 ### Public Key Cryptography
 
 - Slower, but more secure than symmetric cryptography. For this reason frequently used to establish a shared secret
