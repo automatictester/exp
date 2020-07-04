@@ -410,8 +410,7 @@ Authenticated Encryption with Associated Data (AEAD):
 ### RSA
 
 Overview:
-- Security of RSA is based on difficulty of factoring problem, factoring the product of two large prime numbers, 
-  N = p * q:
+- Security of RSA is based on difficulty of factoring problem, factoring the product of two large prime numbers: n = p * q
   - Fundamental theorem of arithmetic says that every integer greater than 1 either is a prime number itself,
     or can be represented as the product of (2 or more) prime numbers and that, this representation is unique
   - Factoring problem is a NP (nondeterministic polynomial) problem - solution can be verified, but not found, in
@@ -420,8 +419,45 @@ Overview:
     catastrophical consequences for security
 - Both public and private keys consist of sets of integers
 - Private key is build of more integers than public key
-- Most important of them, shared between public and private keys, is modulus
+- Most important of them, shared between public and private keys, is modulus (n)
 - Length of RSA key is defined by the bit length of its modulus
+- Can be used for encryption (encryption using recipient's public key) or authentication (signing with sender's
+  private key)
+
+RSA-OAEP:
+- OEAP - Optimal Asymmetric Encryption Padding
+- For RSA to be NM, padding should be added to plaintext
+- Based on PRNG
+
+Key generation:
+- Choose 2 prime numbers p and q matching certain criteria
+- Calculate n = p * q
+- Calculate phi ( n ) = ( p - 1 ) * ( q - 1 )
+- Calculate public exponent e, where e is a prime number such that 1 < e < phi ( n )
+- Calculate private exponent d = xgcd ( e, phi ) - xgcd is extended greatest common divisor
+- Optionally verify ( e * d ) mod phi = 1
+
+Private key:
+- Modulus n
+- Private exponent d
+- Public exponent e
+- Prime numbers p and q - also referred to as prime1 and prime2
+- phi ( n )
+
+Public key:
+- Modulus n
+- Public exponent e
+
+Why public exponent e is usually 65537:
+- Small valid values of public exponent e include: 3, 5, 17, 257 or 65537
+- Early RSA implementations without proper padding were vulnerable to small exponents
+- Large enough to be secure, significantly more secure than 3
+- Small enough to be efficient in public-key operations
+- Having small private exponent could cause security issues
+
+Inspecting RSA keys with OpenSSL:
+- openssl rsa -in rsa -text -noout
+- openssl rsa -in rsa.pub -text -pubin -noout
 
 ### Diffie Hellman Key Exchange
 
@@ -460,3 +496,10 @@ Benefits:
   but doesn't allow to decrypt messages encrypted K<sub>0...x-1</sub> 
 - DH key exchange - Forward Secrecy
 - DHE key exchange (Ephemeral) - Perfect Forward Secrecy
+
+### Security Testing Checklist
+
+- Are keys of correct size?
+- Are keys of correct type (e.g. RSA vs EC)?
+- Are HKDFs supplied with correct input?
+- Are PRNGs suitable for use in cryptography?
