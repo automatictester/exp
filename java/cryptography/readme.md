@@ -409,20 +409,25 @@ Authenticated Encryption with Associated Data (AEAD):
 
 ### RSA
 
-Keys:
-- Both public and private keys consist of a set of integers
+Overview:
+- Security of RSA is based on difficulty of factoring problem, factoring the product of two large prime numbers, 
+  N = p * q:
+  - Fundamental theorem of arithmetic says that every integer greater than 1 either is a prime number itself,
+    or can be represented as the product of (2 or more) prime numbers and that, this representation is unique
+  - Factoring problem is a NP (nondeterministic polynomial) problem - solution can be verified, but not found, in
+    polynomial time, i.e. has a complexity of O(n<sup>c</sup>)
+  - Prime numbers p and q must be carefully chosen to avoid numbers of certain characteristics, which could have
+    catastrophical consequences for security
+- Both public and private keys consist of sets of integers
 - Private key is build of more integers than public key
 - Most important of them, shared between public and private keys, is modulus
 - Length of RSA key is defined by the bit length of its modulus
 
-Key strength:
-- 1024 bit RSA = 80 bit symmetric
-- 2048 bit RSA = 112 bit symmetric
-- 3072 bit RSA = 128 bit symmetric
-- 15360 bit RSA = 256 bit symmetric
-- 3072 bit RSA = 3072 bit DH
-
 ### Diffie Hellman Key Exchange
+
+Overview:
+- Security of DH is based on difficulty of DLP (discreet logarithm problem)
+- Requires RSA or another PK cryptography to avoid man-in-the-middle attacks
 
 |Alice|Public|Bob|
 |:---:|:---:|:---:|
@@ -431,16 +436,22 @@ Key strength:
 |ag, bg| |bg, ag|
 |abg| |abg|
 
-- requires RSA or another PK cryptography to avoid man-in-the-middle attacks
+### Key Strength Comparison
+
+RSA/DH vs symmetric key strength:
+- 1024 bit RSA/DH = 80 bit symmetric
+- 2048 bit RSA/DH = 112 bit symmetric
+- 3072 bit RSA/DH = 128 bit symmetric
+- 15360 bit RSA/DH = 256 bit symmetric
+
+EC vs other public key strength:
+- 256 bit EC = 3072 bit RSA/DH
+- 384 bit EC = 7680 bit RSA/DH - currently defined as good enough for US Top Secret level
 
 ### Elliptic Curve Cryptography
 
-Strength:
-- 256 bit EC = 3072 bit RSA
-- 384 bit EC = 7680 bit RSA - currently defined as good enough for US Top Secret level
-
 Benefits:
-- Shorter key length
+- Significantly shorter key length for the same level of key strength
 - Reduced storage and transmission requirements
 
 ### (Perfect) Forward Secrecy
