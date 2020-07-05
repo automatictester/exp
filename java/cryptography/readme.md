@@ -409,25 +409,37 @@ Authenticated Encryption with Associated Data (AEAD):
 
 ### RSA
 
-Overview:
-- Security of RSA is based on difficulty of factoring problem, factoring the product of two large prime numbers: n = p * q
-  - Fundamental theorem of arithmetic says that every integer greater than 1 either is a prime number itself,
-    or can be represented as the product of (2 or more) prime numbers and that, this representation is unique
-  - Factoring problem is a NP (nondeterministic polynomial) problem - solution can be verified, but not found, in
-    polynomial time, i.e. has a complexity of O(n<sup>c</sup>)
-  - Prime numbers p and q must be carefully chosen to avoid numbers of certain characteristics, which could have
-    catastrophical consequences for security
+Security of RSA:
+- Security of RSA is based on difficulty of factoring problem, factoring the product of two large prime numbers: 
+  n = p * q
+- Fundamental theorem of arithmetic says that every integer greater than 1 either is a prime number itself,
+  or can be represented as the product of (2 or more) prime numbers and that, this representation is unique
+- Factoring problem is a NP (nondeterministic polynomial) problem - solution can be verified, but not found, in
+  polynomial time, i.e. has a complexity of O(n<sup>c</sup>)
+- Prime numbers p and q must be carefully chosen to avoid numbers of certain characteristics, which could have
+  catastrophical consequences for security
+
+Operations:
+- Encryption / signature verification: y = x<sup>e</sup> mod n
+- Decryption / signing: x = y<sup>d</sup> mod n
+
+Encdyption with RSA-OAEP:
+- OEAP - Optimal Asymmetric Encryption Padding
+- More secure than plain RSA
+- Based on PRNG
+
+Signing with RSA-PSS:
+- PPS - Probabilistic Signature Scheme
+- PSS is an equivalent of OAEP for signing
+- More secure than plain RSA
+
+RSA keys:
 - Both public and private keys consist of sets of integers
-- Private key is build of more integers than public key
+- Private key is contains more integers than public key
 - Most important of them, shared between public and private keys, is modulus (n)
 - Length of RSA key is defined by the bit length of its modulus
-- Can be used for encryption (encryption using recipient's public key) or authentication (signing with sender's
+- Keys can be used for encryption (encryption using recipient's public key) or signing (signing with sender's
   private key)
-
-RSA-OAEP:
-- OEAP - Optimal Asymmetric Encryption Padding
-- For RSA to be NM, padding should be added to plaintext
-- Based on PRNG
 
 Key generation:
 - Choose 2 prime numbers p and q matching certain criteria
@@ -436,24 +448,28 @@ Key generation:
 - Calculate public exponent e, where e is a prime number such that 1 < e < phi ( n )
 - Calculate private exponent d = xgcd ( e, phi ) - xgcd is extended greatest common divisor
 - Optionally verify ( e * d ) mod phi = 1
+- Please note phi is the only calculated value which isn't persisted in private key
 
 Private key:
 - Modulus n
 - Private exponent d
 - Public exponent e
 - Prime numbers p and q - also referred to as prime1 and prime2
-- phi ( n )
+- exponent1, exponent2, coefficient - used in chinese remainder theorem to speed up operations 
+  involving private key (signing and decryption)
 
 Public key:
 - Modulus n
 - Public exponent e
 
-Why public exponent e is usually 65537:
+Why public exponent e is usually 65537 (0x10001):
 - Small valid values of public exponent e include: 3, 5, 17, 257 or 65537
 - Early RSA implementations without proper padding were vulnerable to small exponents
-- Large enough to be secure, significantly more secure than 3
-- Small enough to be efficient in public-key operations
+- Large enough to be secure and significantly more secure than 3, small enough to be efficient in public key 
+  (signature verification and encryption)
 - Having small private exponent could cause security issues
+- With such e, private exponent d is close to n, which then makes sense to speed up private key operations with
+  chinese remainder theorem
 
 Inspecting RSA keys with OpenSSL:
 - openssl rsa -in rsa -text -noout
