@@ -478,15 +478,23 @@ Inspecting RSA keys with OpenSSL:
 ### Diffie Hellman Key Exchange
 
 Overview:
-- Security of DH is based on difficulty of DLP (discreet logarithm problem)
-- Requires RSA or another PK cryptography to avoid man-in-the-middle attacks
+- Security of DH is based on difficulty of DLP (discreet logarithm problem) - computing secret g<sup>ab</sup> from
+  public g<sup>a</sup> and g<sup>b</sup>
+- Anonymous DH is prone to man-in-the-middle attacks
+- Authenticated DH uses PK cryptography, e.g. RSA-PSS, to avoid man-in-the-middle attacks
+
+Sequence:
 
 |Alice|Public|Bob|
 |:---:|:---:|:---:|
-|a|g, n|b|
-|ag| |bg|
-|ag, bg| |bg, ag|
-|abg| |abg|
+|a|p, g|b|
+|A = g<sup>a</sup> mod p|<==>|B = g<sup>b</sup> mod p|
+|A, B| |A, B|
+|s = B<sup>a</sup> mod p| |s = A<sup>b</sup> mod p|
+
+Where:
+- p - prime modulus, of certain characteristics
+- g - prime base
 
 ### Key Strength Comparison
 
@@ -519,3 +527,4 @@ Benefits:
 - Are keys of correct type (e.g. RSA vs EC)?
 - Are HKDFs supplied with correct input?
 - Are PRNGs suitable for use in cryptography?
+- Are DH shared secrets used as symmetric keys without KFD?
