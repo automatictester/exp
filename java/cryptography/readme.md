@@ -418,6 +418,9 @@ Security of RSA:
   polynomial time, i.e. has a complexity of O(n<sup>c</sup>)
 - Prime numbers p and q must be carefully chosen to avoid numbers of certain characteristics, which could have
   catastrophical consequences for security
+- RSA keys can directly process input of size just under the key length, hence the typical use cases:
+  - RSA signature takes hash of original message as an input
+  - RSA key is used to encrypt symmetric key which is used to encrypt original message, not the message itself
 
 Operations:
 - Encryption / signature verification: y = x<sup>e</sup> mod n
@@ -496,23 +499,31 @@ Where:
 - p - prime modulus, of certain characteristics
 - g - prime base
 
-### Key Strength Comparison
-
-RSA/DH vs symmetric key strength:
-- 1024 bit RSA/DH = 80 bit symmetric
-- 2048 bit RSA/DH = 112 bit symmetric
-- 3072 bit RSA/DH = 128 bit symmetric
-- 15360 bit RSA/DH = 256 bit symmetric
-
-EC vs other public key strength:
-- 256 bit EC = 3072 bit RSA/DH
-- 384 bit EC = 7680 bit RSA/DH - currently defined as good enough for US Top Secret level
-
 ### Elliptic Curve Cryptography
 
 Benefits:
-- Significantly shorter key length for the same level of key strength
+- Significantly shorter key length for the same level of key strength, resulting in faster computations
 - Reduced storage and transmission requirements
+- Key strength is 2<sup>n/2</sup>, i.e. 128 bit security for 256 bit key
+- Alternative for DLP problem-based systems, like DH
+
+Applications:
+- ECDH
+- ECDSA
+
+Popular curves:
+- P-256 - designed by NSA, part of NIST standard, 256 bit length
+- Curve25519 - designed for use with ECDH, fast, more trusted than NSA-designed curves, not part of NIST standard, 
+  256 bit length
+
+### Key Strength Comparison
+
+RSA/DH vs symmetric vs EC strength:
+- 1024 bit RSA/DH = 80 bit symmetric = 160 bit EC
+- 2048 bit RSA/DH = 112 bit symmetric = 224 bit EC
+- 3072 bit RSA/DH = 128 bit symmetric = 256 bit EC
+- 7680 bit RSA/DH = 192 bit symmetric = 384 bit EC
+- 15360 bit RSA/DH = 256 bit symmetric = 512 bit EC
 
 ### (Perfect) Forward Secrecy
 
