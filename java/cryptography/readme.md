@@ -564,12 +564,12 @@ TLS 1.3:
 
 TLS 1.3 handshake:
 
-|Client|Internet|Server|
-|---|:---:|---|
-| |Client Hello -------->| |
-| |(cipher suites, public DH key)|generate DH keys, calculate DH shared secret, derive symmetric key|
-| |<-------- Server Hello| |
-|verify certificate, verify signature, calculate DH shared secret, derive symmetric key, verify MAC using that key|(selected cipher suite, public DH key, signature, MAC)| |
+|Step|Client|Server|
+|---|---|---|
+|1|Client sends Client Hello with: cipher suites, public DH key| |
+|2| |Server generates DH keys, calculates DH shared secret, derives symmetric key|
+|3| |Server responds with Server Hello with selected cipher suite, public DH key, signature, MAC|
+|4|Client verifies certificate, signature, calculates DH shared secret, derives symmetric key, verifies MAC using that key| |
 
 ### Security Testing Checklist
 
