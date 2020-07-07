@@ -564,18 +564,6 @@ TLS 1.3:
 
 TLS 1.3 handshake:
 
-<style>
-table th:first-of-type {
-    width: 33%;
-}
-table th:nth-of-type(2) {
-    width: 34%;
-}
-table th:nth-of-type(3) {
-    width: 33%;
-}
-</style>
-
 |Client|Internet|Server|
 |---|:---:|---|
 | |Client Hello -------->| |
