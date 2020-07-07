@@ -566,14 +566,10 @@ TLS 1.3 handshake:
 
 |Client|Internet|Server|
 |---|:---:|---|
-| |client hello| |
-| |--------------------->| |
-| |cipher suites, public DH key|generate DH keys, calculate DH shared secret, derive symmetric key|
-| | | |
-| |server hello| |
-| | | |
-| |<---------------------| |
-|verify certificate, verify signature, calculate DH shared secret, derive symmetric key, verify MAC using that key|selected cipher suite, public DH key, signature, MAC| |
+| |Client Hello -------->| |
+| |(cipher suites, public DH key)|generate DH keys, calculate DH shared secret, derive symmetric key|
+| |<-------- Server Hello| |
+|verify certificate, verify signature, calculate DH shared secret, derive symmetric key, verify MAC using that key|(selected cipher suite, public DH key, signature, MAC)| |
 
 ### Security Testing Checklist
 
