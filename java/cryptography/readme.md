@@ -324,6 +324,7 @@ Family of 4 algorithms:
 
 ### Keyed Hashing
 
+- To a degree similar to hash function, but MAC uses a secret key while hash function does not
 - T = MAC ( K, M ), where T stands for tag
 - Benefits of MAC:
   - Integrity - without key, data cannot be changed in a way that attached tag remains valid
@@ -366,10 +367,10 @@ Types of MACs:
       - MAC validation doesn't require decrypting C
 
 Authenticated Encryption with Associated Data (AEAD):
-  - Currently all AE ciphers support AD
+  - Currently all AE ciphers support AAD
   - All use IV
   - Special cases:
-    - Blank AD - AE
+    - Blank AAD - AE
     - Blank P - MAC
   - Ciphers:
     - AES-GCM:
@@ -384,6 +385,7 @@ Authenticated Encryption with Associated Data (AEAD):
       - GCM stands for Galois Counter Mode
       - Produces tags of 128, 120, 112, 104 or 96 bits
       - Using tags below 128 bits is discouraged, because bit strenght reduction is worse than linear
+      - Resulting variant of AES-GCM with AAD but blank P is called GMAC
     - OCB:
       - Offset Codebook
       - Older, faster and more simple than GCM
@@ -478,7 +480,7 @@ Inspecting RSA keys with OpenSSL:
 - openssl rsa -in rsa -text -noout
 - openssl rsa -in rsa.pub -text -pubin -noout
 
-### Diffie Hellman Key Exchange
+### Diffie-Hellman Key Exchange
 
 Overview:
 - Security of DH is based on difficulty of DLP (discreet logarithm problem) - computing secret g<sup>ab</sup> from
@@ -502,7 +504,10 @@ Where:
 ### Elliptic Curve Cryptography
 
 Benefits:
-- Significantly shorter key length for the same level of key strength, resulting in faster computations
+- Significantly shorter key length for the same level of key strength
+- Public and private key operations offer similar performance, which implies:
+  - In comparison to RSA - faster private key operations
+  - In comparison to RSA - slower public key operations
 - Reduced storage and transmission requirements
 - Key strength is 2<sup>n/2</sup>, i.e. 128 bit security for 256 bit key
 - Alternative for DLP problem-based systems, like DH
@@ -531,6 +536,44 @@ RSA/DH vs symmetric vs EC strength:
   but doesn't allow to decrypt messages encrypted K<sub>0...x-1</sub> 
 - DH key exchange - Forward Secrecy
 - DHE key exchange (Ephemeral) - Perfect Forward Secrecy
+- Doesn't allow for decrypting traffic using static symmetric encryption keys, e.g. in a bank
+- Enforced with TLS 1.3
+
+### Transport Layer Security
+
+Overview:
+- Build upon 2 protocols:
+  - Record protocol
+  - Handshake protocol
+- Server makes a final decision on cipher suite to use
+- Cipher suite defines:
+  - Protocol: TLS 1.3, TLS 1.2, or no longer secure TLS 1.1, TLS 1.0, SSL 3.0, SSL 2.0
+  - Key exchange: TLS 1.3 allows only variants of DHE
+  - Authentication: TLS 1.3 allows only RSA, ECDSA, EdDSA, DSS and PSK
+  - Cipher: TLS 1.3 allows only AES-GCM, AES-CCM and ChaCha20-Poly1305
+  - Hash: TLS 1.3 allows only SHA256 and SHA384
+
+TLS 1.3:
+- Reimplementation with security, performance and simplicity in mind
+- Support for only 5 cipher suites (previously 37) - dropped support for less secure options
+- Allows only AEAD ciphers
+- Sample TLS 1.3 cipher suite: TLS_AES_256_GCM_SHA384 vs sample TLS 1.2 cipher suite: 
+  TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+- Handshake reduced to 1 instead of 2 rounds
+- Requires PFS (hence RSA cannot be used for key exchange)
+
+TLS 1.3 handshake:
+
+|Client|Internet|Server|
+|---|:---:|---|
+| |client hello| |
+| |--------------------->| |
+| |cipher suites, public DH key|generate DH keys, calculate DH shared secret, derive symmetric key|
+| | | |
+| |server hello| |
+| | | |
+| |<---------------------| |
+|verify certificate, verify signature, calculate DH shared secret, derive symmetric key, verify MAC using that key|selected cipher suite, public DH key, signature, MAC| |
 
 ### Security Testing Checklist
 
