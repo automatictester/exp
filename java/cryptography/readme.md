@@ -329,7 +329,7 @@ Family of 4 algorithms:
 - Benefits of MAC:
   - Integrity - without key, data cannot be changed in a way that attached tag remains valid
   - Authenticity - only party with access to the key could have generated valid tag
-Types of MACs:
+- Types of MACs:
   - HMAC - Hash-based Message Authentication Code or Keyed-Hash Message Authentication Code
     - Very popular
     - E.g. HMAC-SHA256
@@ -340,7 +340,6 @@ Types of MACs:
   - Dedicated MAC constucts, e.g.:
     - Poly1305:
       - Initially designed as Poly1305-AES, later decoupled
-      - Currently other variants exists, including ChaCha20-Poly1305
       - Optimised for modern CPUs and large messages
       - Secure, but not as much as other types of MACs - focus on performance
       - Used by Google in Chrome, Android and Google's websites
@@ -373,6 +372,7 @@ Authenticated Encryption with Associated Data (AEAD):
     - Blank AAD - AE
     - Blank P - MAC
   - Ciphers:
+    - ChaCha20-Poly1305
     - AES-GCM:
       - Most popular
       - EtM type
