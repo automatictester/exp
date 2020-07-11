@@ -427,6 +427,10 @@ Security of RSA:
 Operations:
 - Encryption / signature verification: y = x<sup>e</sup> mod n
 - Decryption / signing: x = y<sup>d</sup> mod n
+- Naive implementations based on power-then-modulo are slow. Optimised implementations are significantly faster, 
+  and could include:
+  - SageMath's power_mod(x, e, n)
+  - Python's pow(x, e, n)
 
 Encdyption with RSA-OAEP:
 - OEAP - Optimal Asymmetric Encryption Padding
@@ -578,3 +582,11 @@ TLS 1.3 handshake:
 - Are HKDFs supplied with correct input?
 - Are PRNGs suitable for use in cryptography?
 - Are DH shared secrets used as symmetric keys without KFD?
+- Are calculated digests of correct type (digest vs hexdigest)?
+
+### Post-Quantum Cryptography
+
+- Quantum computer would reduce symmetric key strength from 2<sup>n</sup> to 2<sup>n/2</sup>, e.g.
+  2<sup>128</sup> to 2<sup>64</sup>.
+- Symmetric cryptography can protect itself against quantum computers by doubling symmetric key lengths and hash sizes.
+- Quantum computer would break public key cryptography for good.
